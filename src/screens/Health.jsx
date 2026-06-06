@@ -30,8 +30,9 @@ function getCurrentWeekGrid(completions) {
   });
 }
 
-function HabitCard({ habitKey, habit, vacationMode, onToggleVacation }) {
+function HabitCard({ habitKey, habit, vacationMode, onToggleVacation, onToggleDay }) {
   const grid = getCurrentWeekGrid(habit.completions);
+  const todayISO = new Date().toISOString().split('T')[0];
   const doneThisWeek = grid.filter(d => d.done).length;
   const scoreColor = doneThisWeek >= 6 ? '#3DC98A' : doneThisWeek >= 4 ? '#E4A94B' : '#E05C5C';
   const nextBonus = STREAK_BONUSES[habitKey]?.find(b => b.days > habit.currentStreak);
@@ -71,21 +72,30 @@ function HabitCard({ habitKey, habit, vacationMode, onToggleVacation }) {
 
       {/* Week grid */}
       <div className="flex gap-2 mb-3">
-        {grid.map((d, i) => (
-          <div
-            key={i}
-            className="flex items-center justify-center text-xs font-mono font-bold"
-            style={{
-              flex: 1, height: 32, borderRadius: 6,
-              background: d.done ? habit.color : 'var(--navy-700)',
-              color: d.done ? '#000' : 'var(--muted2)',
-              border: `1px solid ${d.done ? habit.color : 'var(--border)'}`,
-              fontSize: 10,
-            }}
-          >
-            {d.label}
-          </div>
-        ))}
+        {grid.map((d, i) => {
+          const isPast = d.date <= todayISO;
+          return (
+            <div
+              key={i}
+              onClick={() => isPast && onToggleDay(d.date)}
+              className="flex items-center justify-center text-xs font-mono font-bold"
+              style={{
+                flex: 1, height: 32, borderRadius: 6,
+                background: d.done ? habit.color : 'var(--navy-700)',
+                color: d.done ? '#000' : 'var(--muted2)',
+                border: `1px solid ${d.done ? habit.color : 'var(--border)'}`,
+                fontSize: 10,
+                cursor: isPast ? 'pointer' : 'default',
+                opacity: isPast ? 1 : 0.35,
+                transition: 'transform 0.1s, opacity 0.15s',
+              }}
+              onMouseEnter={e => { if (isPast) e.currentTarget.style.transform = 'scale(1.12)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; }}
+            >
+              {d.label}
+            </div>
+          );
+        })}
       </div>
 
       <div className="flex items-center justify-between">
@@ -243,6 +253,7 @@ export default function Health() {
             habit={habits[k]}
             vacationMode={vacationMode}
             onToggleVacation={() => dispatch({ type: 'TOGGLE_VACATION_MODE' })}
+            onToggleDay={date => dispatch({ type: 'TOGGLE_HABIT_DAY', habitKey: k, date })}
           />
         ))}
       </div>

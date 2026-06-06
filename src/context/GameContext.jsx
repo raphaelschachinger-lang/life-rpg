@@ -367,6 +367,42 @@ function reducer(state, action) {
       };
     }
 
+    case 'TOGGLE_HABIT_DAY': {
+      const { habitKey, date } = action;
+      const habit = state.habits[habitKey];
+      const wasCompleted = !!habit.completions[date];
+      const newCompletions = { ...habit.completions };
+
+      if (wasCompleted) {
+        delete newCompletions[date];
+      } else {
+        newCompletions[date] = true;
+      }
+
+      const { current, best } = calculateStreak(newCompletions);
+      const totalDays = Object.values(newCompletions).filter(Boolean).length;
+      const xpDelta = wasCompleted ? -habit.xpPerDay : habit.xpPerDay;
+
+      return {
+        ...state,
+        habits: {
+          ...state.habits,
+          [habitKey]: {
+            ...habit,
+            completions: newCompletions,
+            currentStreak: current,
+            bestStreak: Math.max(best, habit.bestStreak),
+            totalDays,
+          },
+        },
+        player: { ...state.player, totalXP: Math.max(0, state.player.totalXP + xpDelta) },
+        stats: {
+          ...state.stats,
+          health: { totalXP: Math.max(0, state.stats.health.totalXP + xpDelta) },
+        },
+      };
+    }
+
     case 'TOGGLE_VACATION_MODE': {
       return {
         ...state,
