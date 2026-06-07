@@ -122,21 +122,6 @@ export function calculateWeeklyXP(form) {
   // Base
   breakdown.push({ label: 'Weekly Review complété', xp: 100 });
 
-  // Habits
-  let totalHabitDays = 0;
-  let perfectWeek = true;
-  Object.entries(form.habits).forEach(([, days]) => {
-    const done = days.filter(Boolean).length;
-    if (done < 7) perfectWeek = false;
-    totalHabitDays += done;
-  });
-  if (totalHabitDays > 0) {
-    breakdown.push({ label: `Habitudes (${totalHabitDays} jours validés × 10)`, xp: totalHabitDays * 10 });
-  }
-  if (perfectWeek) {
-    breakdown.push({ label: 'Bonus semaine parfaite 🔥', xp: 150 });
-  }
-
   // Trading
   if (form.trading.traded) {
     breakdown.push({ label: 'Semaine de trading loggée', xp: 50 });

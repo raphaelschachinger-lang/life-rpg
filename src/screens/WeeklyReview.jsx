@@ -1,11 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useGame } from '../context/GameContext';
 import { calculateWeeklyXP, getCurrentWeekDates, formatDate, checkBadgeUnlocks } from '../utils/gameLogic';
 import { BADGES } from '../data/badges';
 import { ChevronRight, ChevronLeft, Check, Zap } from 'lucide-react';
-
-const DAYS = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
-const HABIT_KEYS = ['sport', 'noSmoke', 'noAlcohol', 'reading', 'noSocial', 'noPorn'];
 
 const RE_ACTIONS = [
   { value: 'visit',     label: 'Visite de bien',                  xp: 200 },
@@ -168,17 +165,10 @@ export default function WeeklyReview() {
   const weekDates = getCurrentWeekDates();
   const todayISO = new Date().toISOString().split('T')[0];
 
-  const initHabits = () => {
-    const h = {};
-    HABIT_KEYS.forEach(k => { h[k] = [false, false, false, false, false, false, false]; });
-    return h;
-  };
-
   const [step, setStep] = useState(1);
   const [form, setForm] = useState({
     date: todayISO,
     patrimoine: { value: state.patrimoine.current, note: '' },
-    habits: initHabits(),
     trading: { traded: false, result: 0, mmRespected: false, tradesCount: 0 },
     realEstate: { actionTaken: false, actionType: '', notes: '' },
     markets: {
@@ -255,7 +245,7 @@ export default function WeeklyReview() {
     );
   }
 
-  const TOTAL_STEPS = 6;
+  const TOTAL_STEPS = 5;
 
   const updateForm = (key, val) => setForm(f => ({ ...f, [key]: val }));
 
@@ -302,50 +292,8 @@ export default function WeeklyReview() {
           </div>
         )}
 
-        {/* Step 2: Health habits */}
+        {/* Step 2: Trading */}
         {step === 2 && (
-          <div className="fade-up">
-            <h2 className="text-base font-bold mb-1" style={{ color: '#E05C5C' }}>❤️ Habitudes Santé</h2>
-            <p className="text-xs mb-4" style={{ color: 'var(--muted)' }}>
-              Cochez chaque jour où vous avez respecté l'habitude.
-            </p>
-            <div
-              className="flex items-center gap-4 mb-3"
-              style={{ color: 'var(--muted2)', fontSize: 11, fontFamily: 'JetBrains Mono' }}
-            >
-              <span style={{ width: 192 }} />
-              {DAYS.map((d, i) => (
-                <span key={i} style={{ width: 28, textAlign: 'center' }}>{d}</span>
-              ))}
-            </div>
-            <div className="flex flex-col gap-4">
-              {HABIT_KEYS.map(k => {
-                const h = state.habits[k];
-                return (
-                  <HabitGrid
-                    key={k}
-                    habitKey={k}
-                    habitName={h.name}
-                    color={h.color}
-                    values={form.habits[k]}
-                    onChange={vals => updateForm('habits', { ...form.habits, [k]: vals })}
-                  />
-                );
-              })}
-            </div>
-            <div
-              className="mt-4 p-3 rounded-lg text-xs"
-              style={{ background: 'var(--navy-700)', color: 'var(--muted)' }}
-            >
-              {Object.values(form.habits).every(d => d.every(Boolean))
-                ? '🔥 Semaine parfaite! Bonus +150 XP'
-                : `Total validé: ${Object.values(form.habits).flat().filter(Boolean).length}/42 jours`}
-            </div>
-          </div>
-        )}
-
-        {/* Step 3: Trading */}
-        {step === 3 && (
           <div className="fade-up">
             <h2 className="text-base font-bold mb-1" style={{ color: '#3DC98A' }}>📈 Trading</h2>
             <p className="text-xs mb-4" style={{ color: 'var(--muted)' }}>
@@ -408,8 +356,8 @@ export default function WeeklyReview() {
           </div>
         )}
 
-        {/* Step 4: Real Estate */}
-        {step === 4 && (
+        {/* Step 3: Real Estate */}
+        {step === 3 && (
           <div className="fade-up">
             <h2 className="text-base font-bold mb-1" style={{ color: '#E4A94B' }}>🏠 Real Estate</h2>
             <p className="text-xs mb-4" style={{ color: 'var(--muted)' }}>
@@ -475,8 +423,8 @@ export default function WeeklyReview() {
           </div>
         )}
 
-        {/* Step 5: Markets */}
-        {step === 5 && (
+        {/* Step 4: Markets */}
+        {step === 4 && (
           <div className="fade-up">
             <h2 className="text-base font-bold mb-1" style={{ color: '#8B6FCA' }}>📊 Financial Markets</h2>
             <p className="text-xs mb-4" style={{ color: 'var(--muted)' }}>
@@ -529,8 +477,8 @@ export default function WeeklyReview() {
           </div>
         )}
 
-        {/* Step 6: Week score */}
-        {step === 6 && (
+        {/* Step 5: Week score */}
+        {step === 5 && (
           <div className="fade-up">
             <h2 className="text-base font-bold mb-1" style={{ color: '#388BDC' }}>⭐ Score de la semaine</h2>
             <p className="text-xs mb-4" style={{ color: 'var(--muted)' }}>

@@ -126,8 +126,8 @@ function reducer(state, action) {
     case 'COMPLETE_WEEKLY_REVIEW': {
       const { form, xpResult, weekDates } = action;
 
-      // Update habits
-      const updatedHabits = updateHabitsFromReview(state.habits, form.habits, weekDates);
+      // Habits are now tracked daily — keep current state as-is
+      const updatedHabits = state.habits;
 
       // Update patrimoine history
       let patrimoineHistory = [...state.patrimoine.history];
