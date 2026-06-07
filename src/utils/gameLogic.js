@@ -152,7 +152,7 @@ export function calculateWeeklyXP(form) {
   }
 
   const total = breakdown.reduce((s, b) => s + b.xp, 0);
-  return { total, breakdown, perfectWeek };
+  return { total, breakdown, perfectWeek: false };
 }
 
 // ── Badge checking ─────────────────────────────────────────────
