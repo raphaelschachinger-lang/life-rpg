@@ -67,6 +67,13 @@ function migrateState(saved) {
     saved.habits.noJunkFood = { completions, currentStreak: 0, bestStreak, totalDays };
     delete saved.habits.noPorn;
   }
+  // Strip config fields from all habits — name/xpPerDay/color/vacationMode come from DEFAULT_STATE
+  if (saved.habits) {
+    Object.keys(saved.habits).forEach(key => {
+      const h = saved.habits[key];
+      if (h) { delete h.name; delete h.xpPerDay; delete h.color; }
+    });
+  }
   // Recalculate streaks for all habits (fix for stored stale streak values)
   if (saved.habits) {
     Object.keys(saved.habits).forEach(key => {
