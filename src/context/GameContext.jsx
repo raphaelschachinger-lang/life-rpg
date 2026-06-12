@@ -61,10 +61,22 @@ export const DEFAULT_STATE = {
 };
 
 function migrateState(saved) {
-  // noPorn → noJunkFood
+  // noPorn → noJunkFood (only migrate user data, not habit metadata)
   if (saved.habits?.noPorn && !saved.habits?.noJunkFood) {
-    saved.habits.noJunkFood = saved.habits.noPorn;
+    const { completions = {}, bestStreak = 0, totalDays = 0 } = saved.habits.noPorn;
+    saved.habits.noJunkFood = { completions, currentStreak: 0, bestStreak, totalDays };
     delete saved.habits.noPorn;
+  }
+  // Recalculate streaks for all habits (fix for stored stale streak values)
+  if (saved.habits) {
+    Object.keys(saved.habits).forEach(key => {
+      const habit = saved.habits[key];
+      if (habit?.completions) {
+        const { current, best } = calculateStreak(habit.completions);
+        habit.currentStreak = current;
+        habit.bestStreak = Math.max(best, habit.bestStreak || 0);
+      }
+    });
   }
   return saved;
 }
