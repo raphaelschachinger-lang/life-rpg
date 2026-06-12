@@ -3,7 +3,7 @@ import { useGame } from '../context/GameContext';
 import { getVerticalLevel, formatDate } from '../utils/gameLogic';
 import { Heart, Flame, Edit2 } from 'lucide-react';
 
-const HABIT_KEYS = ['sport', 'noSmoke', 'noAlcohol', 'reading', 'noSocial', 'noPorn'];
+const HABIT_KEYS = ['sport', 'noSmoke', 'noAlcohol', 'reading', 'noSocial', 'noJunkFood'];
 const DAYS_SHORT = ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
 
 const STREAK_BONUSES = {
@@ -12,7 +12,7 @@ const STREAK_BONUSES = {
   noAlcohol: [{ days: 7, xp: 50 }, { days: 30, xp: 200 }],
   reading:   [{ days: 7, xp: 50 }, { days: 30, xp: 150 }],
   noSocial:  [{ days: 7, xp: 100 }, { days: 30, xp: 300 }],
-  noPorn:    [{ days: 7, xp: 100 }, { days: 90, xp: 300 }],
+  noJunkFood: [{ days: 7, xp: 100 }, { days: 30, xp: 300 }],
 };
 
 function getCurrentWeekGrid(completions) {

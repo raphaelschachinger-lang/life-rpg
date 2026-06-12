@@ -35,7 +35,7 @@ export const DEFAULT_STATE = {
     noAlcohol: { ...HABIT_DEFAULTS(), name: 'Zéro alcool', xpPerDay: 10, color: '#8B6FCA', vacationMode: false },
     reading:   { ...HABIT_DEFAULTS(), name: 'Lecture', xpPerDay: 10, color: '#E4A94B' },
     noSocial:  { ...HABIT_DEFAULTS(), name: 'Zéro réseaux sociaux', xpPerDay: 15, color: '#2EC4B6' },
-    noPorn:    { ...HABIT_DEFAULTS(), name: 'Zéro pornographie', xpPerDay: 15, color: '#E05C5C' },
+    noJunkFood: { ...HABIT_DEFAULTS(), name: 'No Junk Food', xpPerDay: 15, color: '#E05C5C' },
   },
   trading: {
     weeklyLogs: [],
@@ -60,11 +60,20 @@ export const DEFAULT_STATE = {
   loot: {},
 };
 
+function migrateState(saved) {
+  // noPorn → noJunkFood
+  if (saved.habits?.noPorn && !saved.habits?.noJunkFood) {
+    saved.habits.noJunkFood = saved.habits.noPorn;
+    delete saved.habits.noPorn;
+  }
+  return saved;
+}
+
 function loadState() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return DEFAULT_STATE;
-    const saved = JSON.parse(raw);
+    const saved = migrateState(JSON.parse(raw));
     // Deep merge to handle new keys added in updates
     return deepMerge(DEFAULT_STATE, saved);
   } catch {

@@ -182,9 +182,9 @@ export const BADGES = {
   },
   'health-moine': {
     id: 'health-moine', name: 'Moine', category: 'health',
-    description: "90j sans pornographie",
-    rarity: 'elite', xp: 1000, icon: '🧘',
-    check: s => s.habits.noPorn.currentStreak >= 90,
+    description: "30j sans junk food",
+    rarity: 'elite', xp: 1000, icon: '🥗',
+    check: s => s.habits.noJunkFood.currentStreak >= 30,
   },
   'health-iron': {
     id: 'health-iron', name: 'Iron Health', category: 'health',

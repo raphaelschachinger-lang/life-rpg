@@ -77,9 +77,14 @@ export function getChapterProgress(patrimoine, chapter) {
 export function calculateStreak(completions) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
+  const todayKey = today.toISOString().split('T')[0];
 
   let current = 0;
   let check = new Date(today);
+  // If today isn't done yet, start from yesterday so the streak stays alive until EOD
+  if (!completions[todayKey]) {
+    check.setDate(check.getDate() - 1);
+  }
   while (true) {
     const key = check.toISOString().split('T')[0];
     if (completions[key]) {
