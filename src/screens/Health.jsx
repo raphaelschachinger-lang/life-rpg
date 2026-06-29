@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useGame } from '../context/GameContext';
-import { getVerticalLevel, formatDate } from '../utils/gameLogic';
+import { getVerticalLevel, formatDate, isDueDay } from '../utils/gameLogic';
 import { Heart, Flame, Edit2 } from 'lucide-react';
 
 const HABIT_KEYS = ['sport', 'noSmoke', 'noAlcohol', 'reading', 'noSocial', 'noJunkFood'];
@@ -15,7 +15,7 @@ const STREAK_BONUSES = {
   noJunkFood: [{ days: 7, xp: 100 }, { days: 30, xp: 300 }],
 };
 
-function getCurrentWeekGrid(completions) {
+function getCurrentWeekGrid(completions, frequency, frequencyStartDate) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const day = today.getDay();
@@ -26,15 +26,20 @@ function getCurrentWeekGrid(completions) {
     const d = new Date(monday);
     d.setDate(monday.getDate() + i);
     const key = d.toISOString().split('T')[0];
-    return { label: DAYS_SHORT[i], date: key, done: !!completions[key] };
+    const due = frequency === 'alternate' ? isDueDay(key, frequencyStartDate) : true;
+    return { label: DAYS_SHORT[i], date: key, done: !!completions[key], due };
   });
 }
 
 function HabitCard({ habitKey, habit, vacationMode, onToggleVacation, onToggleDay }) {
-  const grid = getCurrentWeekGrid(habit.completions);
+  const grid = getCurrentWeekGrid(habit.completions, habit.frequency, habit.frequencyStartDate);
   const todayISO = new Date().toISOString().split('T')[0];
-  const doneThisWeek = grid.filter(d => d.done).length;
-  const scoreColor = doneThisWeek >= 6 ? '#3DC98A' : doneThisWeek >= 4 ? '#E4A94B' : '#E05C5C';
+  const isAlternate = habit.frequency === 'alternate';
+  const dueCount = grid.filter(d => d.due).length;
+  const doneThisWeek = isAlternate ? grid.filter(d => d.done && d.due).length : grid.filter(d => d.done).length;
+  const target = isAlternate ? dueCount : 7;
+  const ratio = target > 0 ? doneThisWeek / target : 0;
+  const scoreColor = ratio >= 1 ? '#3DC98A' : ratio >= 0.5 ? '#E4A94B' : '#E05C5C';
   const nextBonus = STREAK_BONUSES[habitKey]?.find(b => b.days > habit.currentStreak);
   const isVacationSuspended = habitKey === 'noAlcohol' && vacationMode;
 
@@ -51,7 +56,7 @@ function HabitCard({ habitKey, habit, vacationMode, onToggleVacation, onToggleDa
             )}
           </div>
           <p className="text-xs mt-0.5" style={{ color: 'var(--muted)' }}>
-            +{habit.xpPerDay} XP/jour
+            +{habit.xpPerDay} XP/{isAlternate ? 'séance' : 'jour'}
           </p>
         </div>
         <div className="text-right">
@@ -74,22 +79,26 @@ function HabitCard({ habitKey, habit, vacationMode, onToggleVacation, onToggleDa
       <div className="flex gap-2 mb-3">
         {grid.map((d, i) => {
           const isPast = d.date <= todayISO;
+          const isClickable = isPast && d.due;
+          const isRestDay = !d.due;
           return (
             <div
               key={i}
-              onClick={() => isPast && onToggleDay(d.date)}
+              onClick={() => isClickable && onToggleDay(d.date)}
               className="flex items-center justify-center text-xs font-mono font-bold"
               style={{
                 flex: 1, height: 32, borderRadius: 6,
-                background: d.done ? habit.color : 'var(--navy-700)',
-                color: d.done ? '#000' : 'var(--muted2)',
-                border: `1px solid ${d.done ? habit.color : 'var(--border)'}`,
+                background: isRestDay
+                  ? 'repeating-linear-gradient(45deg, var(--navy-800) 0px, var(--navy-800) 4px, var(--navy-700) 4px, var(--navy-700) 8px)'
+                  : d.done ? habit.color : 'var(--navy-700)',
+                color: (!isRestDay && d.done) ? '#000' : 'var(--muted2)',
+                border: `1px solid ${isRestDay ? 'transparent' : d.done ? habit.color : 'var(--border)'}`,
                 fontSize: 10,
-                cursor: isPast ? 'pointer' : 'default',
-                opacity: isPast ? 1 : 0.35,
+                cursor: isClickable ? 'pointer' : 'default',
+                opacity: isRestDay ? 0.45 : isPast ? 1 : 0.35,
                 transition: 'transform 0.1s, opacity 0.15s',
               }}
-              onMouseEnter={e => { if (isPast) e.currentTarget.style.transform = 'scale(1.12)'; }}
+              onMouseEnter={e => { if (isClickable) e.currentTarget.style.transform = 'scale(1.12)'; }}
               onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; }}
             >
               {d.label}
@@ -103,11 +112,11 @@ function HabitCard({ habitKey, habit, vacationMode, onToggleVacation, onToggleDa
           <div className="progress-bar" style={{ width: 80 }}>
             <div
               className="progress-bar-fill"
-              style={{ width: `${(doneThisWeek / 7) * 100}%`, background: scoreColor }}
+              style={{ width: `${ratio * 100}%`, background: scoreColor }}
             />
           </div>
           <span className="text-xs font-mono" style={{ color: scoreColor }}>
-            {doneThisWeek}/7
+            {doneThisWeek}/{target}
           </span>
         </div>
 
@@ -156,8 +165,11 @@ export default function Health() {
     const isVacation = k === 'noAlcohol' && vacationMode;
     weekDates.forEach(date => {
       if (!isVacation) {
-        totalPossible++;
-        if (h.completions[date]) totalDone++;
+        const due = h.frequency === 'alternate' ? isDueDay(date, h.frequencyStartDate) : true;
+        if (due) {
+          totalPossible++;
+          if (h.completions[date]) totalDone++;
+        }
       }
     });
   });

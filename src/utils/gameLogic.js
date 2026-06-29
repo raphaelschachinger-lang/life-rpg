@@ -74,6 +74,60 @@ export function getChapterProgress(patrimoine, chapter) {
 
 // ── Streak calculation ─────────────────────────────────────────
 
+// Returns true if the given date is a "due" day for an alternate-day habit.
+// Uses the frequencyStartDate as epoch: diff % 2 === 0 → due day.
+export function isDueDay(dateStr, frequencyStartDate) {
+  const d = new Date(dateStr);
+  const ref = new Date(frequencyStartDate);
+  d.setHours(0, 0, 0, 0);
+  ref.setHours(0, 0, 0, 0);
+  return Math.round((d - ref) / 86400000) % 2 === 0;
+}
+
+export function calculateStreakAlternate(completions, startDate) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const todayKey = today.toISOString().split('T')[0];
+
+  // Find the last due day ≤ today
+  let check = new Date(today);
+  if (!isDueDay(todayKey, startDate)) check.setDate(check.getDate() - 1);
+
+  // If that due day isn't done yet, look at the previous one (keep streak alive until EOD)
+  if (!completions[check.toISOString().split('T')[0]]) {
+    check.setDate(check.getDate() - 2);
+  }
+
+  let current = 0;
+  while (true) {
+    const key = check.toISOString().split('T')[0];
+    if (completions[key]) {
+      current++;
+      check.setDate(check.getDate() - 2);
+    } else {
+      break;
+    }
+  }
+
+  // Best streak: only consecutive due-day completions (gap of 2 calendar days)
+  const dueDates = Object.keys(completions)
+    .filter(k => completions[k] && isDueDay(k, startDate))
+    .sort();
+
+  let best = 0;
+  let temp = 0;
+  for (let i = 0; i < dueDates.length; i++) {
+    if (i === 0) { temp = 1; }
+    else {
+      const diff = Math.round((new Date(dueDates[i]) - new Date(dueDates[i - 1])) / 86400000);
+      temp = diff === 2 ? temp + 1 : 1;
+    }
+    if (temp > best) best = temp;
+  }
+
+  return { current, best: Math.max(best, current) };
+}
+
 export function calculateStreak(completions) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);

@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import {
-  getLevelFromXP, calculateStreak, checkBadgeUnlocks,
-  updateHabitsFromReview, getCurrentWeekDates, todayISO,
+  getLevelFromXP, calculateStreak, calculateStreakAlternate, checkBadgeUnlocks,
+  updateHabitsFromReview, getCurrentWeekDates, todayISO, isDueDay,
 } from '../utils/gameLogic';
 
 const STORAGE_KEY = 'life-rpg-v1';
@@ -30,7 +30,7 @@ export const DEFAULT_STATE = {
     health:     { totalXP: 0 },
   },
   habits: {
-    sport:     { ...HABIT_DEFAULTS(), name: 'Sport', xpPerDay: 10, color: '#3DC98A' },
+    sport:     { ...HABIT_DEFAULTS(), name: 'Sport', xpPerDay: 10, color: '#3DC98A', frequency: 'alternate', frequencyStartDate: '2026-06-29' },
     noSmoke:   { ...HABIT_DEFAULTS(), name: 'Zéro cigarette', xpPerDay: 15, color: '#388BDC' },
     noAlcohol: { ...HABIT_DEFAULTS(), name: 'Zéro alcool', xpPerDay: 10, color: '#8B6FCA', vacationMode: false },
     reading:   { ...HABIT_DEFAULTS(), name: 'Lecture', xpPerDay: 10, color: '#E4A94B' },
@@ -71,7 +71,7 @@ function migrateState(saved) {
   if (saved.habits) {
     Object.keys(saved.habits).forEach(key => {
       const h = saved.habits[key];
-      if (h) { delete h.name; delete h.xpPerDay; delete h.color; }
+      if (h) { delete h.name; delete h.xpPerDay; delete h.color; delete h.frequency; delete h.frequencyStartDate; }
     });
   }
   // Recalculate streaks for all habits (fix for stored stale streak values)
@@ -93,8 +93,17 @@ function loadState() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return DEFAULT_STATE;
     const saved = migrateState(JSON.parse(raw));
-    // Deep merge to handle new keys added in updates
-    return deepMerge(DEFAULT_STATE, saved);
+    const merged = deepMerge(DEFAULT_STATE, saved);
+    // Recalculate streaks for alternate habits after merge (frequency is now available)
+    Object.keys(merged.habits).forEach(key => {
+      const habit = merged.habits[key];
+      if (habit?.frequency === 'alternate' && habit?.completions && habit?.frequencyStartDate) {
+        const { current, best } = calculateStreakAlternate(habit.completions, habit.frequencyStartDate);
+        habit.currentStreak = current;
+        habit.bestStreak = Math.max(best, habit.bestStreak || 0);
+      }
+    });
+    return merged;
   } catch {
     return DEFAULT_STATE;
   }
@@ -407,8 +416,12 @@ function reducer(state, action) {
         newCompletions[date] = true;
       }
 
-      const { current, best } = calculateStreak(newCompletions);
-      const totalDays = Object.values(newCompletions).filter(Boolean).length;
+      const { current, best } = habit.frequency === 'alternate'
+        ? calculateStreakAlternate(newCompletions, habit.frequencyStartDate)
+        : calculateStreak(newCompletions);
+      const totalDays = habit.frequency === 'alternate'
+        ? Object.keys(newCompletions).filter(k => newCompletions[k] && isDueDay(k, habit.frequencyStartDate)).length
+        : Object.values(newCompletions).filter(Boolean).length;
       const xpDelta = wasCompleted ? -habit.xpPerDay : habit.xpPerDay;
 
       return {
