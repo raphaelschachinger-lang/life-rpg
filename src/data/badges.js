@@ -261,11 +261,11 @@ export const BADGES = {
   },
   'timed-pea-rapide': {
     id: 'timed-pea-rapide', name: 'PEA Rapide', category: 'timed',
-    description: "PEA ouvert en 2025",
-    expiresDate: '2025-12-31', rarity: 'veteran', xp: 500, icon: '⚡',
+    description: "PEA ouvert en 2026",
+    expiresDate: '2026-12-31', rarity: 'veteran', xp: 500, icon: '⚡',
     check: (s, now) => {
       if (!s.markets.pea.openDate) return false;
-      return s.markets.pea.openDate.startsWith('2025');
+      return s.markets.pea.openDate.startsWith('2026');
     },
   },
   'timed-new-year': {
