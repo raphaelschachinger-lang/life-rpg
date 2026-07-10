@@ -118,6 +118,13 @@ body {
 }
 .pulse-gold { animation: pulseGold 0.7s ease 3; }
 
+/* Milestone node "in progress" pulse (continuous, uses currentColor) */
+@keyframes pulseNode {
+  0%, 100% { box-shadow: 0 0 0 0 currentColor; }
+  50%       { box-shadow: 0 0 10px 3px currentColor; }
+}
+.pulse-node { animation: pulseNode 2s ease-in-out infinite; }
+
 /* Level up overlay */
 @keyframes levelUpBg {
   0%, 100% { opacity: 0; }

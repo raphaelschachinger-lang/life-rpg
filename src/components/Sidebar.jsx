@@ -3,7 +3,7 @@ import { useGame } from '../context/GameContext';
 import { getLevelFromXP, getVerticalLevel } from '../utils/gameLogic';
 import {
   LayoutDashboard, Home, TrendingUp, BarChart2,
-  Heart, Trophy, ClipboardList, Gift, UserCircle2,
+  Heart, Trophy, ClipboardList, Gift, UserCircle2, Map,
 } from 'lucide-react';
 
 const NAV_ITEMS = [
@@ -13,6 +13,7 @@ const NAV_ITEMS = [
   { screen: 'markets',    label: 'Financial Markets',icon: BarChart2,       color: '#8B6FCA' },
   { screen: 'health',     label: 'Health & Habits',  icon: Heart,           color: '#E05C5C' },
   { screen: 'character',  label: 'Personnage',       icon: UserCircle2,     color: '#8B6FCA' },
+  { screen: 'carte',      label: 'Carte',            icon: Map,             color: '#388BDC' },
   { screen: 'achievements',label: 'Achievements',    icon: Trophy,          color: '#E4A94B' },
   { screen: 'review',     label: 'Weekly Review',    icon: ClipboardList,   color: '#2EC4B6' },
   { screen: 'loot',       label: 'Loot Shop',        icon: Gift,            color: '#E4A94B' },

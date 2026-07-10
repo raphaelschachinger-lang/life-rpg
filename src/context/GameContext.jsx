@@ -3,6 +3,7 @@ import {
   getLevelFromXP, calculateStreak, calculateStreakAlternate, checkBadgeUnlocks,
   updateHabitsFromReview, getCurrentWeekDates, todayISO, isDueDay, applyTraitAnswers,
 } from '../utils/gameLogic';
+import { DEFAULT_MILESTONE_STATUS } from '../data/milestones';
 
 const STORAGE_KEY = 'life-rpg-v1';
 
@@ -90,6 +91,7 @@ export const DEFAULT_STATE = {
       last_updated: null,
     },
   },
+  milestones: DEFAULT_MILESTONE_STATUS,
 };
 
 function migrateState(saved) {
@@ -491,6 +493,16 @@ function reducer(state, action) {
         ...state,
         badges: updatedBadges,
         player: { ...state.player, totalXP: state.player.totalXP + badgeXP },
+      };
+    }
+
+    case 'SET_MILESTONE_STATUS': {
+      return {
+        ...state,
+        milestones: {
+          ...state.milestones,
+          [action.id]: { status: action.status, updatedAt: todayISO() },
+        },
       };
     }
 

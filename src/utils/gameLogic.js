@@ -214,6 +214,17 @@ export function calculateWeeklyXP(form) {
   return { total, breakdown, perfectWeek: false };
 }
 
+// ── Progression map milestones ─────────────────────────────────
+
+// Generic milestones derive status purely from current_level — never stored, never manual.
+// Thematic milestones' status lives in state.milestones (manual, spec §3).
+export function getMilestoneStatus(milestone, milestonesState, currentLevel) {
+  if (milestone.type === 'generic') {
+    return currentLevel >= milestone.target_level ? 'done' : 'not_started';
+  }
+  return milestonesState[milestone.id]?.status || 'not_started';
+}
+
 // ── Character traits (weekly self-assessment → incremental gain) ──
 
 const TRAIT_GAIN_STEP = 3; // amplitude per point of deviation from 3 (status quo)

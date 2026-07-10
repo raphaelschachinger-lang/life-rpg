@@ -11,6 +11,7 @@ import Health from '../screens/Health';
 import Achievements from '../screens/Achievements';
 import LootShop from '../screens/LootShop';
 import Character from '../screens/Character';
+import Carte from '../screens/Carte';
 
 const SCREENS = {
   dashboard:    Dashboard,
@@ -22,6 +23,7 @@ const SCREENS = {
   review:       WeeklyReview,
   loot:         LootShop,
   character:    Character,
+  carte:        Carte,
 };
 
 export default function Layout() {
