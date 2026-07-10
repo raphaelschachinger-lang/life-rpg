@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import {
   getLevelFromXP, calculateStreak, calculateStreakAlternate, checkBadgeUnlocks,
-  updateHabitsFromReview, getCurrentWeekDates, todayISO, isDueDay,
+  updateHabitsFromReview, getCurrentWeekDates, todayISO, isDueDay, applyTraitAnswers,
 } from '../utils/gameLogic';
 
 const STORAGE_KEY = 'life-rpg-v1';
@@ -58,6 +58,38 @@ export const DEFAULT_STATE = {
   badges: {},
   weeklyReviews: [],
   loot: {},
+  traits: {
+    discernement: {
+      id: 'discernement', name: 'Discernement', base_value: 85, current_value: 85,
+      sources: { ocean_facets: ['intellect', 'imagination', 'prudence', 'ordre', 'efficacite_perso'], via_ranks: [1, 3, 4, 10, 14] },
+      last_updated: null,
+    },
+    integrite: {
+      id: 'integrite', name: 'Intégrité', base_value: 86, current_value: 86,
+      sources: { ocean_facets: ['moralite', 'fiabilite', 'cooperation'], via_ranks: [5, 6, 8] },
+      last_updated: null,
+    },
+    discipline: {
+      id: 'discipline', name: 'Discipline', base_value: 57, current_value: 57,
+      sources: { ocean_facets: ['auto_discipline', 'immoderation_inv'], via_ranks: [11, 20] },
+      last_updated: null,
+    },
+    lien_social: {
+      id: 'lien_social', name: 'Lien social', base_value: 50, current_value: 50,
+      sources: { ocean_facets: ['gregarisme', 'amitie', 'confiance', 'empathie', 'altruisme'], via_ranks: [13, 16, 17] },
+      last_updated: null,
+    },
+    serenite: {
+      id: 'serenite', name: 'Sérénité', base_value: 52, current_value: 52,
+      sources: { ocean_facets: ['anxiete_inv', 'timidite_sociale_inv', 'depression_inv', 'hostilite_coleriquee_inv', 'vulnerabilite_inv'], via_ranks: [9, 15, 21] },
+      last_updated: null,
+    },
+    audace: {
+      id: 'audace', name: 'Audace', base_value: 56, current_value: 56,
+      sources: { ocean_facets: ['aventurisme', 'recherche_excitation', 'assertivite'], via_ranks: [12, 23] },
+      last_updated: null,
+    },
+  },
 };
 
 function migrateState(saved) {
@@ -217,6 +249,9 @@ function reducer(state, action) {
       // New total XP
       const newTotalXP = state.player.totalXP + xpResult.total;
 
+      // Update character traits from self-assessment (never recalculated from scratch)
+      const updatedTraits = applyTraitAnswers(state.traits, form.character, form.date);
+
       // Check badge unlocks with updated state
       const tempState = {
         ...state,
@@ -224,6 +259,7 @@ function reducer(state, action) {
         patrimoine: { current: form.patrimoine.value, history: patrimoineHistory },
         trading: updatedTrading,
         markets: updatedMarkets,
+        traits: updatedTraits,
         player: { ...state.player, totalXP: newTotalXP },
         weeklyReviews: [...state.weeklyReviews, { ...form, submittedAt: new Date().toISOString(), xpGained: xpResult.total }],
       };
@@ -242,6 +278,7 @@ function reducer(state, action) {
         patrimoine: { current: form.patrimoine.value, history: patrimoineHistory },
         trading: updatedTrading,
         markets: updatedMarkets,
+        traits: updatedTraits,
         player: { ...state.player, totalXP: newTotalXP + badgeXP },
         weeklyReviews: [...state.weeklyReviews, {
           ...form,

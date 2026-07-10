@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useGame } from '../context/GameContext';
-import { calculateWeeklyXP, getCurrentWeekDates, formatDate, checkBadgeUnlocks } from '../utils/gameLogic';
+import { calculateWeeklyXP, getCurrentWeekDates, formatDate, checkBadgeUnlocks, applyTraitAnswers } from '../utils/gameLogic';
 import { BADGES } from '../data/badges';
+import { TRAIT_ORDER, TRAITS_META } from '../data/traits';
 import { ChevronRight, ChevronLeft, Check, Zap } from 'lucide-react';
 
 const RE_ACTIONS = [
@@ -92,7 +93,7 @@ function XPCounter({ target }) {
   return <span>{displayed.toLocaleString()}</span>;
 }
 
-function ResultsScreen({ xpResult, newBadges, onDone }) {
+function ResultsScreen({ xpResult, newBadges, traitChanges, onDone }) {
   return (
     <div className="fade-up text-center" style={{ maxWidth: 560, margin: '0 auto' }}>
       <div
@@ -130,6 +131,28 @@ function ResultsScreen({ xpResult, newBadges, onDone }) {
             ))}
           </div>
         </div>
+
+        {/* Trait changes */}
+        {traitChanges && traitChanges.some(t => t.after > t.before) && (
+          <div
+            className="text-left rounded-lg p-4 mb-6"
+            style={{ background: 'var(--navy-700)', border: '1px solid var(--border)' }}
+          >
+            <p className="text-xs font-mono font-bold mb-3" style={{ color: 'var(--muted)', letterSpacing: '0.1em' }}>
+              PERSONNAGE
+            </p>
+            <div className="flex flex-col gap-2">
+              {traitChanges.filter(t => t.after > t.before).map(t => (
+                <div key={t.id} className="flex justify-between text-xs">
+                  <span style={{ color: 'var(--text)' }}>{TRAITS_META[t.id]?.name}</span>
+                  <span className="font-mono font-bold" style={{ color: TRAITS_META[t.id]?.color }}>
+                    {t.before.toFixed(1)} → {t.after.toFixed(1)}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* New badges */}
         {newBadges.length > 0 && (
@@ -178,10 +201,12 @@ export default function WeeklyReview() {
     },
     weekScore: 7,
     comment: '',
+    character: Object.fromEntries(TRAIT_ORDER.map(id => [id, 3])),
   });
 
   const [results, setResults] = useState(null);
   const [newBadges, setNewBadges] = useState([]);
+  const [traitChanges, setTraitChanges] = useState(null);
 
   // Check if review already done this week
   const weekNum = Math.floor(new Date().getTime() / (7 * 24 * 60 * 60 * 1000));
@@ -201,6 +226,13 @@ export default function WeeklyReview() {
     };
     const unlocked = checkBadgeUnlocks(tempState, state.badges);
 
+    const updatedTraits = applyTraitAnswers(state.traits, form.character, form.date);
+    const changes = TRAIT_ORDER.map(id => ({
+      id,
+      before: state.traits[id].current_value,
+      after: updatedTraits[id].current_value,
+    }));
+
     dispatch({
       type: 'COMPLETE_WEEKLY_REVIEW',
       form,
@@ -209,8 +241,9 @@ export default function WeeklyReview() {
     });
 
     setNewBadges(unlocked);
+    setTraitChanges(changes);
     setResults(xpResult);
-    setStep(8);
+    setStep(TOTAL_STEPS + 1);
   };
 
   if (reviewDone && step === 1) {
@@ -235,17 +268,18 @@ export default function WeeklyReview() {
     );
   }
 
-  if (step === 8 && results) {
+  const TOTAL_STEPS = 6;
+
+  if (step === TOTAL_STEPS + 1 && results) {
     return (
       <ResultsScreen
         xpResult={results}
         newBadges={newBadges}
+        traitChanges={traitChanges}
         onDone={() => dispatch({ type: 'NAVIGATE', screen: 'dashboard' })}
       />
     );
   }
-
-  const TOTAL_STEPS = 5;
 
   const updateForm = (key, val) => setForm(f => ({ ...f, [key]: val }));
 
@@ -550,6 +584,48 @@ export default function WeeklyReview() {
                   <span className="font-mono">+{calculateWeeklyXP(form).total} XP</span>
                 </div>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Step 6: Personnage */}
+        {step === 6 && (
+          <div className="fade-up">
+            <h2 className="text-base font-bold mb-1" style={{ color: '#8B6FCA' }}>🧬 Personnage</h2>
+            <p className="text-xs mb-5" style={{ color: 'var(--muted)' }}>
+              Auto-évaluation hebdomadaire. 1 = nettement en dessous de d'habitude, 3 = comme d'habitude, 5 = nettement au-dessus.
+            </p>
+            <div className="flex flex-col gap-5">
+              {TRAIT_ORDER.map(id => {
+                const meta = TRAITS_META[id];
+                const value = form.character[id];
+                return (
+                  <div key={id}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: meta.color }} />
+                      <span className="text-sm font-semibold" style={{ color: 'var(--text)' }}>{meta.name}</span>
+                    </div>
+                    <p className="text-xs mb-2" style={{ color: 'var(--muted)' }}>{meta.question}</p>
+                    <div className="flex gap-2">
+                      {[1, 2, 3, 4, 5].map(n => (
+                        <button
+                          key={n}
+                          type="button"
+                          onClick={() => updateForm('character', { ...form.character, [id]: n })}
+                          className="flex-1 py-2 rounded text-sm font-mono font-bold transition-all"
+                          style={{
+                            background: n === value ? `${meta.color}30` : 'var(--navy-700)',
+                            color: n === value ? meta.color : 'var(--muted2)',
+                            border: n === value ? `1px solid ${meta.color}` : '1px solid var(--border)',
+                          }}
+                        >
+                          {n}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}

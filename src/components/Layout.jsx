@@ -10,6 +10,7 @@ import FinancialMarkets from '../screens/FinancialMarkets';
 import Health from '../screens/Health';
 import Achievements from '../screens/Achievements';
 import LootShop from '../screens/LootShop';
+import Character from '../screens/Character';
 
 const SCREENS = {
   dashboard:    Dashboard,
@@ -20,6 +21,7 @@ const SCREENS = {
   achievements: Achievements,
   review:       WeeklyReview,
   loot:         LootShop,
+  character:    Character,
 };
 
 export default function Layout() {

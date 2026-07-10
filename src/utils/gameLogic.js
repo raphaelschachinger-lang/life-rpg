@@ -214,6 +214,32 @@ export function calculateWeeklyXP(form) {
   return { total, breakdown, perfectWeek: false };
 }
 
+// ── Character traits (weekly self-assessment → incremental gain) ──
+
+const TRAIT_GAIN_STEP = 3; // amplitude per point of deviation from 3 (status quo)
+
+// gain = (réponse - 3) * pas ; new_value = current + max(gain,0) * (1 - current/100)
+// Never punitive: an answer below 3 never lowers the trait (spec §5.3).
+export function calculateTraitGain(answer, currentValue) {
+  const gain = (answer - 3) * TRAIT_GAIN_STEP;
+  return Math.max(gain, 0) * (1 - currentValue / 100);
+}
+
+export function applyTraitAnswers(traits, answers, date) {
+  const updated = { ...traits };
+  Object.entries(answers || {}).forEach(([traitId, answer]) => {
+    const trait = updated[traitId];
+    if (!trait) return;
+    const gain = calculateTraitGain(answer, trait.current_value);
+    updated[traitId] = {
+      ...trait,
+      current_value: Math.min(100, trait.current_value + gain),
+      last_updated: date,
+    };
+  });
+  return updated;
+}
+
 // ── Badge checking ─────────────────────────────────────────────
 
 export function checkBadgeUnlocks(gameState, existingBadges) {
