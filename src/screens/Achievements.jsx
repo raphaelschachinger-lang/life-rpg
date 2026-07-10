@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useGame } from '../context/GameContext';
 import { BADGES, BADGE_CATEGORIES, RARITY_ORDER } from '../data/badges';
 import { getLevelFromXP, formatDate } from '../utils/gameLogic';
-import { Lock, Trophy, Filter } from 'lucide-react';
+import { Lock, Trophy, Filter, RefreshCw } from 'lucide-react';
 
 const RARITY_LABELS = {
   initie:    { label: 'Initié',    cls: 'pill-initie' },
@@ -79,7 +79,7 @@ function BadgeCard({ badge, unlocked, unlockedData }) {
 }
 
 export default function Achievements() {
-  const { state } = useGame();
+  const { state, dispatch } = useGame();
   const { level } = getLevelFromXP(state.player.totalXP);
   const [filterCategory, setFilterCategory] = useState('all');
   const [filterStatus, setFilterStatus] = useState('all');
@@ -114,6 +114,13 @@ export default function Achievements() {
             {unlockedCount} / {totalBadges} badges débloqués · {totalXPFromBadges.toLocaleString()} XP gagnés
           </p>
         </div>
+        <button
+          className="btn btn-ghost flex items-center gap-2 text-xs"
+          title="Re-teste les conditions de tous les badges verrouillés contre l'état actuel (utile après une correction de règle)"
+          onClick={() => dispatch({ type: 'RECHECK_BADGES' })}
+        >
+          <RefreshCw size={12} /> Vérifier les badges
+        </button>
       </div>
 
       {/* Stats row */}

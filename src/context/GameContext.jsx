@@ -481,6 +481,19 @@ function reducer(state, action) {
       };
     }
 
+    case 'RECHECK_BADGES': {
+      const newBadges = checkBadgeUnlocks(state, state.badges);
+      if (newBadges.length === 0) return state;
+      const updatedBadges = { ...state.badges };
+      let badgeXP = 0;
+      newBadges.forEach(b => { updatedBadges[b.id] = { unlockedAt: todayISO(), xpGranted: b.xp }; badgeXP += b.xp; });
+      return {
+        ...state,
+        badges: updatedBadges,
+        player: { ...state.player, totalXP: state.player.totalXP + badgeXP },
+      };
+    }
+
     case 'TOGGLE_VACATION_MODE': {
       return {
         ...state,
