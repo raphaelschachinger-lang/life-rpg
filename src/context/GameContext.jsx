@@ -3,7 +3,6 @@ import {
   getLevelFromXP, calculateStreak, calculateStreakAlternate, checkBadgeUnlocks,
   updateHabitsFromReview, getCurrentWeekDates, todayISO, isDueDay, applyTraitAnswers,
 } from '../utils/gameLogic';
-import { DEFAULT_MILESTONE_STATUS } from '../data/milestones';
 
 const STORAGE_KEY = 'life-rpg-v1';
 
@@ -91,10 +90,12 @@ export const DEFAULT_STATE = {
       last_updated: null,
     },
   },
-  milestones: DEFAULT_MILESTONE_STATUS,
 };
 
 function migrateState(saved) {
+  // Thematic milestones system removed — carte de progression now chapter-based
+  delete saved.milestones;
+
   // noPorn → noJunkFood (only migrate user data, not habit metadata)
   if (saved.habits?.noPorn && !saved.habits?.noJunkFood) {
     const { completions = {}, bestStreak = 0, totalDays = 0 } = saved.habits.noPorn;
@@ -493,16 +494,6 @@ function reducer(state, action) {
         ...state,
         badges: updatedBadges,
         player: { ...state.player, totalXP: state.player.totalXP + badgeXP },
-      };
-    }
-
-    case 'SET_MILESTONE_STATUS': {
-      return {
-        ...state,
-        milestones: {
-          ...state.milestones,
-          [action.id]: { status: action.status, updatedAt: todayISO() },
-        },
       };
     }
 

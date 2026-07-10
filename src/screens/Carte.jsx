@@ -1,251 +1,253 @@
 import React, { useState } from 'react';
 import { useGame } from '../context/GameContext';
-import { getLevelFromXP, getMilestoneStatus } from '../utils/gameLogic';
-import { MILESTONES } from '../data/milestones';
-import { Star, Flag, Check, MapPin, Map, Search } from 'lucide-react';
+import { CHAPTERS, getCurrentChapter, getChapterProgress, formatCurrency } from '../utils/gameLogic';
+import { CHAPTER_INFO } from '../data/chapterInfo';
+import { BADGES } from '../data/badges';
+import { ChevronLeft, ChevronRight, Lock, Check, ArrowRight } from 'lucide-react';
 
-const THEMATIC_COLOR = '#E4A94B';
-const GENERIC_COLOR = '#388BDC';
-const DONE_COLOR = '#3DC98A';
+// ── Path geometry (vertical serpentine, 4 nodes) ──────────────────
 
-const STATUS_LABEL = { not_started: 'À venir', in_progress: 'En cours', done: 'Terminé' };
-const NEXT_STATUS = { not_started: 'in_progress', in_progress: 'done', done: 'not_started' };
+const VIEW_W = 640;
+const NODE_R = 64;
+const NODES = [
+  { x: 170, y: 150 },
+  { x: 470, y: 490 },
+  { x: 170, y: 830 },
+  { x: 470, y: 1170 },
+];
+const VIEW_H = 1360;
 
-function nodeColor(milestone, status) {
-  if (status === 'done') return DONE_COLOR;
-  if (status === 'not_started') return 'var(--muted2)';
-  return milestone.type === 'thematic' ? THEMATIC_COLOR : GENERIC_COLOR;
+function segmentControls(p0, p3) {
+  const midY = p0.y + (p3.y - p0.y) * 0.5;
+  return { c1: { x: p0.x, y: midY }, c2: { x: p3.x, y: midY } };
 }
 
-function MilestoneNode({ milestone, status, onClick, size = 36 }) {
-  const Icon = milestone.type === 'thematic' ? Star : Flag;
-  const color = nodeColor(milestone, status);
-  const clickable = milestone.type === 'thematic';
-  return (
-    <button
-      type="button"
-      className={status === 'in_progress' ? 'pulse-node' : ''}
-      onClick={clickable ? onClick : undefined}
-      title={clickable ? `${milestone.title} — cliquer pour changer le statut (${STATUS_LABEL[status]})` : `${milestone.title} (${STATUS_LABEL[status]})`}
-      style={{
-        width: size, height: size, borderRadius: '50%', flexShrink: 0,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        background: status === 'not_started' ? 'var(--navy-700)' : `${color}22`,
-        border: `2px solid ${color}`,
-        color,
-        cursor: clickable ? 'pointer' : 'default',
-        transition: 'all 0.15s',
-      }}
-    >
-      {status === 'done' ? <Check size={size * 0.5} /> : <Icon size={size * 0.42} />}
-    </button>
-  );
+function bezierPoint(p0, c1, c2, p3, t) {
+  const mt = 1 - t;
+  return {
+    x: mt ** 3 * p0.x + 3 * mt ** 2 * t * c1.x + 3 * mt * t ** 2 * c2.x + t ** 3 * p3.x,
+    y: mt ** 3 * p0.y + 3 * mt ** 2 * t * c1.y + 3 * mt * t ** 2 * c2.y + t ** 3 * p3.y,
+  };
 }
 
-function MacroView({ sorted, state, currentLevel, maxLevel, cycleStatus }) {
-  const currentPct = Math.min(100, (currentLevel / maxLevel) * 100);
-  return (
-    <div className="card" style={{ padding: '48px 32px 64px' }}>
-      <div style={{ position: 'relative', height: 2 }}>
-        {/* Path — parcouru (plein) puis à venir (pointillé) */}
-        <div style={{ position: 'absolute', top: 0, left: 0, width: `${currentPct}%`, height: 2, background: 'var(--blue)' }} />
-        <div style={{ position: 'absolute', top: 0, left: `${currentPct}%`, right: 0, height: 0, borderTop: '2px dashed var(--border2)' }} />
-
-        {/* Position actuelle */}
-        <div
-          style={{ position: 'absolute', top: 0, left: `${currentPct}%`, transform: 'translate(-50%, -100%)', textAlign: 'center', marginBottom: 8 }}
-        >
-          <div className="flex flex-col items-center" style={{ marginBottom: 6 }}>
-            <span className="text-xs font-mono font-bold" style={{ color: 'var(--blue)', whiteSpace: 'nowrap' }}>
-              Toi · Niveau {currentLevel}
-            </span>
-            <MapPin size={20} style={{ color: 'var(--blue)' }} />
-          </div>
-        </div>
-
-        {/* Jalons */}
-        {sorted.map((m, i) => {
-          const pct = Math.min(100, (m.target_level / maxLevel) * 100);
-          const status = getMilestoneStatus(m, state.milestones, currentLevel);
-          const labelBelow = i % 2 === 1;
-          return (
-            <div
-              key={m.id}
-              style={{ position: 'absolute', top: 0, left: `${pct}%`, transform: 'translate(-50%, -50%)' }}
-            >
-              <div className="flex flex-col items-center" style={{ gap: 6 }}>
-                {!labelBelow && (
-                  <div style={{ textAlign: 'center', marginBottom: 4, minWidth: 90 }}>
-                    <p className="text-xs font-semibold" style={{ color: 'var(--text)', whiteSpace: 'nowrap' }}>{m.title}</p>
-                    {m.subtitle && <p className="text-xs" style={{ color: 'var(--muted2)', fontSize: 10 }}>{m.subtitle}</p>}
-                  </div>
-                )}
-                <MilestoneNode milestone={m} status={status} onClick={() => cycleStatus(m.id)} />
-                {labelBelow && (
-                  <div style={{ textAlign: 'center', marginTop: 4, minWidth: 90 }}>
-                    <p className="text-xs font-semibold" style={{ color: 'var(--text)', whiteSpace: 'nowrap' }}>{m.title}</p>
-                    {m.subtitle && <p className="text-xs" style={{ color: 'var(--muted2)', fontSize: 10 }}>{m.subtitle}</p>}
-                  </div>
-                )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Legend */}
-      <div className="flex flex-wrap gap-4 justify-center mt-16 pt-6" style={{ borderTop: '1px solid var(--border)' }}>
-        <div className="flex items-center gap-2">
-          <Star size={14} style={{ color: THEMATIC_COLOR }} /> <span className="text-xs" style={{ color: 'var(--muted)' }}>Jalon thématique</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Flag size={14} style={{ color: GENERIC_COLOR }} /> <span className="text-xs" style={{ color: 'var(--muted)' }}>Jalon générique</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Check size={14} style={{ color: DONE_COLOR }} /> <span className="text-xs" style={{ color: 'var(--muted)' }}>Terminé</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="pulse-node" style={{ width: 10, height: 10, borderRadius: '50%', background: THEMATIC_COLOR, color: THEMATIC_COLOR, display: 'inline-block' }} />
-          <span className="text-xs" style={{ color: 'var(--muted)' }}>En cours</span>
-        </div>
-      </div>
-    </div>
-  );
+function sampleBezier(p0, c1, c2, p3, steps = 40) {
+  return Array.from({ length: steps + 1 }, (_, i) => bezierPoint(p0, c1, c2, p3, i / steps));
 }
 
-function ZoomView({ sorted, state, currentLevel, cycleStatus }) {
-  const range = 5;
-  const start = Math.max(1, currentLevel - range);
-  const end = currentLevel + range;
-  const levels = Array.from({ length: end - start + 1 }, (_, i) => start + i);
-  const nearbyThematic = sorted.filter(m => m.type === 'thematic');
-
-  return (
-    <div className="card" style={{ padding: 24 }}>
-      <p className="text-xs font-mono mb-4" style={{ color: 'var(--muted)', letterSpacing: '0.1em' }}>
-        CHAPITRE ACTUEL · NIVEAU {start} À {end}
-      </p>
-      <div className="flex gap-2 mb-8 flex-wrap">
-        {levels.map(lvl => {
-          const milestone = sorted.find(m => m.target_level === lvl);
-          const isCurrent = lvl === currentLevel;
-          const status = milestone ? getMilestoneStatus(milestone, state.milestones, currentLevel) : null;
-          const color = milestone ? nodeColor(milestone, status) : (lvl <= currentLevel ? 'var(--blue)' : 'var(--muted2)');
-          return (
-            <div key={lvl} className="flex flex-col items-center" style={{ gap: 4, minWidth: 44 }}>
-              <button
-                type="button"
-                onClick={milestone?.type === 'thematic' ? () => cycleStatus(milestone.id) : undefined}
-                title={milestone ? `${milestone.title}${milestone.subtitle ? ' — ' + milestone.subtitle : ''}` : `Niveau ${lvl}`}
-                className={status === 'in_progress' ? 'pulse-node' : ''}
-                style={{
-                  width: isCurrent ? 40 : 32, height: isCurrent ? 40 : 32, borderRadius: '50%',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: isCurrent ? 'var(--blue)' : (lvl <= currentLevel ? 'var(--blue-dim)' : 'var(--navy-700)'),
-                  border: milestone ? `2px solid ${color}` : `1px solid ${lvl <= currentLevel ? 'var(--blue)' : 'var(--border)'}`,
-                  color: isCurrent ? '#fff' : color,
-                  fontFamily: 'JetBrains Mono, monospace',
-                  fontSize: 11, fontWeight: 700,
-                  cursor: milestone?.type === 'thematic' ? 'pointer' : 'default',
-                }}
-              >
-                {milestone ? (milestone.type === 'thematic' ? <Star size={14} /> : <Flag size={14} />) : lvl}
-              </button>
-              {milestone && (
-                <span className="text-xs text-center" style={{ color: 'var(--muted2)', fontSize: 9, maxWidth: 60 }}>
-                  {milestone.title}
-                </span>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      <p className="text-xs font-mono mb-3" style={{ color: 'var(--muted)', letterSpacing: '0.1em' }}>
-        JALONS THÉMATIQUES
-      </p>
-      <div className="flex flex-col gap-2">
-        {nearbyThematic.map(m => {
-          const status = getMilestoneStatus(m, state.milestones, currentLevel);
-          const color = nodeColor(m, status);
-          return (
-            <div
-              key={m.id}
-              className="flex items-center justify-between p-3 rounded-lg"
-              style={{ background: 'var(--navy-700)', border: '1px solid var(--border)' }}
-            >
-              <div className="flex items-center gap-3">
-                <MilestoneNode milestone={m} status={status} onClick={() => cycleStatus(m.id)} size={28} />
-                <div>
-                  <p className="text-sm font-semibold" style={{ color: 'var(--text)' }}>{m.title}</p>
-                  <p className="text-xs" style={{ color: 'var(--muted2)' }}>{m.subtitle} · Niveau visé {m.target_level}</p>
-                </div>
-              </div>
-              <button
-                type="button"
-                className="btn btn-ghost text-xs"
-                style={{ color, borderColor: `${color}60` }}
-                onClick={() => cycleStatus(m.id)}
-              >
-                {STATUS_LABEL[status]}
-              </button>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
+function pathD(p0, c1, c2, p3) {
+  return `M ${p0.x} ${p0.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${p3.x} ${p3.y}`;
 }
+
+function pointsAttr(points) {
+  return points.map(p => `${p.x},${p.y}`).join(' ');
+}
+
+// ── Component ───────────────────────────────────────────────────
 
 export default function Carte() {
   const { state, dispatch } = useGame();
-  const { level: currentLevel, xpInLevel, xpNeeded } = getLevelFromXP(state.player.totalXP);
-  const [view, setView] = useState('macro');
+  const currentChapter = getCurrentChapter(state.patrimoine.current);
+  const currentIndex = CHAPTERS.findIndex(c => c.id === currentChapter.id);
+  const [selectedIndex, setSelectedIndex] = useState(currentIndex);
 
-  const sorted = [...MILESTONES].sort((a, b) => a.target_level - b.target_level);
-  const maxLevel = Math.max(currentLevel, ...sorted.map(m => m.target_level)) + 3;
+  const selected = CHAPTERS[selectedIndex];
+  const selectedInfo = CHAPTER_INFO[selected.id];
+  const selectedPct = getChapterProgress(state.patrimoine.current, selected);
 
-  const cycleStatus = (id) => {
-    const current = state.milestones[id]?.status || 'not_started';
-    dispatch({ type: 'SET_MILESTONE_STATUS', id, status: NEXT_STATUS[current] });
-  };
+  const segments = CHAPTERS.slice(0, -1).map((_, i) => {
+    const p0 = NODES[i], p3 = NODES[i + 1];
+    const { c1, c2 } = segmentControls(p0, p3);
+    return { p0, c1, c2, p3, points: sampleBezier(p0, c1, c2, p3) };
+  });
 
-  const pct = Math.min(100, (xpInLevel / xpNeeded) * 100);
+  // Marker: current position along the current segment (or pinned to the last node in chapter 4)
+  const currentSegmentPct = currentIndex < 3 ? getChapterProgress(state.patrimoine.current, CHAPTERS[currentIndex]) : 100;
+  const markerT = Math.min(1, Math.max(0, currentSegmentPct / 100));
+  const markerPos = currentIndex < 3
+    ? bezierPoint(segments[currentIndex].p0, segments[currentIndex].c1, segments[currentIndex].c2, segments[currentIndex].p3, markerT)
+    : NODES[3];
 
   return (
     <div className="fade-up" style={{ maxWidth: 1000 }}>
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-xl font-bold" style={{ color: 'var(--text)' }}>Carte de progression</h1>
-          <p className="text-sm" style={{ color: 'var(--muted)' }}>
-            Niveau {currentLevel} · {xpInLevel.toLocaleString()} / {xpNeeded.toLocaleString()} XP vers le niveau suivant
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <button
-            className={`btn flex items-center gap-2 text-xs ${view === 'macro' ? 'btn-primary' : 'btn-ghost'}`}
-            onClick={() => setView('macro')}
-          >
-            <Map size={13} /> Vue macro
-          </button>
-          <button
-            className={`btn flex items-center gap-2 text-xs ${view === 'zoom' ? 'btn-primary' : 'btn-ghost'}`}
-            onClick={() => setView('zoom')}
-          >
-            <Search size={13} /> Vue zoom
-          </button>
-        </div>
+      <div className="mb-6">
+        <h1 className="text-xl font-bold" style={{ color: 'var(--text)' }}>Carte de progression</h1>
+        <p className="text-sm" style={{ color: 'var(--muted)' }}>
+          {formatCurrency(state.patrimoine.current)} · Chapitre {currentChapter.id} — {currentChapter.name}
+        </p>
       </div>
 
-      <div className="progress-bar mb-6" style={{ height: 6, borderRadius: 3 }}>
-        <div className="progress-bar-fill" style={{ width: `${pct}%`, background: 'var(--blue)' }} />
+      {/* Serpentine path */}
+      <div className="card mb-6" style={{ padding: 16, overflow: 'hidden' }}>
+        <svg viewBox={`0 0 ${VIEW_W} ${VIEW_H}`} style={{ width: '100%', height: 'auto', display: 'block' }}>
+          {/* Chapter zone backdrops */}
+          {CHAPTERS.map((c, i) => (
+            <rect
+              key={c.id}
+              x={0} y={NODES[i].y - 175} width={VIEW_W} height={350}
+              fill={c.color} opacity={0.04} rx={24}
+            />
+          ))}
+
+          {/* Base path — full route, dashed/muted */}
+          {segments.map((seg, i) => (
+            <path key={i} d={pathD(seg.p0, seg.c1, seg.c2, seg.p3)}
+              fill="none" stroke="var(--border2)" strokeWidth={5} strokeDasharray="2 14" strokeLinecap="round" />
+          ))}
+
+          {/* Solid overlay — completed segments */}
+          {segments.map((seg, i) => i < currentIndex && (
+            <polyline key={`solid-${i}`} points={pointsAttr(seg.points)}
+              fill="none" stroke={CHAPTERS[i + 1].color} strokeWidth={5} strokeLinecap="round" opacity={0.85} />
+          ))}
+
+          {/* Solid overlay — current (in-progress) segment, up to marker */}
+          {currentIndex < 3 && (
+            <polyline
+              points={pointsAttr(segments[currentIndex].points.slice(0, Math.ceil(markerT * 40) + 1))}
+              fill="none" stroke={CHAPTERS[currentIndex].color} strokeWidth={5} strokeLinecap="round" opacity={0.85}
+            />
+          )}
+
+          {/* Nodes */}
+          {CHAPTERS.map((chapter, i) => {
+            const pos = NODES[i];
+            const status = i < currentIndex ? 'done' : i === currentIndex ? 'current' : 'locked';
+            const info = CHAPTER_INFO[chapter.id];
+            const isSelected = i === selectedIndex;
+            return (
+              <g
+                key={chapter.id}
+                onClick={() => setSelectedIndex(i)}
+                style={{ cursor: 'pointer' }}
+              >
+                <circle
+                  cx={pos.x} cy={pos.y} r={NODE_R}
+                  fill={status === 'locked' ? 'var(--navy-700)' : `${chapter.color}22`}
+                  stroke={isSelected ? chapter.color : (status === 'locked' ? 'var(--border2)' : chapter.color)}
+                  strokeWidth={isSelected ? 4 : 2.5}
+                  opacity={status === 'locked' ? 0.55 : 1}
+                />
+                {status === 'current' && (
+                  <circle cx={pos.x} cy={pos.y} r={NODE_R + 8} fill="none" stroke={chapter.color} strokeWidth={2} opacity={0.5}>
+                    <animate attributeName="r" values={`${NODE_R + 6};${NODE_R + 16};${NODE_R + 6}`} dur="2.2s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0.5;0;0.5" dur="2.2s" repeatCount="indefinite" />
+                  </circle>
+                )}
+                <text x={pos.x} y={pos.y + 16} textAnchor="middle" fontSize={44}>
+                  {status === 'locked' ? '🔒' : info.icon}
+                </text>
+                <text x={pos.x} y={pos.y + NODE_R + 30} textAnchor="middle" fontSize={16} fontWeight={700}
+                  fill="var(--text)" fontFamily="Inter, sans-serif">
+                  {chapter.name}
+                </text>
+                <text x={pos.x} y={pos.y + NODE_R + 50} textAnchor="middle" fontSize={12}
+                  fill="var(--muted)" fontFamily="Inter, sans-serif">
+                  {chapter.period}
+                </text>
+                <text x={pos.x} y={pos.y + NODE_R + 68} textAnchor="middle" fontSize={12} fontWeight={700}
+                  fill={chapter.color} fontFamily="JetBrains Mono, monospace">
+                  {formatCurrency(chapter.target)}
+                </text>
+              </g>
+            );
+          })}
+
+          {/* "You are here" marker */}
+          <g>
+            <circle cx={markerPos.x} cy={markerPos.y} r={10} fill="var(--blue)" stroke="#fff" strokeWidth={2}>
+              <animate attributeName="r" values="9;12;9" dur="1.4s" repeatCount="indefinite" />
+            </circle>
+            <text x={markerPos.x} y={markerPos.y - 20} textAnchor="middle" fontSize={12} fontWeight={700}
+              fill="var(--blue)" fontFamily="JetBrains Mono, monospace">
+              Toi
+            </text>
+          </g>
+        </svg>
       </div>
 
-      {view === 'macro' ? (
-        <MacroView sorted={sorted} state={state} currentLevel={currentLevel} maxLevel={maxLevel} cycleStatus={cycleStatus} />
-      ) : (
-        <ZoomView sorted={sorted} state={state} currentLevel={currentLevel} cycleStatus={cycleStatus} />
-      )}
+      {/* Detail panel — selected chapter */}
+      <div className="card" style={{ borderTop: `2px solid ${selected.color}`, padding: 24 }}>
+        <div className="flex items-center justify-between mb-4">
+          <button
+            className="btn btn-ghost flex items-center gap-1 text-xs"
+            disabled={selectedIndex === 0}
+            style={selectedIndex === 0 ? { opacity: 0.3, cursor: 'default' } : {}}
+            onClick={() => selectedIndex > 0 && setSelectedIndex(selectedIndex - 1)}
+          >
+            <ChevronLeft size={14} /> Précédent
+          </button>
+          <div className="text-center">
+            <p className="text-xs font-mono" style={{ color: 'var(--muted)', letterSpacing: '0.1em' }}>
+              CHAPITRE {selected.id}
+            </p>
+            <h2 className="text-lg font-bold" style={{ color: selected.color }}>{selected.name}</h2>
+          </div>
+          <button
+            className="btn btn-ghost flex items-center gap-1 text-xs"
+            disabled={selectedIndex === CHAPTERS.length - 1}
+            style={selectedIndex === CHAPTERS.length - 1 ? { opacity: 0.3, cursor: 'default' } : {}}
+            onClick={() => selectedIndex < CHAPTERS.length - 1 && setSelectedIndex(selectedIndex + 1)}
+          >
+            Suivant <ChevronRight size={14} />
+          </button>
+        </div>
+
+        <div className="flex items-center justify-between text-xs mb-1" style={{ color: 'var(--muted)' }}>
+          <span>{selected.period}</span>
+          <span>Boss final : <strong style={{ color: selected.color }}>{formatCurrency(selected.target)}</strong></span>
+        </div>
+        <div className="progress-bar mb-2" style={{ height: 8, borderRadius: 4 }}>
+          <div className="progress-bar-fill" style={{ width: `${selectedPct}%`, background: selected.color }} />
+        </div>
+        <p className="text-xs font-mono mb-5" style={{ color: selected.color }}>{selectedPct.toFixed(2)}% accompli</p>
+
+        {selectedIndex < CHAPTERS.length - 1 && (
+          <div className="text-xs mb-5 p-3 rounded-lg" style={{ background: 'var(--navy-700)', border: '1px solid var(--border)' }}>
+            <span style={{ color: 'var(--muted)' }}>Déverrouille le chapitre suivant : </span>
+            <span style={{ color: 'var(--text)' }}>{selectedInfo.unlockCondition}</span>
+          </div>
+        )}
+
+        <p className="text-xs font-mono mb-3" style={{ color: 'var(--muted)', letterSpacing: '0.1em' }}>
+          JALONS DE CE CHAPITRE
+        </p>
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          {selectedInfo.milestoneBadges.map(id => {
+            const badge = BADGES[id];
+            if (!badge) return null;
+            const unlocked = !!state.badges[id];
+            return (
+              <div
+                key={id}
+                className="flex items-center gap-3 p-2 rounded-lg"
+                style={{
+                  background: unlocked ? `${selected.color}12` : 'var(--navy-700)',
+                  border: `1px solid ${unlocked ? `${selected.color}40` : 'var(--border)'}`,
+                  opacity: unlocked ? 1 : 0.6,
+                }}
+              >
+                <span className="text-xl flex-shrink-0" style={{ filter: unlocked ? 'none' : 'grayscale(1)' }}>
+                  {badge.icon}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold truncate" style={{ color: 'var(--text)' }}>{badge.name}</p>
+                  <p className="text-xs truncate" style={{ color: 'var(--muted2)', fontSize: 10 }}>{badge.description}</p>
+                </div>
+                {unlocked
+                  ? <Check size={14} style={{ color: '#3DC98A', flexShrink: 0 }} />
+                  : <Lock size={12} style={{ color: 'var(--muted2)', flexShrink: 0 }} />}
+              </div>
+            );
+          })}
+        </div>
+
+        <button
+          className="btn btn-ghost text-xs flex items-center gap-1"
+          onClick={() => dispatch({ type: 'NAVIGATE', screen: 'achievements' })}
+        >
+          Voir tous les badges <ArrowRight size={12} />
+        </button>
+      </div>
     </div>
   );
 }
