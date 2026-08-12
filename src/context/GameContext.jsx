@@ -30,12 +30,12 @@ export const DEFAULT_STATE = {
     health:     { totalXP: 0 },
   },
   habits: {
-    sport:     { ...HABIT_DEFAULTS(), name: 'Sport', xpPerDay: 10, color: '#3DC98A', frequency: 'alternate', frequencyStartDate: '2026-06-29' },
-    noSmoke:   { ...HABIT_DEFAULTS(), name: 'Zéro cigarette', xpPerDay: 15, color: '#388BDC' },
-    noAlcohol: { ...HABIT_DEFAULTS(), name: 'Zéro alcool', xpPerDay: 10, color: '#8B6FCA', vacationMode: false },
-    reading:   { ...HABIT_DEFAULTS(), name: 'Lecture', xpPerDay: 10, color: '#E4A94B' },
-    noSocial:  { ...HABIT_DEFAULTS(), name: 'Zéro réseaux sociaux', xpPerDay: 15, color: '#2EC4B6' },
-    noJunkFood: { ...HABIT_DEFAULTS(), name: 'No Junk Food', xpPerDay: 15, color: '#E05C5C' },
+    sport:     { ...HABIT_DEFAULTS(), name: 'Sport', xpPerDay: 10, color: '#4fe8d1', frequency: 'alternate', frequencyStartDate: '2026-06-29' },
+    noSmoke:   { ...HABIT_DEFAULTS(), name: 'Zéro cigarette', xpPerDay: 15, color: '#4fe8d1' },
+    noAlcohol: { ...HABIT_DEFAULTS(), name: 'Zéro alcool', xpPerDay: 10, color: '#4fe8d1', vacationMode: false },
+    reading:   { ...HABIT_DEFAULTS(), name: 'Lecture', xpPerDay: 10, color: '#4fe8d1' },
+    noSocial:  { ...HABIT_DEFAULTS(), name: 'Zéro réseaux sociaux', xpPerDay: 15, color: '#4fe8d1' },
+    noJunkFood: { ...HABIT_DEFAULTS(), name: 'No Junk Food', xpPerDay: 15, color: '#4fe8d1' },
   },
   trading: {
     weeklyLogs: [],

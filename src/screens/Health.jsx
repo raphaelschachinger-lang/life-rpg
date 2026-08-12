@@ -39,7 +39,7 @@ function HabitCard({ habitKey, habit, vacationMode, onToggleVacation, onToggleDa
   const doneThisWeek = isAlternate ? grid.filter(d => d.done && d.due).length : grid.filter(d => d.done).length;
   const target = isAlternate ? dueCount : 7;
   const ratio = target > 0 ? doneThisWeek / target : 0;
-  const scoreColor = ratio >= 1 ? '#3DC98A' : ratio >= 0.5 ? '#E4A94B' : '#E05C5C';
+  const scoreColor = ratio >= 0.8 ? '#4fe8d1' : '#ffb454';
   const nextBonus = STREAK_BONUSES[habitKey]?.find(b => b.days > habit.currentStreak);
   const isVacationSuspended = habitKey === 'noAlcohol' && vacationMode;
 
@@ -50,7 +50,7 @@ function HabitCard({ habitKey, habit, vacationMode, onToggleVacation, onToggleDa
           <div className="flex items-center gap-2">
             <span className="text-sm font-bold" style={{ color: 'var(--text)' }}>{habit.name}</span>
             {isVacationSuspended && (
-              <span className="pill" style={{ background: 'rgba(228,169,75,0.15)', color: '#E4A94B', fontSize: 9 }}>
+              <span className="pill" style={{ background: 'rgba(79,232,209,0.15)', color: '#4fe8d1', fontSize: 9 }}>
                 MODE VACANCES
               </span>
             )}
@@ -122,7 +122,7 @@ function HabitCard({ habitKey, habit, vacationMode, onToggleVacation, onToggleDa
 
         {nextBonus && (
           <span className="text-xs" style={{ color: 'var(--muted)' }}>
-            Prochain bonus: <span className="font-mono" style={{ color: '#3DC98A' }}>+{nextBonus.xp} XP</span>
+            Prochain bonus: <span className="font-mono" style={{ color: '#4fe8d1' }}>+{nextBonus.xp} XP</span>
             {' '}à {nextBonus.days}j
           </span>
         )}
@@ -175,7 +175,7 @@ export default function Health() {
   });
 
   const weeklyScore = totalPossible > 0 ? (totalDone / totalPossible) * 100 : 0;
-  const scoreColor = weeklyScore >= 80 ? '#3DC98A' : weeklyScore >= 50 ? '#E4A94B' : '#E05C5C';
+  const scoreColor = weeklyScore >= 80 ? '#4fe8d1' : '#ffb454';
 
   // Combined streak across all habits (sport's alternate-day rest days don't break it)
   const { current: minStreak } = calculateGlobalStreak(habits);
@@ -189,45 +189,45 @@ export default function Health() {
       </div>
 
       {/* Level bar */}
-      <div className="card mb-6" style={{ padding: '12px 16px', borderTop: '2px solid #E05C5C' }}>
+      <div className="card mb-6" style={{ padding: '12px 16px' }}>
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-mono font-bold" style={{ color: '#E05C5C' }}>Health Niveau {vLevel}</span>
+          <span className="text-xs font-mono font-bold" style={{ color: 'var(--cyan)' }}>Health Niveau {vLevel}</span>
           <span className="text-xs font-mono" style={{ color: 'var(--muted)' }}>
             {xpInLevel.toLocaleString()} / {xpNeeded.toLocaleString()} XP
           </span>
         </div>
         <div className="progress-bar" style={{ height: 6, borderRadius: 3 }}>
           <div className="progress-bar-fill"
-            style={{ width: `${Math.min(100, (xpInLevel / xpNeeded) * 100)}%`, background: '#E05C5C' }} />
+            style={{ width: `${Math.min(100, (xpInLevel / xpNeeded) * 100)}%` }} />
         </div>
       </div>
 
       {/* KPI row */}
       <div className="grid grid-cols-4 gap-4 mb-6">
-        <div className="card" style={{ borderTop: '2px solid #E05C5C' }}>
+        <div className="card">
           <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>Score semaine</p>
           <p className="font-mono font-bold text-2xl" style={{ color: scoreColor }}>
             {weeklyScore.toFixed(0)}%
           </p>
           <p className="text-xs" style={{ color: 'var(--muted)' }}>{totalDone}/{totalPossible} jours</p>
         </div>
-        <div className="card" style={{ borderTop: '2px solid #E05C5C' }}>
+        <div className="card">
           <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>Streak minimum</p>
-          <p className="font-mono font-bold text-2xl" style={{ color: minStreak > 0 ? '#3DC98A' : '#E05C5C' }}>
+          <p className="font-mono font-bold text-2xl" style={{ color: minStreak > 0 ? '#4fe8d1' : '#ffb454' }}>
             {minStreak}j
           </p>
           <p className="text-xs" style={{ color: 'var(--muted)' }}>toutes habitudes</p>
         </div>
-        <div className="card" style={{ borderTop: '2px solid #E05C5C' }}>
+        <div className="card">
           <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>Jours validés total</p>
           <p className="font-mono font-bold text-2xl" style={{ color: 'var(--text)' }}>
             {totalHabitDays}
           </p>
           <p className="text-xs" style={{ color: 'var(--muted)' }}>toutes habitudes</p>
         </div>
-        <div className="card" style={{ borderTop: '2px solid #E05C5C' }}>
+        <div className="card">
           <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>Mode vacances</p>
-          <p className="font-mono font-bold text-lg" style={{ color: vacationMode ? '#E4A94B' : 'var(--muted2)' }}>
+          <p className="font-mono font-bold text-lg" style={{ color: vacationMode ? '#4fe8d1' : 'var(--muted2)' }}>
             {vacationMode ? '🏖️ Actif' : 'Inactif'}
           </p>
           <p className="text-xs" style={{ color: 'var(--muted)' }}>alcool suspendu</p>
@@ -235,7 +235,7 @@ export default function Health() {
       </div>
 
       {/* Weekly score bar */}
-      <div className="card card-red mb-6">
+      <div className="card mb-6">
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm font-bold" style={{ color: 'var(--text)' }}>Score santé hebdomadaire</span>
           <span className="font-mono font-bold text-xl" style={{ color: scoreColor }}>
@@ -249,9 +249,8 @@ export default function Health() {
           />
         </div>
         <div className="flex justify-between text-xs mt-2" style={{ color: 'var(--muted)' }}>
-          <span style={{ color: '#E05C5C' }}>Rouge &lt;50%</span>
-          <span style={{ color: '#E4A94B' }}>Orange 50–79%</span>
-          <span style={{ color: '#3DC98A' }}>Vert ≥80%</span>
+          <span style={{ color: '#ffb454' }}>&lt; 80% — à surveiller</span>
+          <span style={{ color: '#4fe8d1' }}>≥ 80% — sur la cible</span>
         </div>
       </div>
 
@@ -294,7 +293,7 @@ export default function Health() {
                         {h.currentStreak >= b.days ? '✓' : ''}
                       </span>
                       <span className="text-xs" style={{ color: 'var(--muted)' }}>{b.days}j</span>
-                      <span className="text-xs font-mono" style={{ color: '#3DC98A' }}>+{b.xp}XP</span>
+                      <span className="text-xs font-mono" style={{ color: '#4fe8d1' }}>+{b.xp}XP</span>
                     </div>
                   ))}
                 </div>

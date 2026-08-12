@@ -7,9 +7,9 @@ import {
 import { Plus, X, TrendingUp, TrendingDown, Edit2 } from 'lucide-react';
 
 const STATUS_CONFIG = {
-  challenge: { label: 'En challenge', color: '#E4A94B' },
-  funded:    { label: 'Funded',       color: '#3DC98A' },
-  lost:      { label: 'Perdu',        color: '#E05C5C' },
+  challenge: { label: 'En challenge', color: '#ffb454' },
+  funded:    { label: 'Funded',       color: '#4fe8d1' },
+  lost:      { label: 'Perdu',        color: '#ffb454' },
 };
 
 function PropfirmCard({ pf, onUpdate, onRemove }) {
@@ -34,14 +34,14 @@ function PropfirmCard({ pf, onUpdate, onRemove }) {
           <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>
             Capital: <span className="font-mono" style={{ color: 'var(--text)' }}>{formatCurrency(pf.capital)}</span>
             {' · '}
-            DD Max: <span className="font-mono" style={{ color: '#E05C5C' }}>{pf.maxDrawdown}%</span>
+            DD Max: <span className="font-mono" style={{ color: '#ffb454' }}>{pf.maxDrawdown}%</span>
           </p>
         </div>
         <div className="flex gap-1">
           <button className="btn btn-ghost" style={{ padding: '4px 8px' }} onClick={() => setEditing(!editing)}>
             <Edit2 size={12} />
           </button>
-          <button className="btn btn-ghost" style={{ padding: '4px 8px', color: '#E05C5C' }} onClick={() => onRemove(pf.id)}>
+          <button className="btn btn-ghost" style={{ padding: '4px 8px', color: '#ffb454' }} onClick={() => onRemove(pf.id)}>
             <X size={12} />
           </button>
         </div>
@@ -53,7 +53,7 @@ function PropfirmCard({ pf, onUpdate, onRemove }) {
           <p className="text-xs" style={{ color: 'var(--muted)' }}>P&L actuel</p>
           <p
             className="text-xl font-mono font-bold"
-            style={{ color: pf.pnl >= 0 ? '#3DC98A' : '#E05C5C' }}
+            style={{ color: pf.pnl >= 0 ? '#4fe8d1' : '#ffb454' }}
           >
             {pf.pnl >= 0 ? '+' : ''}{formatCurrency(pf.pnl)}
           </p>
@@ -62,14 +62,14 @@ function PropfirmCard({ pf, onUpdate, onRemove }) {
           <p className="text-xs" style={{ color: 'var(--muted)' }}>Performance</p>
           <p
             className="text-xl font-mono font-bold"
-            style={{ color: pf.pnl >= 0 ? '#3DC98A' : '#E05C5C' }}
+            style={{ color: pf.pnl >= 0 ? '#4fe8d1' : '#ffb454' }}
           >
             {pf.pnl >= 0 ? '+' : ''}{pnlPct}%
           </p>
         </div>
         <div>
           <p className="text-xs" style={{ color: 'var(--muted)' }}>Marge DD</p>
-          <p className="text-xl font-mono font-bold" style={{ color: '#E4A94B' }}>
+          <p className="text-xl font-mono font-bold" style={{ color: '#4fe8d1' }}>
             {Math.max(0, pf.maxDrawdown + Number(pnlPct)).toFixed(1)}%
           </p>
         </div>
@@ -150,34 +150,34 @@ export default function Trading() {
           <h1 className="text-xl font-bold" style={{ color: 'var(--text)' }}>Trading</h1>
           <p className="text-sm" style={{ color: 'var(--muted)' }}>Vertical Trading · Niveau {vLevel}</p>
         </div>
-        <button className="btn flex items-center gap-2" style={{ background: '#3DC98A', color: '#000' }} onClick={() => setShowAddPF(true)}>
+        <button className="btn flex items-center gap-2" style={{ background: '#4fe8d1', color: '#04211d' }} onClick={() => setShowAddPF(true)}>
           <Plus size={14} /> Ajouter une propfirm
         </button>
       </div>
 
       {/* Level bar */}
-      <div className="card mb-6" style={{ padding: '12px 16px', borderTop: '2px solid #3DC98A' }}>
+      <div className="card mb-6" style={{ padding: '12px 16px', borderTop: '2px solid #4fe8d1' }}>
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-mono font-bold" style={{ color: '#3DC98A' }}>Trading Niveau {vLevel}</span>
+          <span className="text-xs font-mono font-bold" style={{ color: '#4fe8d1' }}>Trading Niveau {vLevel}</span>
           <span className="text-xs font-mono" style={{ color: 'var(--muted)' }}>
             {xpInLevel.toLocaleString()} / {xpNeeded.toLocaleString()} XP
           </span>
         </div>
         <div className="progress-bar" style={{ height: 6, borderRadius: 3 }}>
           <div className="progress-bar-fill"
-            style={{ width: `${Math.min(100, (xpInLevel / xpNeeded) * 100)}%`, background: '#3DC98A' }} />
+            style={{ width: `${Math.min(100, (xpInLevel / xpNeeded) * 100)}%`, background: '#4fe8d1' }} />
         </div>
       </div>
 
       {/* KPIs */}
       <div className="grid grid-cols-4 gap-4 mb-6">
         {[
-          { label: 'P&L total', value: `${totalPnL >= 0 ? '+' : ''}${formatCurrency(totalPnL)}`, color: totalPnL >= 0 ? '#3DC98A' : '#E05C5C' },
-          { label: 'Semaines positives', value: `${positiveWeeks}/${state.trading.weeklyLogs.length}`, color: '#3DC98A' },
-          { label: 'Win rate hebdo', value: `${winRate}%`, color: Number(winRate) >= 50 ? '#3DC98A' : '#E05C5C' },
-          { label: 'Funded actifs', value: fundedCount, color: '#E4A94B' },
+          { label: 'P&L total', value: `${totalPnL >= 0 ? '+' : ''}${formatCurrency(totalPnL)}`, color: totalPnL >= 0 ? '#4fe8d1' : '#ffb454' },
+          { label: 'Semaines positives', value: `${positiveWeeks}/${state.trading.weeklyLogs.length}`, color: '#4fe8d1' },
+          { label: 'Win rate hebdo', value: `${winRate}%`, color: Number(winRate) >= 50 ? '#4fe8d1' : '#ffb454' },
+          { label: 'Funded actifs', value: fundedCount, color: '#4fe8d1' },
         ].map(({ label, value, color }) => (
-          <div key={label} className="card" style={{ borderTop: '2px solid #3DC98A' }}>
+          <div key={label} className="card" style={{ borderTop: '2px solid #4fe8d1' }}>
             <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>{label}</p>
             <p className="font-mono text-lg font-bold" style={{ color }}>{value}</p>
           </div>
@@ -185,7 +185,7 @@ export default function Trading() {
       </div>
 
       {/* Consecutive months - editable */}
-      <div className="card mb-6" style={{ borderTop: '2px solid #3DC98A' }}>
+      <div className="card mb-6" style={{ borderTop: '2px solid #4fe8d1' }}>
         <div className="flex items-center justify-between">
           <div>
             <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>Mois consécutifs positifs</p>
@@ -196,7 +196,7 @@ export default function Trading() {
                   min="0"
                   value={consecutiveMonths}
                   onChange={e => setConsecutiveMonths(Number(e.target.value))}
-                  style={{ width: 80, fontFamily: 'JetBrains Mono', fontSize: 24, fontWeight: 700, color: '#3DC98A' }}
+                  style={{ width: 80, fontFamily: "'Courier New', ui-monospace, monospace", fontSize: 24, fontWeight: 700, color: '#4fe8d1' }}
                 />
                 <button className="btn btn-primary" style={{ padding: '4px 12px' }} onClick={() => {
                   dispatch({ type: 'UPDATE_CONSECUTIVE_MONTHS', value: consecutiveMonths });
@@ -205,7 +205,7 @@ export default function Trading() {
               </div>
             ) : (
               <div className="flex items-center gap-3">
-                <p className="font-mono font-bold" style={{ fontSize: 32, color: consecutiveMonths >= 6 ? '#3DC98A' : '#E4A94B' }}>
+                <p className="font-mono font-bold" style={{ fontSize: 32, color: consecutiveMonths >= 6 ? '#4fe8d1' : '#ffb454' }}>
                   {consecutiveMonths}
                   <span className="text-sm ml-1" style={{ color: 'var(--muted)' }}>mois</span>
                 </p>
@@ -220,33 +220,33 @@ export default function Trading() {
             <p className="font-mono text-sm" style={{ color: 'var(--text)' }}>6 mois consécutifs</p>
             <div className="progress-bar mt-2" style={{ width: 120, height: 6, borderRadius: 3 }}>
               <div className="progress-bar-fill"
-                style={{ width: `${Math.min(100, (consecutiveMonths / 6) * 100)}%`, background: '#3DC98A' }} />
+                style={{ width: `${Math.min(100, (consecutiveMonths / 6) * 100)}%`, background: '#4fe8d1' }} />
             </div>
           </div>
         </div>
       </div>
 
       {/* P&L Chart */}
-      <div className="card mb-6" style={{ borderTop: '2px solid #3DC98A' }}>
+      <div className="card mb-6" style={{ borderTop: '2px solid #4fe8d1' }}>
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-semibold" style={{ color: 'var(--text)' }}>Courbe P&L cumulatif</h3>
-          <span className="text-xs font-mono" style={{ color: totalPnL >= 0 ? '#3DC98A' : '#E05C5C' }}>
+          <span className="text-xs font-mono" style={{ color: totalPnL >= 0 ? '#4fe8d1' : '#ffb454' }}>
             {totalPnL >= 0 ? '+' : ''}{formatCurrency(totalPnL)} total
           </span>
         </div>
         {chartData.length > 1 ? (
           <ResponsiveContainer width="100%" height={180}>
             <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(56,139,220,0.08)" />
-              <XAxis dataKey="date" tick={{ fill: '#4E6A88', fontSize: 10 }} tickLine={false} axisLine={false} />
-              <YAxis tick={{ fill: '#4E6A88', fontSize: 10 }} tickLine={false} axisLine={false}
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(79,232,209,0.08)" />
+              <XAxis dataKey="date" tick={{ fill: '#6fa39a', fontSize: 10 }} tickLine={false} axisLine={false} />
+              <YAxis tick={{ fill: '#6fa39a', fontSize: 10 }} tickLine={false} axisLine={false}
                 tickFormatter={v => formatCurrency(v)} width={60} />
               <Tooltip
                 contentStyle={{ background: 'var(--navy-800)', border: '1px solid var(--border)', borderRadius: 6 }}
                 formatter={(v, n) => [formatCurrency(v), n === 'cumulative' ? 'P&L cumulé' : 'Semaine']}
               />
-              <ReferenceLine y={0} stroke="rgba(224,92,92,0.4)" strokeDasharray="4 2" />
-              <Line type="monotone" dataKey="cumulative" stroke="#3DC98A" strokeWidth={2} dot={false} />
+              <ReferenceLine y={0} stroke="rgba(255,180,84,0.4)" strokeDasharray="4 2" />
+              <Line type="monotone" dataKey="cumulative" stroke="#4fe8d1" strokeWidth={2} dot={false} />
             </LineChart>
           </ResponsiveContainer>
         ) : (
@@ -258,7 +258,7 @@ export default function Trading() {
 
       {/* Weekly log history */}
       {state.trading.weeklyLogs.length > 0 && (
-        <div className="card mb-6" style={{ borderTop: '2px solid #3DC98A' }}>
+        <div className="card mb-6" style={{ borderTop: '2px solid #4fe8d1' }}>
           <h3 className="text-sm font-semibold mb-3" style={{ color: 'var(--text)' }}>
             Journal des semaines ({state.trading.weeklyLogs.length})
           </h3>
@@ -280,18 +280,18 @@ export default function Trading() {
                       key={i}
                       style={{ borderTop: '1px solid var(--border)' }}
                     >
-                      <td style={{ padding: '8px', color: 'var(--muted)', fontFamily: 'JetBrains Mono', fontSize: 11 }}>{formatDate(log.date)}</td>
-                      <td style={{ padding: '8px', fontFamily: 'JetBrains Mono', fontWeight: 700,
-                        color: log.result >= 0 ? '#3DC98A' : '#E05C5C' }}>
+                      <td style={{ padding: '8px', color: 'var(--muted)', fontFamily: "'Courier New', ui-monospace, monospace", fontSize: 11 }}>{formatDate(log.date)}</td>
+                      <td style={{ padding: '8px', fontFamily: "'Courier New', ui-monospace, monospace", fontWeight: 700,
+                        color: log.result >= 0 ? '#4fe8d1' : '#ffb454' }}>
                         {log.result >= 0 ? '+' : ''}{formatCurrency(log.result)}
                       </td>
-                      <td style={{ padding: '8px', color: 'var(--text)', fontFamily: 'JetBrains Mono' }}>{log.tradesCount || '—'}</td>
+                      <td style={{ padding: '8px', color: 'var(--text)', fontFamily: "'Courier New', ui-monospace, monospace" }}>{log.tradesCount || '—'}</td>
                       <td style={{ padding: '8px' }}>
-                        <span style={{ color: log.mmRespected ? '#3DC98A' : '#E05C5C', fontSize: 12 }}>
+                        <span style={{ color: log.mmRespected ? '#4fe8d1' : '#ffb454', fontSize: 12 }}>
                           {log.mmRespected ? '✓' : '✗'}
                         </span>
                       </td>
-                      <td style={{ padding: '8px', fontFamily: 'JetBrains Mono', color: cum >= 0 ? '#3DC98A' : '#E05C5C' }}>
+                      <td style={{ padding: '8px', fontFamily: "'Courier New', ui-monospace, monospace", color: cum >= 0 ? '#4fe8d1' : '#ffb454' }}>
                         {cum >= 0 ? '+' : ''}{formatCurrency(cum)}
                       </td>
                     </tr>
@@ -332,10 +332,10 @@ export default function Trading() {
       {/* Add propfirm modal */}
       {showAddPF && (
         <div style={{
-          position: 'fixed', inset: 0, background: 'rgba(5,13,26,0.85)',
+          position: 'fixed', inset: 0, background: 'rgba(5,16,18,0.85)',
           display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100,
         }}>
-          <div className="card" style={{ width: 400, borderTop: '2px solid #3DC98A' }}>
+          <div className="card" style={{ width: 400, borderTop: '2px solid #4fe8d1' }}>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-base font-bold" style={{ color: 'var(--text)' }}>Ajouter une propfirm</h3>
               <button className="btn btn-ghost" style={{ padding: '4px 8px' }} onClick={() => setShowAddPF(false)}><X size={14} /></button>
@@ -362,7 +362,7 @@ export default function Trading() {
               <div className="flex gap-2 mt-2">
                 <button
                   className="btn flex-1"
-                  style={{ background: '#3DC98A', color: '#000' }}
+                  style={{ background: '#4fe8d1', color: '#04211d' }}
                   onClick={() => {
                     if (newPF.name) { dispatch({ type: 'ADD_PROPFIRM', propfirm: newPF }); setShowAddPF(false); }
                   }}

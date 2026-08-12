@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "life-rpg",
-      "runtimeExecutable": "/tmp/node-v20.11.1-darwin-arm64/bin/npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeExecutable": "/Users/raphaelschachinger/bin/node",
+      "runtimeArgs": ["node_modules/vite/bin/vite.js"],
       "port": 5174
     }
   ]

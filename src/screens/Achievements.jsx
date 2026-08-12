@@ -25,13 +25,13 @@ function BadgeCard({ badge, unlocked, unlockedData }) {
         style={{
           display: 'flex', flexDirection: 'column', alignItems: 'center',
           textAlign: 'center', padding: 16,
-          borderTop: '2px solid #2EC4B6',
+          borderTop: '2px solid #4fe8d1',
           opacity: 0.7,
         }}
       >
         <div className="text-3xl mb-2" style={{ filter: 'grayscale(1)', opacity: 0.4 }}>???</div>
         <span className="pill pill-secret mb-2">Secret</span>
-        <p className="text-xs italic" style={{ color: '#2EC4B6' }}>{badge.hint}</p>
+        <p className="text-xs italic" style={{ color: '#4fe8d1' }}>{badge.hint}</p>
         <p className="text-xs mt-1" style={{ color: 'var(--muted2)' }}>???</p>
       </div>
     );
@@ -43,7 +43,7 @@ function BadgeCard({ badge, unlocked, unlockedData }) {
       style={{
         display: 'flex', flexDirection: 'column', alignItems: 'center',
         textAlign: 'center', padding: 16,
-        borderTop: `2px solid ${unlocked ? (BADGE_CATEGORIES.find(c => c.id === badge.category)?.color || '#388BDC') : 'var(--border)'}`,
+        borderTop: `2px solid ${unlocked ? (BADGE_CATEGORIES.find(c => c.id === badge.category)?.color || '#4fe8d1') : 'var(--border)'}`,
         opacity: unlocked ? 1 : 0.4,
         transition: 'all 0.2s',
       }}
@@ -63,7 +63,7 @@ function BadgeCard({ badge, unlocked, unlockedData }) {
       </p>
       {unlocked ? (
         <div>
-          <p className="font-mono text-xs font-bold" style={{ color: '#3DC98A' }}>+{badge.xp} XP</p>
+          <p className="font-mono text-xs font-bold" style={{ color: '#4fe8d1' }}>+{badge.xp} XP</p>
           <p className="text-xs mt-1" style={{ color: 'var(--muted2)', fontSize: 10 }}>
             {formatDate(unlockedData.unlockedAt)}
           </p>
@@ -126,10 +126,10 @@ export default function Achievements() {
       {/* Stats row */}
       <div className="grid grid-cols-4 gap-4 mb-6">
         {[
-          { label: 'Débloqués', value: unlockedCount, color: '#E4A94B', icon: '🏆' },
+          { label: 'Débloqués', value: unlockedCount, color: '#4fe8d1', icon: '🏆' },
           { label: 'Restants', value: totalBadges - unlockedCount, color: 'var(--muted)', icon: '🔒' },
-          { label: 'XP badges', value: `${totalXPFromBadges.toLocaleString()}`, color: '#3DC98A', icon: '⚡' },
-          { label: 'Progression', value: `${Math.round((unlockedCount / totalBadges) * 100)}%`, color: '#388BDC', icon: '📊' },
+          { label: 'XP badges', value: `${totalXPFromBadges.toLocaleString()}`, color: '#4fe8d1', icon: '⚡' },
+          { label: 'Progression', value: `${Math.round((unlockedCount / totalBadges) * 100)}%`, color: '#4fe8d1', icon: '📊' },
         ].map(({ label, value, color, icon }) => (
           <div key={label} className="card card-gold">
             <div className="flex items-center gap-2 mb-1">
@@ -145,7 +145,7 @@ export default function Achievements() {
       <div className="card mb-6">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-mono" style={{ color: 'var(--muted)' }}>PROGRESSION GLOBALE</span>
-          <span className="text-xs font-mono" style={{ color: '#E4A94B' }}>
+          <span className="text-xs font-mono" style={{ color: '#4fe8d1' }}>
             {unlockedCount}/{totalBadges}
           </span>
         </div>
@@ -154,7 +154,7 @@ export default function Achievements() {
             className="progress-bar-fill"
             style={{
               width: `${(unlockedCount / totalBadges) * 100}%`,
-              background: 'linear-gradient(90deg, #E4A94B, #3DC98A)',
+              background: 'linear-gradient(90deg, #4fe8d1, #4fe8d1)',
             }}
           />
         </div>
@@ -195,7 +195,7 @@ export default function Achievements() {
             style={{
               padding: '3px 10px',
               ...(filterStatus === f.id
-                ? { background: 'var(--blue-dim)', color: '#388BDC', borderColor: 'rgba(56,139,220,0.4)' }
+                ? { background: 'var(--blue-dim)', color: '#4fe8d1', borderColor: 'rgba(79,232,209,0.4)' }
                 : {}),
             }}
             onClick={() => setFilterStatus(f.id)}

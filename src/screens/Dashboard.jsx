@@ -156,7 +156,7 @@ export default function Dashboard() {
           title="Patrimoine net"
           value={formatCurrency(state.patrimoine.current)}
           sub={`×${multiplier} depuis le départ`}
-          color="#E4A94B"
+          color="#4fe8d1"
           icon={TrendingUp}
         />
         <StatCard
@@ -170,14 +170,14 @@ export default function Dashboard() {
           title="XP & Niveau"
           value={`LVL ${level}`}
           sub={`${xpInLevel.toLocaleString()} / ${xpNeeded.toLocaleString()} XP`}
-          color="#388BDC"
+          color="#4fe8d1"
           icon={Zap}
         />
         <StatCard
           title="Badges débloqués"
           value={Object.keys(state.badges).length}
           sub={`sur 49 badges`}
-          color="#E4A94B"
+          color="#4fe8d1"
           icon={Trophy}
         />
       </div>
@@ -189,7 +189,7 @@ export default function Dashboard() {
           <div className="flex-1 progress-bar" style={{ height: 8, borderRadius: 4 }}>
             <div
               className="progress-bar-fill"
-              style={{ width: `${xpPct}%`, background: 'linear-gradient(90deg, #388BDC, #2EC4B6)' }}
+              style={{ width: `${xpPct}%`, background: 'linear-gradient(90deg, #4fe8d1, #4fe8d1)' }}
             />
           </div>
           <span className="text-xs font-mono" style={{ color: 'var(--muted)' }}>LVL {level + 1}</span>
@@ -205,7 +205,7 @@ export default function Dashboard() {
         <div className="card card-gold col-span-2">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-semibold" style={{ color: 'var(--text)' }}>Historique patrimoine</h3>
-            <span className="text-xs font-mono" style={{ color: '#E4A94B' }}>
+            <span className="text-xs font-mono" style={{ color: '#4fe8d1' }}>
               {formatCurrency(chapter.target)} objectif
             </span>
           </div>
@@ -214,19 +214,19 @@ export default function Dashboard() {
               <AreaChart data={patrimoineChart}>
                 <defs>
                   <linearGradient id="pgGold" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#E4A94B" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#E4A94B" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#4fe8d1" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#4fe8d1" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <XAxis dataKey="date" tick={{ fill: '#4E6A88', fontSize: 10 }} tickLine={false} axisLine={false} />
-                <YAxis tick={{ fill: '#4E6A88', fontSize: 10 }} tickLine={false} axisLine={false}
+                <XAxis dataKey="date" tick={{ fill: '#6fa39a', fontSize: 10 }} tickLine={false} axisLine={false} />
+                <YAxis tick={{ fill: '#6fa39a', fontSize: 10 }} tickLine={false} axisLine={false}
                   tickFormatter={v => formatCurrency(v)} width={55} />
                 <Tooltip
                   contentStyle={{ background: 'var(--navy-800)', border: '1px solid var(--border)', borderRadius: 6 }}
                   labelStyle={{ color: 'var(--muted)', fontSize: 11 }}
                   formatter={v => [formatCurrency(v), 'Patrimoine']}
                 />
-                <Area type="monotone" dataKey="value" stroke="#E4A94B" fill="url(#pgGold)" strokeWidth={2} />
+                <Area type="monotone" dataKey="value" stroke="#4fe8d1" fill="url(#pgGold)" strokeWidth={2} />
               </AreaChart>
             </ResponsiveContainer>
           ) : (
@@ -289,14 +289,14 @@ export default function Dashboard() {
       <div className="grid grid-cols-3 gap-4 mb-6">
         {/* Weekly Review CTA */}
         <div className={`card ${reviewDoneThisWeek ? 'card-blue' : ''}`}
-          style={!reviewDoneThisWeek ? { borderTop: '2px solid #2EC4B6', animation: 'pulseGold 2s ease infinite' } : {}}>
+          style={!reviewDoneThisWeek ? { borderTop: '2px solid #ffb454', animation: 'pulseGold 2s ease infinite' } : {}}>
           <div className="flex items-center gap-2 mb-3">
-            <ClipboardList size={16} style={{ color: reviewDoneThisWeek ? '#388BDC' : '#2EC4B6' }} />
+            <ClipboardList size={16} style={{ color: reviewDoneThisWeek ? '#4fe8d1' : '#ffb454' }} />
             <h3 className="text-sm font-semibold" style={{ color: 'var(--text)' }}>Weekly Review</h3>
           </div>
           {reviewDoneThisWeek ? (
             <div>
-              <p className="text-sm" style={{ color: '#3DC98A' }}>✓ Complétée cette semaine</p>
+              <p className="text-sm" style={{ color: '#4fe8d1' }}>✓ Complétée cette semaine</p>
               <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>
                 {state.weeklyReviews.length} reviews au total
               </p>
@@ -309,7 +309,7 @@ export default function Dashboard() {
               <button
                 className="btn btn-primary w-full"
                 onClick={() => dispatch({ type: 'NAVIGATE', screen: 'review' })}
-                style={{ background: '#2EC4B6', width: '100%' }}
+                style={{ background: '#4fe8d1', width: '100%' }}
               >
                 Démarrer la review →
               </button>
@@ -320,7 +320,7 @@ export default function Dashboard() {
         {/* Recent badges */}
         <div className="card card-gold">
           <div className="flex items-center gap-2 mb-3">
-            <Trophy size={16} style={{ color: '#E4A94B' }} />
+            <Trophy size={16} style={{ color: '#4fe8d1' }} />
             <h3 className="text-sm font-semibold" style={{ color: 'var(--text)' }}>Badges récents</h3>
           </div>
           {recentBadges.length === 0 ? (
@@ -334,7 +334,7 @@ export default function Dashboard() {
                   <span className="text-base">{b.icon}</span>
                   <div>
                     <p className="text-xs font-semibold" style={{ color: 'var(--text)' }}>{b.name}</p>
-                    <p className="text-xs" style={{ color: '#E4A94B', fontFamily: 'JetBrains Mono' }}>+{b.xp} XP</p>
+                    <p className="text-xs" style={{ color: '#4fe8d1', fontFamily: "'Courier New', ui-monospace, monospace" }}>+{b.xp} XP</p>
                   </div>
                 </div>
               ))}
@@ -345,35 +345,35 @@ export default function Dashboard() {
         {/* Active alerts */}
         <div className="card">
           <div className="flex items-center gap-2 mb-3">
-            <AlertCircle size={16} style={{ color: '#E05C5C' }} />
+            <AlertCircle size={16} style={{ color: '#ffb454' }} />
             <h3 className="text-sm font-semibold" style={{ color: 'var(--text)' }}>Statut</h3>
           </div>
           <div className="flex flex-col gap-2 text-xs">
             <div className="flex items-center gap-2">
-              <span className="status-dot" style={{ background: state.markets.emergencyFund >= 9000 ? '#3DC98A' : '#E05C5C' }} />
+              <span className="status-dot" style={{ background: state.markets.emergencyFund >= 9000 ? '#4fe8d1' : '#ffb454' }} />
               <span style={{ color: 'var(--text)' }}>Fonds urgence</span>
-              <span className="font-mono ml-auto" style={{ color: state.markets.emergencyFund >= 9000 ? '#3DC98A' : '#E05C5C' }}>
+              <span className="font-mono ml-auto" style={{ color: state.markets.emergencyFund >= 9000 ? '#4fe8d1' : '#ffb454' }}>
                 {formatCurrency(state.markets.emergencyFund)}
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="status-dot" style={{ background: state.markets.pea.openDate ? '#3DC98A' : '#E4A94B' }} />
+              <span className="status-dot" style={{ background: state.markets.pea.openDate ? '#4fe8d1' : '#ffb454' }} />
               <span style={{ color: 'var(--text)' }}>PEA</span>
-              <span className="ml-auto text-xs" style={{ color: state.markets.pea.openDate ? '#3DC98A' : '#E4A94B' }}>
+              <span className="ml-auto text-xs" style={{ color: state.markets.pea.openDate ? '#4fe8d1' : '#ffb454' }}>
                 {state.markets.pea.openDate ? 'Actif' : 'À ouvrir'}
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="status-dot" style={{ background: state.trading.consecutivePositiveMonths > 0 ? '#3DC98A' : 'var(--muted2)' }} />
+              <span className="status-dot" style={{ background: state.trading.consecutivePositiveMonths > 0 ? '#4fe8d1' : 'var(--muted2)' }} />
               <span style={{ color: 'var(--text)' }}>Trading streak</span>
-              <span className="font-mono ml-auto" style={{ color: '#3DC98A' }}>
+              <span className="font-mono ml-auto" style={{ color: '#4fe8d1' }}>
                 {state.trading.consecutivePositiveMonths}M
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="status-dot" style={{ background: state.trading.propfirms.filter(p => p.status === 'funded').length > 0 ? '#3DC98A' : 'var(--muted2)' }} />
+              <span className="status-dot" style={{ background: state.trading.propfirms.filter(p => p.status === 'funded').length > 0 ? '#4fe8d1' : 'var(--muted2)' }} />
               <span style={{ color: 'var(--text)' }}>Propfirms funded</span>
-              <span className="font-mono ml-auto" style={{ color: '#3DC98A' }}>
+              <span className="font-mono ml-auto" style={{ color: '#4fe8d1' }}>
                 {state.trading.propfirms.filter(p => p.status === 'funded').length}
               </span>
             </div>
@@ -389,7 +389,7 @@ export default function Dashboard() {
         <div className="flex flex-col gap-2">
           {PRINCIPLES.map((p, i) => (
             <div key={i} className="flex items-start gap-2 text-xs">
-              <span className="font-mono font-bold flex-shrink-0" style={{ color: '#388BDC' }}>
+              <span className="font-mono font-bold flex-shrink-0" style={{ color: '#4fe8d1' }}>
                 {String(i + 1).padStart(2, '0')}.
               </span>
               <span style={{ color: 'var(--muted)' }}>{p}</span>

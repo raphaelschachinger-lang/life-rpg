@@ -31,15 +31,17 @@ export default function Layout() {
   const Screen = SCREENS[state.ui.currentScreen] || Dashboard;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden', position: 'relative' }}>
+      <div className="bg-texture" />
+      <div className="bg-grid" />
+      <div className="bg-scanlines" />
       <Topbar />
-      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+      <div style={{ display: 'flex', flex: 1, overflow: 'hidden', position: 'relative', zIndex: 1 }}>
         <Sidebar />
         <main
           style={{
             flex: 1,
             overflowY: 'auto',
-            background: 'var(--navy-900)',
             padding: '24px',
           }}
         >

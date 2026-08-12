@@ -4,12 +4,12 @@ import { formatCurrency, formatDate, getVerticalLevel } from '../utils/gameLogic
 import { Plus, Home, TrendingUp, X, Edit2, Check } from 'lucide-react';
 
 const STATUS_CONFIG = {
-  searching:  { label: 'En recherche',   color: '#6B8BAD' },
-  offer:      { label: 'Offre faite',    color: '#E4A94B' },
-  compromis:  { label: 'Compromis',      color: '#388BDC' },
-  owned:      { label: 'Propriétaire',   color: '#3DC98A' },
-  sold:       { label: 'Vendu',          color: '#8B6FCA' },
-  lost:       { label: 'Perdu',          color: '#E05C5C' },
+  searching:  { label: 'En recherche',   color: '#6fa39a' },
+  offer:      { label: 'Offre faite',    color: '#ffb454' },
+  compromis:  { label: 'Compromis',      color: '#4fe8d1' },
+  owned:      { label: 'Propriétaire',   color: '#4fe8d1' },
+  sold:       { label: 'Vendu',          color: '#4fe8d1' },
+  lost:       { label: 'Perdu',          color: '#ffb454' },
 };
 
 const ACTION_XP = {
@@ -77,7 +77,7 @@ function PropertyCard({ property, onUpdate, onRemove }) {
           <button className="btn btn-ghost" style={{ padding: '4px 8px' }} onClick={() => setEditing(!editing)}>
             <Edit2 size={12} />
           </button>
-          <button className="btn btn-ghost" style={{ padding: '4px 8px', color: '#E05C5C' }} onClick={() => onRemove(property.id)}>
+          <button className="btn btn-ghost" style={{ padding: '4px 8px', color: '#ffb454' }} onClick={() => onRemove(property.id)}>
             <X size={12} />
           </button>
         </div>
@@ -179,7 +179,7 @@ function PropertyCard({ property, onUpdate, onRemove }) {
                   <p className="text-xs" style={{ color: 'var(--muted)' }}>Profit net estimé</p>
                   <p
                     className="text-sm font-mono font-bold"
-                    style={{ color: (property.salePrice || 0) - (property.purchasePrice || 0) - (property.renovationBudget || 0) >= 0 ? '#3DC98A' : '#E05C5C' }}
+                    style={{ color: (property.salePrice || 0) - (property.purchasePrice || 0) - (property.renovationBudget || 0) >= 0 ? '#4fe8d1' : '#ffb454' }}
                   >
                     {formatCurrency((property.salePrice || 0) - (property.purchasePrice || 0) - (property.renovationBudget || 0))}
                   </p>
@@ -190,7 +190,7 @@ function PropertyCard({ property, onUpdate, onRemove }) {
                 <p className="text-xs" style={{ color: 'var(--muted)' }}>Cash-flow mensuel</p>
                 <p
                   className="text-sm font-mono font-bold"
-                  style={{ color: (property.cashflow || 0) >= 0 ? '#3DC98A' : '#E05C5C' }}
+                  style={{ color: (property.cashflow || 0) >= 0 ? '#4fe8d1' : '#ffb454' }}
                 >
                   {formatCurrency(property.cashflow || 0)}/mois
                 </p>
@@ -198,7 +198,7 @@ function PropertyCard({ property, onUpdate, onRemove }) {
             )}
             <div>
               <p className="text-xs" style={{ color: 'var(--muted)' }}>Valeur actuelle</p>
-              <p className="text-sm font-mono font-bold" style={{ color: '#E4A94B' }}>
+              <p className="text-sm font-mono font-bold" style={{ color: '#4fe8d1' }}>
                 {formatCurrency(property.currentValue || 0)}
               </p>
             </div>
@@ -209,9 +209,9 @@ function PropertyCard({ property, onUpdate, onRemove }) {
             </p>
           )}
           <div className="flex gap-3 mt-3">
-            {property.visited && <span className="text-xs" style={{ color: '#3DC98A' }}>✓ Visité</span>}
-            {property.offerAccepted && <span className="text-xs" style={{ color: '#388BDC' }}>✓ Offre acceptée</span>}
-            {property.notaryActSigned && <span className="text-xs" style={{ color: '#8B6FCA' }}>✓ Acte notarié</span>}
+            {property.visited && <span className="text-xs" style={{ color: '#4fe8d1' }}>✓ Visité</span>}
+            {property.offerAccepted && <span className="text-xs" style={{ color: '#4fe8d1' }}>✓ Offre acceptée</span>}
+            {property.notaryActSigned && <span className="text-xs" style={{ color: '#4fe8d1' }}>✓ Acte notarié</span>}
           </div>
         </div>
       )}
@@ -224,11 +224,11 @@ function AddPropertyModal({ onAdd, onClose }) {
   return (
     <div
       style={{
-        position: 'fixed', inset: 0, background: 'rgba(5,13,26,0.85)',
+        position: 'fixed', inset: 0, background: 'rgba(5,16,18,0.85)',
         display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100,
       }}
     >
-      <div className="card" style={{ width: 420, borderTop: '2px solid #E4A94B' }}>
+      <div className="card" style={{ width: 420, borderTop: '2px solid #4fe8d1' }}>
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-base font-bold" style={{ color: 'var(--text)' }}>Ajouter un bien</h3>
           <button className="btn btn-ghost" style={{ padding: '4px 8px' }} onClick={onClose}><X size={14} /></button>
@@ -291,7 +291,7 @@ export default function RealEstate() {
       {/* Vertical level bar */}
       <div className="card card-gold mb-6" style={{ padding: '12px 16px' }}>
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-mono font-bold" style={{ color: '#E4A94B' }}>
+          <span className="text-xs font-mono font-bold" style={{ color: '#4fe8d1' }}>
             Immo Niveau {vLevel}
           </span>
           <span className="text-xs font-mono" style={{ color: 'var(--muted)' }}>
@@ -301,7 +301,7 @@ export default function RealEstate() {
         <div className="progress-bar" style={{ height: 6, borderRadius: 3 }}>
           <div
             className="progress-bar-fill"
-            style={{ width: `${Math.min(100, (xpInLevel / xpNeeded) * 100)}%`, background: '#E4A94B' }}
+            style={{ width: `${Math.min(100, (xpInLevel / xpNeeded) * 100)}%`, background: '#4fe8d1' }}
           />
         </div>
       </div>
@@ -309,9 +309,9 @@ export default function RealEstate() {
       {/* KPI row */}
       <div className="grid grid-cols-4 gap-4 mb-6">
         {[
-          { label: 'Biens actifs', value: ownedCount, color: '#E4A94B' },
-          { label: 'Portefeuille brut', value: formatCurrency(totalBrut), color: '#E4A94B' },
-          { label: 'Cash-flow net/mois', value: `${totalCashflow >= 0 ? '+' : ''}${formatCurrency(totalCashflow)}`, color: totalCashflow >= 0 ? '#3DC98A' : '#E05C5C' },
+          { label: 'Biens actifs', value: ownedCount, color: '#4fe8d1' },
+          { label: 'Portefeuille brut', value: formatCurrency(totalBrut), color: '#4fe8d1' },
+          { label: 'Cash-flow net/mois', value: `${totalCashflow >= 0 ? '+' : ''}${formatCurrency(totalCashflow)}`, color: totalCashflow >= 0 ? '#4fe8d1' : '#ffb454' },
           { label: 'Total biens', value: state.realEstate.properties.length, color: 'var(--text)' },
         ].map(({ label, value, color }) => (
           <div key={label} className="card card-gold">
@@ -325,7 +325,7 @@ export default function RealEstate() {
       {state.realEstate.properties.length === 0 ? (
         <div
           className="card text-center py-12"
-          style={{ borderTop: '2px solid #E4A94B' }}
+          style={{ borderTop: '2px solid #4fe8d1' }}
         >
           <Home size={32} style={{ color: 'var(--muted2)', margin: '0 auto 12px' }} />
           <p className="text-sm mb-1" style={{ color: 'var(--muted)' }}>Aucun bien enregistré</p>

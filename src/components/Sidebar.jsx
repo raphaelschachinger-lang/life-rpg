@@ -7,23 +7,23 @@ import {
 } from 'lucide-react';
 
 const NAV_ITEMS = [
-  { screen: 'dashboard',  label: 'Dashboard',       icon: LayoutDashboard, color: '#388BDC' },
-  { screen: 'immo',       label: 'Real Estate',      icon: Home,            color: '#E4A94B' },
-  { screen: 'trading',    label: 'Trading',          icon: TrendingUp,      color: '#3DC98A' },
-  { screen: 'markets',    label: 'Financial Markets',icon: BarChart2,       color: '#8B6FCA' },
-  { screen: 'health',     label: 'Health & Habits',  icon: Heart,           color: '#E05C5C' },
-  { screen: 'character',  label: 'Personnage',       icon: UserCircle2,     color: '#8B6FCA' },
-  { screen: 'carte',      label: 'Carte',            icon: Map,             color: '#388BDC' },
-  { screen: 'achievements',label: 'Achievements',    icon: Trophy,          color: '#E4A94B' },
-  { screen: 'review',     label: 'Weekly Review',    icon: ClipboardList,   color: '#2EC4B6' },
-  { screen: 'loot',       label: 'Loot Shop',        icon: Gift,            color: '#E4A94B' },
+  { screen: 'dashboard',  label: 'Dashboard',        icon: LayoutDashboard },
+  { screen: 'immo',       label: 'Real Estate',      icon: Home },
+  { screen: 'trading',    label: 'Trading',          icon: TrendingUp },
+  { screen: 'markets',    label: 'Financial Markets',icon: BarChart2 },
+  { screen: 'health',     label: 'Health & Habits',  icon: Heart },
+  { screen: 'character',  label: 'Personnage',       icon: UserCircle2 },
+  { screen: 'carte',      label: 'Carte',            icon: Map },
+  { screen: 'achievements',label: 'Achievements',    icon: Trophy },
+  { screen: 'review',     label: 'Weekly Review',    icon: ClipboardList },
+  { screen: 'loot',       label: 'Loot Shop',        icon: Gift },
 ];
 
 const VERTICALS = [
-  { key: 'realEstate', label: 'Immo',    color: '#E4A94B' },
-  { key: 'trading',    label: 'Trading', color: '#3DC98A' },
-  { key: 'markets',    label: 'Markets', color: '#8B6FCA' },
-  { key: 'health',     label: 'Health',  color: '#E05C5C' },
+  { key: 'realEstate', label: 'Immo' },
+  { key: 'trading',    label: 'Trading' },
+  { key: 'markets',    label: 'Markets' },
+  { key: 'health',     label: 'Health' },
 ];
 
 export default function Sidebar() {
@@ -48,35 +48,35 @@ export default function Sidebar() {
       className="flex flex-col h-full flex-shrink-0"
       style={{
         width: 220,
-        background: 'var(--navy-800)',
-        borderRight: '1px solid var(--border)',
+        background: 'var(--bg-panel)',
+        backdropFilter: 'blur(2px)',
+        borderRight: '1px solid var(--line)',
       }}
     >
       {/* Nav */}
       <nav className="flex-1 p-3 flex flex-col gap-1">
-        {NAV_ITEMS.map(({ screen, label, icon: Icon, color }) => {
+        {NAV_ITEMS.map(({ screen, label, icon: Icon }) => {
           const isActive = currentScreen === screen;
           const showDot = screen === 'review' && !reviewDoneThisWeek;
           return (
             <button
               key={screen}
-              className="nav-item w-full text-left"
-              style={isActive ? { background: `${color}18`, color } : {}}
+              className={`nav-item w-full text-left ${isActive ? 'active' : ''}`}
               onClick={() => navigate(screen)}
             >
-              <Icon size={15} style={{ flexShrink: 0, color: isActive ? color : undefined }} />
+              <Icon size={15} style={{ flexShrink: 0 }} />
               <span className="flex-1">{label}</span>
               {showDot && (
                 <span
                   className="w-2 h-2 rounded-full flex-shrink-0"
-                  style={{ background: '#2EC4B6' }}
+                  style={{ background: 'var(--amber)', boxShadow: '0 0 6px var(--amber)' }}
                   title="Review à faire"
                 />
               )}
               {screen === 'achievements' && unlockedBadgeCount > 0 && (
                 <span
-                  className="text-xs font-mono px-1 rounded"
-                  style={{ background: 'var(--gold-dim)', color: '#E4A94B', fontSize: 10 }}
+                  className="text-xs px-1"
+                  style={{ background: 'var(--cyan-dim-bg)', color: 'var(--cyan)', fontSize: 10, borderRadius: 2 }}
                 >
                   {unlockedBadgeCount}
                 </span>
@@ -87,25 +87,22 @@ export default function Sidebar() {
       </nav>
 
       {/* Vertical stats */}
-      <div className="p-3 border-t" style={{ borderColor: 'var(--border)' }}>
-        <p className="text-xs font-mono mb-3" style={{ color: 'var(--muted2)', letterSpacing: '0.1em' }}>
-          STATS VERTICAL
+      <div className="p-3" style={{ borderTop: '1px solid var(--line)' }}>
+        <p className="panel-label" style={{ marginBottom: 12 }}>
+          Stats vertical
         </p>
         <div className="flex flex-col gap-3">
-          {VERTICALS.map(({ key, label, color }) => {
+          {VERTICALS.map(({ key, label }) => {
             const { level, xpInLevel, xpNeeded } = getVerticalLevel(state.stats[key].totalXP);
             const pct = Math.min(100, (xpInLevel / xpNeeded) * 100);
             return (
               <div key={key}>
                 <div className="flex justify-between items-center mb-1">
-                  <span className="text-xs" style={{ color: 'var(--muted)', fontSize: 11 }}>{label}</span>
-                  <span className="font-mono text-xs font-bold" style={{ color }}>Lv.{level}</span>
+                  <span style={{ color: 'var(--text-dim)', fontSize: 11, textTransform: 'uppercase' }}>{label}</span>
+                  <span className="text-xs font-bold" style={{ color: 'var(--cyan)' }}>Lv.{level}</span>
                 </div>
                 <div className="progress-bar">
-                  <div
-                    className="progress-bar-fill"
-                    style={{ width: `${pct}%`, background: color }}
-                  />
+                  <div className="progress-bar-fill" style={{ width: `${pct}%` }} />
                 </div>
               </div>
             );
@@ -114,11 +111,11 @@ export default function Sidebar() {
       </div>
 
       {/* Player name */}
-      <div className="p-3 border-t" style={{ borderColor: 'var(--border)' }}>
-        <p className="text-xs font-mono" style={{ color: 'var(--muted)', fontSize: 11 }}>
+      <div className="p-3" style={{ borderTop: '1px solid var(--line)' }}>
+        <p className="text-xs" style={{ color: 'var(--text-dim)', fontSize: 11, textTransform: 'uppercase' }}>
           {state.player.name}
         </p>
-        <p className="text-xs" style={{ color: 'var(--muted2)', fontSize: 10 }}>
+        <p className="text-xs" style={{ color: 'var(--text-dim2)', fontSize: 10 }}>
           {state.player.totalXP.toLocaleString()} XP total
         </p>
       </div>

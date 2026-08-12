@@ -59,28 +59,28 @@ export default function FinancialMarkets() {
       </div>
 
       {/* Level bar */}
-      <div className="card mb-6" style={{ padding: '12px 16px', borderTop: '2px solid #8B6FCA' }}>
+      <div className="card mb-6" style={{ padding: '12px 16px', borderTop: '2px solid #4fe8d1' }}>
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-mono font-bold" style={{ color: '#8B6FCA' }}>Markets Niveau {vLevel}</span>
+          <span className="text-xs font-mono font-bold" style={{ color: '#4fe8d1' }}>Markets Niveau {vLevel}</span>
           <span className="text-xs font-mono" style={{ color: 'var(--muted)' }}>
             {xpInLevel.toLocaleString()} / {xpNeeded.toLocaleString()} XP
           </span>
         </div>
         <div className="progress-bar" style={{ height: 6, borderRadius: 3 }}>
           <div className="progress-bar-fill"
-            style={{ width: `${Math.min(100, (xpInLevel / xpNeeded) * 100)}%`, background: '#8B6FCA' }} />
+            style={{ width: `${Math.min(100, (xpInLevel / xpNeeded) * 100)}%`, background: '#4fe8d1' }} />
         </div>
       </div>
 
       {/* KPI row */}
       <div className="grid grid-cols-4 gap-4 mb-6">
         {[
-          { label: 'Portefeuille total', value: formatCurrency(totalPortfolio), color: '#8B6FCA' },
+          { label: 'Portefeuille total', value: formatCurrency(totalPortfolio), color: '#4fe8d1' },
           { label: 'Total investi', value: formatCurrency(totalInvested), color: 'var(--text)' },
-          { label: 'Plus-value', value: `${totalGain >= 0 ? '+' : ''}${formatCurrency(totalGain)}`, color: totalGain >= 0 ? '#3DC98A' : '#E05C5C' },
-          { label: 'Performance', value: `${gainPct >= 0 ? '+' : ''}${gainPct}%`, color: gainPct >= 0 ? '#3DC98A' : '#E05C5C' },
+          { label: 'Plus-value', value: `${totalGain >= 0 ? '+' : ''}${formatCurrency(totalGain)}`, color: totalGain >= 0 ? '#4fe8d1' : '#ffb454' },
+          { label: 'Performance', value: `${gainPct >= 0 ? '+' : ''}${gainPct}%`, color: gainPct >= 0 ? '#4fe8d1' : '#ffb454' },
         ].map(({ label, value, color }) => (
-          <div key={label} className="card" style={{ borderTop: '2px solid #8B6FCA' }}>
+          <div key={label} className="card" style={{ borderTop: '2px solid #4fe8d1' }}>
             <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>{label}</p>
             <p className="font-mono text-lg font-bold" style={{ color }}>{value}</p>
           </div>
@@ -89,10 +89,10 @@ export default function FinancialMarkets() {
 
       <div className="grid grid-cols-2 gap-4 mb-6">
         {/* PEA Card */}
-        <div className="card" style={{ borderTop: '2px solid #8B6FCA' }}>
+        <div className="card" style={{ borderTop: '2px solid #4fe8d1' }}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <Shield size={14} style={{ color: '#8B6FCA' }} />
+              <Shield size={14} style={{ color: '#4fe8d1' }} />
               <h3 className="text-sm font-bold" style={{ color: 'var(--text)' }}>PEA</h3>
               {pea.openDate ? (
                 <span className="pill pill-veteran" style={{ fontSize: 10 }}>Actif depuis {pea.openDate.split('-')[0]}</span>
@@ -109,7 +109,7 @@ export default function FinancialMarkets() {
             <div className="mb-3">
               <button
                 className="btn w-full"
-                style={{ background: '#8B6FCA', color: '#fff', width: '100%' }}
+                style={{ background: '#4fe8d1', color: '#04211d', width: '100%' }}
                 onClick={() => setShowOpenPEA(true)}
               >
                 + Ouvrir le PEA (+300 XP)
@@ -124,7 +124,7 @@ export default function FinancialMarkets() {
               <div className="flex gap-2 mt-2">
                 <button
                   className="btn btn-primary flex-1"
-                  style={{ background: '#8B6FCA' }}
+                  style={{ background: '#4fe8d1' }}
                   onClick={() => {
                     dispatch({ type: 'OPEN_PEA', amount: openPEAAmount });
                     setShowOpenPEA(false);
@@ -140,7 +140,7 @@ export default function FinancialMarkets() {
           <div className="grid grid-cols-2 gap-3 mb-3">
             <div>
               <p className="text-xs" style={{ color: 'var(--muted)' }}>Valeur actuelle</p>
-              <p className="font-mono font-bold text-lg" style={{ color: '#8B6FCA' }}>{formatCurrency(pea.currentValue)}</p>
+              <p className="font-mono font-bold text-lg" style={{ color: '#4fe8d1' }}>{formatCurrency(pea.currentValue)}</p>
             </div>
             <div>
               <p className="text-xs" style={{ color: 'var(--muted)' }}>Total investi</p>
@@ -156,7 +156,7 @@ export default function FinancialMarkets() {
             </div>
             <div className="progress-bar" style={{ height: 4, borderRadius: 2 }}>
               <div className="progress-bar-fill"
-                style={{ width: `${Math.min(100, (pea.totalInvested / 150000) * 100)}%`, background: '#8B6FCA' }} />
+                style={{ width: `${Math.min(100, (pea.totalInvested / 150000) * 100)}%`, background: '#4fe8d1' }} />
             </div>
           </div>
 
@@ -179,10 +179,10 @@ export default function FinancialMarkets() {
         </div>
 
         {/* CTO Card */}
-        <div className="card" style={{ borderTop: '2px solid #388BDC' }}>
+        <div className="card" style={{ borderTop: '2px solid #4fe8d1' }}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <TrendingUp size={14} style={{ color: '#388BDC' }} />
+              <TrendingUp size={14} style={{ color: '#4fe8d1' }} />
               <h3 className="text-sm font-bold" style={{ color: 'var(--text)' }}>CTO</h3>
             </div>
             <button className="btn btn-ghost" style={{ padding: '4px 8px' }} onClick={() => setEditCTO(!editCTO)}>
@@ -193,7 +193,7 @@ export default function FinancialMarkets() {
           <div className="grid grid-cols-2 gap-3 mb-3">
             <div>
               <p className="text-xs" style={{ color: 'var(--muted)' }}>Valeur actuelle</p>
-              <p className="font-mono font-bold text-lg" style={{ color: '#388BDC' }}>{formatCurrency(cto.currentValue)}</p>
+              <p className="font-mono font-bold text-lg" style={{ color: '#4fe8d1' }}>{formatCurrency(cto.currentValue)}</p>
             </div>
             <div>
               <p className="text-xs" style={{ color: 'var(--muted)' }}>Total investi</p>
@@ -209,7 +209,7 @@ export default function FinancialMarkets() {
             </div>
             <div className="progress-bar" style={{ height: 4, borderRadius: 2 }}>
               <div className="progress-bar-fill"
-                style={{ width: `${Math.min(100, (cto.currentValue / 500000) * 100)}%`, background: '#388BDC' }} />
+                style={{ width: `${Math.min(100, (cto.currentValue / 500000) * 100)}%`, background: '#4fe8d1' }} />
             </div>
           </div>
 
@@ -234,7 +234,7 @@ export default function FinancialMarkets() {
 
       <div className="grid grid-cols-2 gap-4 mb-6">
         {/* DCA Tracker */}
-        <div className="card" style={{ borderTop: '2px solid #8B6FCA' }}>
+        <div className="card" style={{ borderTop: '2px solid #4fe8d1' }}>
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-bold" style={{ color: 'var(--text)' }}>DCA Tracker</h3>
             <button className="btn btn-ghost" style={{ padding: '4px 8px' }} onClick={() => setEditDCA(!editDCA)}>
@@ -245,11 +245,11 @@ export default function FinancialMarkets() {
           <div className="grid grid-cols-2 gap-3 mb-3">
             <div>
               <p className="text-xs" style={{ color: 'var(--muted)' }}>Mensuel programmé</p>
-              <p className="font-mono font-bold text-lg" style={{ color: '#8B6FCA' }}>{formatCurrency(dca.monthlyAmount)}</p>
+              <p className="font-mono font-bold text-lg" style={{ color: '#4fe8d1' }}>{formatCurrency(dca.monthlyAmount)}</p>
             </div>
             <div>
               <p className="text-xs" style={{ color: 'var(--muted)' }}>Mois consécutifs</p>
-              <p className="font-mono font-bold text-lg" style={{ color: consecutiveDCAMonths >= 12 ? '#3DC98A' : '#E4A94B' }}>
+              <p className="font-mono font-bold text-lg" style={{ color: consecutiveDCAMonths >= 12 ? '#4fe8d1' : '#ffb454' }}>
                 {consecutiveDCAMonths}
               </p>
             </div>
@@ -263,7 +263,7 @@ export default function FinancialMarkets() {
             </div>
             <div className="progress-bar" style={{ height: 4, borderRadius: 2 }}>
               <div className="progress-bar-fill"
-                style={{ width: `${Math.min(100, (consecutiveDCAMonths / 12) * 100)}%`, background: '#8B6FCA' }} />
+                style={{ width: `${Math.min(100, (consecutiveDCAMonths / 12) * 100)}%`, background: '#4fe8d1' }} />
             </div>
           </div>
 
@@ -292,8 +292,8 @@ export default function FinancialMarkets() {
               <div className="flex flex-col gap-1 max-h-32 overflow-y-auto">
                 {[...dca.history].reverse().slice(0, 8).map((entry, i) => (
                   <div key={i} className="flex justify-between text-xs">
-                    <span style={{ color: 'var(--muted)', fontFamily: 'JetBrains Mono' }}>{formatDate(entry.date)}</span>
-                    <span className="font-mono font-bold" style={{ color: '#8B6FCA' }}>+{formatCurrency(entry.amount)}</span>
+                    <span style={{ color: 'var(--muted)', fontFamily: "'Courier New', ui-monospace, monospace" }}>{formatDate(entry.date)}</span>
+                    <span className="font-mono font-bold" style={{ color: '#4fe8d1' }}>+{formatCurrency(entry.amount)}</span>
                   </div>
                 ))}
               </div>
@@ -302,10 +302,10 @@ export default function FinancialMarkets() {
         </div>
 
         {/* Emergency Fund */}
-        <div className="card" style={{ borderTop: `2px solid ${emergencyFund >= 9000 ? '#3DC98A' : '#E05C5C'}` }}>
+        <div className="card" style={{ borderTop: `2px solid ${emergencyFund >= 9000 ? '#4fe8d1' : '#ffb454'}` }}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <Shield size={14} style={{ color: emergencyFund >= 9000 ? '#3DC98A' : '#E05C5C' }} />
+              <Shield size={14} style={{ color: emergencyFund >= 9000 ? '#4fe8d1' : '#ffb454' }} />
               <h3 className="text-sm font-bold" style={{ color: 'var(--text)' }}>Fonds d'urgence</h3>
             </div>
             <button className="btn btn-ghost" style={{ padding: '4px 8px' }} onClick={() => setEditEF(!editEF)}>
@@ -315,7 +315,7 @@ export default function FinancialMarkets() {
 
           <p
             className="font-mono font-bold mb-2"
-            style={{ fontSize: 32, color: emergencyFund >= 9000 ? '#3DC98A' : '#E05C5C' }}
+            style={{ fontSize: 32, color: emergencyFund >= 9000 ? '#4fe8d1' : '#ffb454' }}
           >
             {formatCurrency(emergencyFund)}
           </p>
@@ -329,14 +329,14 @@ export default function FinancialMarkets() {
               <div className="progress-bar-fill"
                 style={{
                   width: `${Math.min(100, (emergencyFund / 9000) * 100)}%`,
-                  background: emergencyFund >= 9000 ? '#3DC98A' : '#E05C5C',
+                  background: emergencyFund >= 9000 ? '#4fe8d1' : '#ffb454',
                 }}
               />
             </div>
           </div>
 
           {emergencyFund >= 9000 && (
-            <p className="text-xs" style={{ color: '#3DC98A' }}>✓ Fonds sanctuaire atteint!</p>
+            <p className="text-xs" style={{ color: '#4fe8d1' }}>✓ Fonds sanctuaire atteint!</p>
           )}
           {emergencyFund < 9000 && (
             <p className="text-xs" style={{ color: 'var(--muted)' }}>
@@ -363,7 +363,7 @@ export default function FinancialMarkets() {
 
       {/* DCA Growth Chart */}
       {dcaChartData.length > 1 && (
-        <div className="card" style={{ borderTop: '2px solid #8B6FCA' }}>
+        <div className="card" style={{ borderTop: '2px solid #4fe8d1' }}>
           <h3 className="text-sm font-semibold mb-3" style={{ color: 'var(--text)' }}>
             Progression versements DCA
           </h3>
@@ -371,18 +371,18 @@ export default function FinancialMarkets() {
             <AreaChart data={dcaChartData}>
               <defs>
                 <linearGradient id="dcaGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#8B6FCA" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#8B6FCA" stopOpacity={0} />
+                  <stop offset="5%" stopColor="#4fe8d1" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#4fe8d1" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <XAxis dataKey="date" tick={{ fill: '#4E6A88', fontSize: 10 }} tickLine={false} axisLine={false} />
-              <YAxis tick={{ fill: '#4E6A88', fontSize: 10 }} tickLine={false} axisLine={false}
+              <XAxis dataKey="date" tick={{ fill: '#6fa39a', fontSize: 10 }} tickLine={false} axisLine={false} />
+              <YAxis tick={{ fill: '#6fa39a', fontSize: 10 }} tickLine={false} axisLine={false}
                 tickFormatter={v => formatCurrency(v)} width={55} />
               <Tooltip
                 contentStyle={{ background: 'var(--navy-800)', border: '1px solid var(--border)', borderRadius: 6 }}
                 formatter={v => [formatCurrency(v), 'Versé']}
               />
-              <Area type="monotone" dataKey="total" stroke="#8B6FCA" fill="url(#dcaGrad)" strokeWidth={2} />
+              <Area type="monotone" dataKey="total" stroke="#4fe8d1" fill="url(#dcaGrad)" strokeWidth={2} />
             </AreaChart>
           </ResponsiveContainer>
         </div>

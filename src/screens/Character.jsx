@@ -52,7 +52,7 @@ export default function Character() {
           </span>
           <span
             className="text-xs font-mono font-bold"
-            style={{ color: totalGain > 0 ? '#3DC98A' : 'var(--muted)' }}
+            style={{ color: totalGain > 0 ? '#4fe8d1' : 'var(--muted)' }}
           >
             {totalGain > 0 ? `+${totalGain.toFixed(1)} pts cumulés` : 'Aucune progression pour le moment'}
           </span>
@@ -63,7 +63,7 @@ export default function Character() {
             <PolarAngleAxis dataKey="trait" tick={{ fill: 'var(--text)', fontSize: 12 }} />
             <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: 'var(--muted2)', fontSize: 10 }} />
             <Radar name="Départ" dataKey="base" stroke="var(--muted2)" fill="var(--muted2)" fillOpacity={0.08} strokeDasharray="4 3" />
-            <Radar name="Actuel" dataKey="current" stroke="#8B6FCA" fill="#8B6FCA" fillOpacity={0.25} strokeWidth={2} />
+            <Radar name="Actuel" dataKey="current" stroke="#4fe8d1" fill="#4fe8d1" fillOpacity={0.25} strokeWidth={2} />
             <Legend wrapperStyle={{ fontSize: 12 }} />
             <Tooltip content={<CustomTooltip />} />
           </RadarChart>
@@ -97,7 +97,7 @@ export default function Character() {
               </div>
               <div className="flex justify-between text-xs mb-3" style={{ color: 'var(--muted2)' }}>
                 <span>Départ : {trait.base_value}</span>
-                <span style={{ color: delta > 0 ? '#3DC98A' : 'var(--muted2)' }}>
+                <span style={{ color: delta > 0 ? '#4fe8d1' : 'var(--muted2)' }}>
                   {delta > 0 ? `+${delta.toFixed(1)}` : 'stable'}
                 </span>
               </div>

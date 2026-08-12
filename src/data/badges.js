@@ -344,13 +344,13 @@ export const BADGES = {
 export const BADGE_LIST = Object.values(BADGES);
 
 export const BADGE_CATEGORIES = [
-  { id: 'realEstate', label: 'Real Estate', color: '#E4A94B' },
-  { id: 'trading',    label: 'Trading',     color: '#3DC98A' },
-  { id: 'markets',    label: 'Markets',     color: '#8B6FCA' },
-  { id: 'health',     label: 'Health',      color: '#E05C5C' },
-  { id: 'global',     label: 'Global',      color: '#388BDC' },
-  { id: 'timed',      label: 'Temporels',   color: '#E05C5C' },
-  { id: 'secret',     label: 'Secrets',     color: '#2EC4B6' },
+  { id: 'realEstate', label: 'Real Estate', color: '#4fe8d1' },
+  { id: 'trading',    label: 'Trading',     color: '#4fe8d1' },
+  { id: 'markets',    label: 'Markets',     color: '#4fe8d1' },
+  { id: 'health',     label: 'Health',      color: '#4fe8d1' },
+  { id: 'global',     label: 'Global',      color: '#4fe8d1' },
+  { id: 'timed',      label: 'Temporels',   color: '#ffb454' },
+  { id: 'secret',     label: 'Secrets',     color: '#4fe8d1' },
 ];
 
 export const RARITY_ORDER = ['initie', 'veteran', 'elite', 'legendaire', 'mythique', 'timed', 'secret'];

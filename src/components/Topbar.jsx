@@ -14,31 +14,31 @@ export default function Topbar() {
   return (
     <div
       className="flex items-center gap-4 px-5 h-14 flex-shrink-0"
-      style={{ background: 'var(--navy-800)', borderBottom: '1px solid var(--border)' }}
+      style={{ background: 'var(--bg-panel)', backdropFilter: 'blur(2px)', borderBottom: '1px solid var(--line)', position: 'relative', zIndex: 1 }}
     >
       {/* Logo */}
       <div className="flex items-center gap-2 flex-shrink-0">
         <div
-          className="w-7 h-7 rounded flex items-center justify-center text-sm"
-          style={{ background: 'var(--blue)', color: '#fff', fontFamily: 'JetBrains Mono', fontWeight: 700 }}
+          className="w-7 h-7 flex items-center justify-center text-sm"
+          style={{ border: '1px solid var(--cyan)', color: 'var(--cyan)', fontWeight: 700, borderRadius: 2 }}
         >
           L
         </div>
-        <span className="font-mono text-sm font-bold" style={{ color: 'var(--text)', letterSpacing: '0.1em' }}>
-          LIFE RPG
+        <span className="text-sm font-bold" style={{ color: 'var(--text)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+          Life RPG
         </span>
       </div>
 
       {/* Chapter badge */}
       <div
-        className="flex items-center gap-2 px-3 py-1 rounded-full flex-shrink-0"
-        style={{ background: `${chapter.color}18`, border: `1px solid ${chapter.color}40` }}
+        className="flex items-center gap-2 px-3 py-1 flex-shrink-0"
+        style={{ background: 'var(--cyan-dim-bg)', border: '1px solid var(--line-strong)', borderRadius: 2 }}
       >
-        <Shield size={12} style={{ color: chapter.color }} />
-        <span className="text-xs font-mono font-bold" style={{ color: chapter.color, letterSpacing: '0.08em' }}>
+        <Shield size={12} style={{ color: 'var(--cyan)' }} />
+        <span className="text-xs font-bold" style={{ color: 'var(--cyan)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
           CH. {chapter.id} — {chapter.name}
         </span>
-        <span className="text-xs font-mono" style={{ color: 'var(--muted)' }}>
+        <span className="text-xs" style={{ color: 'var(--text-dim)' }}>
           {chapterProgress.toFixed(0)}%
         </span>
       </div>
@@ -47,43 +47,40 @@ export default function Topbar() {
 
       {/* Patrimoine */}
       <div className="flex items-center gap-2 flex-shrink-0">
-        <span className="text-xs" style={{ color: 'var(--muted)' }}>Patrimoine</span>
-        <span className="font-mono text-sm font-bold" style={{ color: '#E4A94B' }}>
+        <span className="text-xs" style={{ color: 'var(--text-dim)', textTransform: 'uppercase' }}>Patrimoine</span>
+        <span className="text-sm font-bold" style={{ color: 'var(--cyan)' }}>
           {formatCurrency(state.patrimoine.current)}
         </span>
       </div>
 
-      <div style={{ width: 1, height: 20, background: 'var(--border)', flexShrink: 0 }} />
+      <div style={{ width: 1, height: 20, background: 'var(--line)', flexShrink: 0 }} />
 
       {/* XP Bar */}
       <div className="flex items-center gap-3 flex-shrink-0" style={{ minWidth: 220 }}>
         <div className="flex items-center gap-1">
-          <Zap size={12} style={{ color: '#388BDC' }} />
-          <span className="font-mono text-xs font-bold" style={{ color: '#388BDC' }}>
+          <Zap size={12} style={{ color: 'var(--cyan)' }} />
+          <span className="text-xs font-bold" style={{ color: 'var(--cyan)' }}>
             LVL {level}
           </span>
         </div>
         <div className="flex-1 relative" style={{ minWidth: 120 }}>
-          <div className="progress-bar" style={{ height: 6, borderRadius: 3 }}>
-            <div
-              className="progress-bar-fill"
-              style={{ width: `${xpPct}%`, background: 'linear-gradient(90deg, #388BDC, #2EC4B6)' }}
-            />
+          <div className="progress-bar" style={{ height: 5 }}>
+            <div className="progress-bar-fill" style={{ width: `${xpPct}%` }} />
           </div>
         </div>
-        <span className="font-mono text-xs" style={{ color: 'var(--muted)', whiteSpace: 'nowrap' }}>
+        <span className="text-xs" style={{ color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>
           {xpInLevel.toLocaleString()} / {xpNeeded.toLocaleString()} XP
         </span>
       </div>
 
-      <div style={{ width: 1, height: 20, background: 'var(--border)', flexShrink: 0 }} />
+      <div style={{ width: 1, height: 20, background: 'var(--line)', flexShrink: 0 }} />
 
       {/* Title */}
       <div
-        className="px-2 py-1 rounded text-xs font-mono font-bold flex-shrink-0"
-        style={{ background: 'var(--blue-dim)', color: '#388BDC', letterSpacing: '0.06em' }}
+        className="px-2 py-1 text-xs font-bold flex-shrink-0"
+        style={{ background: 'var(--cyan-dim-bg)', color: 'var(--cyan)', letterSpacing: '0.08em', textTransform: 'uppercase', borderRadius: 2 }}
       >
-        {title.toUpperCase()}
+        {title}
       </div>
     </div>
   );

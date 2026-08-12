@@ -8,10 +8,10 @@ function ClaimModal({ item, onConfirm, onClose }) {
   const [note, setNote] = useState('');
   return (
     <div style={{
-      position: 'fixed', inset: 0, background: 'rgba(5,13,26,0.9)',
+      position: 'fixed', inset: 0, background: 'rgba(5,16,18,0.9)',
       display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100,
     }}>
-      <div className="card pulse-gold" style={{ width: 440, borderTop: '2px solid #E4A94B' }}>
+      <div className="card pulse-gold" style={{ width: 440, borderTop: '2px solid #ffb454' }}>
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-base font-bold" style={{ color: 'var(--text)' }}>Réclamer la récompense</h3>
           <button className="btn btn-ghost" style={{ padding: '4px 8px' }} onClick={onClose}><X size={14} /></button>
@@ -19,10 +19,10 @@ function ClaimModal({ item, onConfirm, onClose }) {
 
         <div
           className="p-4 rounded-lg mb-4 text-center"
-          style={{ background: 'var(--gold-dim)', border: '1px solid rgba(228,169,75,0.3)' }}
+          style={{ background: 'var(--amber-dim-bg)', border: '1px solid rgba(255,180,84,0.3)' }}
         >
           <div className="text-4xl mb-2">{item.icon}</div>
-          <h4 className="font-bold mb-1" style={{ color: '#E4A94B' }}>{item.label}</h4>
+          <h4 className="font-bold mb-1" style={{ color: '#ffb454' }}>{item.label}</h4>
           {item.budget && (
             <p className="font-mono text-sm" style={{ color: 'var(--text)' }}>
               Budget max: <strong>{formatCurrency(item.budget)}</strong>
@@ -63,7 +63,7 @@ function LootCard({ item, unlocked, claimed, claimData, onClaim }) {
     <div
       className="card"
       style={{
-        borderTop: `2px solid ${claimed ? '#3DC98A' : unlocked ? '#E4A94B' : 'var(--border)'}`,
+        borderTop: `2px solid ${claimed ? '#4fe8d1' : unlocked ? '#ffb454' : 'var(--border)'}`,
         opacity: claimed ? 0.7 : 1,
         transition: 'all 0.2s',
         position: 'relative',
@@ -75,7 +75,7 @@ function LootCard({ item, unlocked, claimed, claimData, onClaim }) {
         <div
           style={{
             position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-            background: 'linear-gradient(90deg, transparent, #E4A94B, transparent)',
+            background: 'linear-gradient(90deg, transparent, #ffb454, transparent)',
             animation: 'pulseGold 2s ease infinite',
           }}
         />
@@ -85,8 +85,8 @@ function LootCard({ item, unlocked, claimed, claimData, onClaim }) {
         <div
           className="text-3xl flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-lg"
           style={{
-            background: claimed ? 'rgba(61,201,138,0.1)' : unlocked ? 'var(--gold-dim)' : 'var(--navy-700)',
-            border: `1px solid ${claimed ? '#3DC98A40' : unlocked ? '#E4A94B40' : 'var(--border)'}`,
+            background: claimed ? 'rgba(79,232,209,0.1)' : unlocked ? 'var(--amber-dim-bg)' : 'var(--navy-700)',
+            border: `1px solid ${claimed ? '#4fe8d140' : unlocked ? '#ffb45440' : 'var(--border)'}`,
           }}
         >
           {item.icon}
@@ -95,11 +95,11 @@ function LootCard({ item, unlocked, claimed, claimData, onClaim }) {
           <div className="flex items-center gap-2 mb-0.5">
             <h3
               className="text-sm font-bold"
-              style={{ color: claimed ? '#3DC98A' : unlocked ? '#E4A94B' : 'var(--muted2)' }}
+              style={{ color: claimed ? '#4fe8d1' : unlocked ? '#ffb454' : 'var(--muted2)' }}
             >
               {item.label}
             </h3>
-            {claimed && <Check size={12} style={{ color: '#3DC98A' }} />}
+            {claimed && <Check size={12} style={{ color: '#4fe8d1' }} />}
             {!unlocked && <Lock size={11} style={{ color: 'var(--muted2)' }} />}
           </div>
           <p className="text-xs" style={{ color: 'var(--muted)' }}>{item.trigger}</p>
@@ -110,8 +110,8 @@ function LootCard({ item, unlocked, claimed, claimData, onClaim }) {
         <div
           className="inline-block px-2 py-1 rounded text-xs font-mono font-bold mb-3"
           style={{
-            background: unlocked ? 'var(--gold-dim)' : 'var(--navy-700)',
-            color: unlocked ? '#E4A94B' : 'var(--muted2)',
+            background: unlocked ? 'var(--amber-dim-bg)' : 'var(--navy-700)',
+            color: unlocked ? '#ffb454' : 'var(--muted2)',
           }}
         >
           Budget max: {formatCurrency(item.budget)}
@@ -129,9 +129,9 @@ function LootCard({ item, unlocked, claimed, claimData, onClaim }) {
       {claimed ? (
         <div
           className="p-2 rounded text-xs"
-          style={{ background: 'rgba(61,201,138,0.08)', border: '1px solid rgba(61,201,138,0.2)' }}
+          style={{ background: 'rgba(79,232,209,0.08)', border: '1px solid rgba(79,232,209,0.2)' }}
         >
-          <p style={{ color: '#3DC98A', marginBottom: 2 }}>✓ Réclamée le {formatDate(claimData.claimedAt)}</p>
+          <p style={{ color: '#4fe8d1', marginBottom: 2 }}>✓ Réclamée le {formatDate(claimData.claimedAt)}</p>
           {claimData.note && (
             <p style={{ color: 'var(--muted)' }}>{claimData.note}</p>
           )}
@@ -197,7 +197,7 @@ export default function LootShop() {
           </p>
         </div>
         <div className="text-right">
-          <p className="font-mono font-bold text-lg" style={{ color: '#E4A94B' }}>
+          <p className="font-mono font-bold text-lg" style={{ color: '#ffb454' }}>
             {pendingItems.length}
           </p>
           <p className="text-xs" style={{ color: 'var(--muted)' }}>à réclamer</p>
@@ -207,8 +207,8 @@ export default function LootShop() {
       {/* KPI */}
       <div className="grid grid-cols-3 gap-4 mb-6">
         {[
-          { label: 'Disponibles', value: pendingItems.length, color: '#E4A94B', icon: '🎁' },
-          { label: 'Réclamées', value: claimedItems.length, color: '#3DC98A', icon: '✓' },
+          { label: 'Disponibles', value: pendingItems.length, color: '#ffb454', icon: '🎁' },
+          { label: 'Réclamées', value: claimedItems.length, color: '#4fe8d1', icon: '✓' },
           { label: 'Verrouillées', value: LOOT_ITEMS.length - unlockedItems.length, color: 'var(--muted)', icon: '🔒' },
         ].map(({ label, value, color, icon }) => (
           <div key={label} className="card card-gold">
@@ -225,12 +225,12 @@ export default function LootShop() {
       {pendingItems.length > 0 && (
         <div
           className="card mb-6 pulse-gold"
-          style={{ borderTop: '2px solid #E4A94B', background: 'var(--gold-dim)' }}
+          style={{ borderTop: '2px solid #ffb454', background: 'var(--amber-dim-bg)' }}
         >
           <div className="flex items-center gap-3">
-            <Gift size={20} style={{ color: '#E4A94B' }} />
+            <Gift size={20} style={{ color: '#ffb454' }} />
             <div>
-              <p className="text-sm font-bold" style={{ color: '#E4A94B' }}>
+              <p className="text-sm font-bold" style={{ color: '#ffb454' }}>
                 {pendingItems.length} récompense{pendingItems.length > 1 ? 's' : ''} prête{pendingItems.length > 1 ? 's' : ''} à réclamer !
               </p>
               <p className="text-xs" style={{ color: 'var(--muted)' }}>
