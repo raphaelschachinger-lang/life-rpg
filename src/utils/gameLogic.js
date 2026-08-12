@@ -164,6 +164,65 @@ export function calculateStreak(completions) {
   return { current, best: Math.max(best, current) };
 }
 
+// Combined streak across ALL habits at once.
+// A calendar day only counts against a given habit if that habit is
+// actually "due" that day — alternate-day habits (e.g. sport every other
+// day) don't break the combined streak on their rest days, and a habit
+// currently in vacation mode is skipped entirely.
+function isGlobalDayComplete(habits, dateKey) {
+  return Object.values(habits).every(h => {
+    if (h.vacationMode) return true;
+    if (h.frequency === 'alternate' && !isDueDay(dateKey, h.frequencyStartDate)) return true;
+    return !!h.completions[dateKey];
+  });
+}
+
+export function calculateGlobalStreak(habits) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const todayKey = today.toISOString().split('T')[0];
+
+  let check = new Date(today);
+  // If today isn't fully done yet, start from yesterday so the streak stays alive until EOD
+  if (!isGlobalDayComplete(habits, todayKey)) {
+    check.setDate(check.getDate() - 1);
+  }
+
+  let current = 0;
+  while (true) {
+    const key = check.toISOString().split('T')[0];
+    if (isGlobalDayComplete(habits, key)) {
+      current++;
+      check.setDate(check.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+
+  // Best streak: walk day-by-day from the earliest completion to today.
+  const allDates = Object.values(habits)
+    .flatMap(h => Object.keys(h.completions).filter(k => h.completions[k]));
+  let best = current;
+  if (allDates.length > 0) {
+    const earliest = allDates.sort()[0];
+    let d = new Date(earliest);
+    d.setHours(0, 0, 0, 0);
+    let temp = 0;
+    while (d <= today) {
+      const key = d.toISOString().split('T')[0];
+      if (isGlobalDayComplete(habits, key)) {
+        temp++;
+        if (temp > best) best = temp;
+      } else {
+        temp = 0;
+      }
+      d.setDate(d.getDate() + 1);
+    }
+  }
+
+  return { current, best };
+}
+
 // ── Weekly XP calculation ──────────────────────────────────────
 
 export const REAL_ESTATE_ACTION_XP = {
@@ -246,11 +305,14 @@ export function checkBadgeUnlocks(gameState, existingBadges) {
   const now = new Date();
   const { level } = getLevelFromXP(gameState.player.totalXP);
   const newBadges = [];
+  // Exposed to badge `check` fns as `s.globalStreak` — the combined streak
+  // across all habits, respecting each habit's own due-day frequency.
+  const stateForChecks = { ...gameState, globalStreak: calculateGlobalStreak(gameState.habits) };
 
   Object.values(BADGES).forEach(badge => {
     if (existingBadges[badge.id]) return; // already unlocked
     try {
-      const unlocked = badge.check(gameState, now, level);
+      const unlocked = badge.check(stateForChecks, now, level);
       if (unlocked) newBadges.push(badge);
     } catch (_) {}
   });

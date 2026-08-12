@@ -160,7 +160,7 @@ export const BADGES = {
     id: 'health-clean-week', name: 'Clean Week', category: 'health',
     description: "Toutes les habitudes 7j parfaits",
     rarity: 'veteran', xp: 300, icon: '✨',
-    check: s => Object.values(s.habits).every(h => h.currentStreak >= 7),
+    check: s => s.globalStreak.current >= 7,
   },
   'health-30-smoke': {
     id: 'health-30-smoke', name: '30j sans fumer', category: 'health',
@@ -190,7 +190,7 @@ export const BADGES = {
     id: 'health-iron', name: 'Iron Health', category: 'health',
     description: "365j de toutes les habitudes",
     rarity: 'mythique', xp: 5000, icon: '⚔️',
-    check: s => Object.values(s.habits).every(h => h.bestStreak >= 365),
+    check: s => s.globalStreak.best >= 365,
   },
 
   // ── Global ────────────────────────────────────────────────────
@@ -331,7 +331,7 @@ export const BADGES = {
     id: 'secret-iron-will', name: 'Iron Will', category: 'secret',
     hint: 'Seul le temps le révèle',
     rarity: 'secret', xp: 1500, icon: '🔩',
-    check: s => Object.values(s.habits).every(h => h.bestStreak >= 365),
+    check: s => s.globalStreak.best >= 365,
   },
   'secret-oracle': {
     id: 'secret-oracle', name: 'The Oracle', category: 'secret',

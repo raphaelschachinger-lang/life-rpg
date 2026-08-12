@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useGame } from '../context/GameContext';
-import { getVerticalLevel, formatDate, isDueDay } from '../utils/gameLogic';
+import { getVerticalLevel, formatDate, isDueDay, calculateGlobalStreak } from '../utils/gameLogic';
 import { Heart, Flame, Edit2 } from 'lucide-react';
 
 const HABIT_KEYS = ['sport', 'noSmoke', 'noAlcohol', 'reading', 'noSocial', 'noJunkFood'];
@@ -177,9 +177,8 @@ export default function Health() {
   const weeklyScore = totalPossible > 0 ? (totalDone / totalPossible) * 100 : 0;
   const scoreColor = weeklyScore >= 80 ? '#3DC98A' : weeklyScore >= 50 ? '#E4A94B' : '#E05C5C';
 
-  // Total streak stats
-  const allStreaks = HABIT_KEYS.map(k => habits[k].currentStreak);
-  const minStreak = Math.min(...allStreaks);
+  // Combined streak across all habits (sport's alternate-day rest days don't break it)
+  const { current: minStreak } = calculateGlobalStreak(habits);
   const totalHabitDays = HABIT_KEYS.reduce((s, k) => s + habits[k].totalDays, 0);
 
   return (
