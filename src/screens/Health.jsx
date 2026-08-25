@@ -203,7 +203,7 @@ export default function Health() {
       </div>
 
       {/* KPI row */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <div className="card">
           <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>Score semaine</p>
           <p className="font-mono font-bold text-2xl" style={{ color: scoreColor }}>
@@ -255,7 +255,7 @@ export default function Health() {
       </div>
 
       {/* Habits grid */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {HABIT_KEYS.map(k => (
           <HabitCard
             key={k}
@@ -273,7 +273,7 @@ export default function Health() {
         <h3 className="panel-label mb-3">
           Milestones de streak
         </h3>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {HABIT_KEYS.map(k => {
             const h = habits[k];
             const bonuses = STREAK_BONUSES[k] || [];

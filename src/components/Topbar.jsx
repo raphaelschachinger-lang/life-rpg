@@ -1,9 +1,9 @@
 import React from 'react';
 import { useGame } from '../context/GameContext';
 import { getLevelFromXP, getPlayerTitle, getCurrentChapter, getChapterProgress, formatCurrency } from '../utils/gameLogic';
-import { Zap, Shield, Sun, Moon } from 'lucide-react';
+import { Zap, Shield, Sun, Moon, Menu, X } from 'lucide-react';
 
-export default function Topbar() {
+export default function Topbar({ navOpen, onMenuClick }) {
   const { state, dispatch } = useGame();
   const { level, xpInLevel, xpNeeded } = getLevelFromXP(state.player.totalXP);
   const title = getPlayerTitle(level);
@@ -17,6 +17,16 @@ export default function Topbar() {
       className="flex items-center gap-4 px-5 h-14 flex-shrink-0"
       style={{ background: 'var(--panel)', borderBottom: '1px solid var(--border)', position: 'relative', zIndex: 1 }}
     >
+      {/* Mobile menu button */}
+      <button
+        className="md:hidden flex-shrink-0"
+        style={{ background: 'transparent', border: 'none', color: 'var(--text)', padding: 4, cursor: 'pointer' }}
+        onClick={onMenuClick}
+        aria-label={navOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+      >
+        {navOpen ? <X size={20} /> : <Menu size={20} />}
+      </button>
+
       {/* Logo */}
       <div className="flex items-center gap-2 flex-shrink-0">
         <div
@@ -25,14 +35,14 @@ export default function Topbar() {
         >
           L
         </div>
-        <span className="text-sm font-bold" style={{ color: 'var(--text)', letterSpacing: '-0.01em' }}>
+        <span className="text-sm font-bold hidden sm:inline" style={{ color: 'var(--text)', letterSpacing: '-0.01em' }}>
           Life RPG
         </span>
       </div>
 
       {/* Chapter badge */}
       <div
-        className="flex items-center gap-2 px-3 py-1 flex-shrink-0"
+        className="hidden md:flex items-center gap-2 px-3 py-1 flex-shrink-0"
         style={{ background: 'var(--accent-soft)', borderRadius: 20 }}
       >
         <Shield size={12} style={{ color: 'var(--accent)' }} />
@@ -47,17 +57,17 @@ export default function Topbar() {
       <div className="flex-1" />
 
       {/* Patrimoine */}
-      <div className="flex items-center gap-2 flex-shrink-0">
+      <div className="hidden md:flex items-center gap-2 flex-shrink-0">
         <span className="text-xs" style={{ color: 'var(--text-dim)' }}>Patrimoine</span>
         <span className="text-sm font-bold mono" style={{ color: 'var(--accent)' }}>
           {formatCurrency(state.patrimoine.current)}
         </span>
       </div>
 
-      <div style={{ width: 1, height: 20, background: 'var(--border)', flexShrink: 0 }} />
+      <div className="hidden md:block" style={{ width: 1, height: 20, background: 'var(--border)', flexShrink: 0 }} />
 
       {/* XP Bar */}
-      <div className="flex items-center gap-3 flex-shrink-0" style={{ minWidth: 220 }}>
+      <div className="hidden md:flex items-center gap-3 flex-shrink-0" style={{ minWidth: 220 }}>
         <div className="flex items-center gap-1">
           <Zap size={12} style={{ color: 'var(--accent)' }} />
           <span className="text-xs font-bold" style={{ color: 'var(--accent)' }}>
@@ -74,11 +84,11 @@ export default function Topbar() {
         </span>
       </div>
 
-      <div style={{ width: 1, height: 20, background: 'var(--border)', flexShrink: 0 }} />
+      <div className="hidden md:block" style={{ width: 1, height: 20, background: 'var(--border)', flexShrink: 0 }} />
 
       {/* Title */}
       <div
-        className="px-3 py-1 text-xs font-semibold flex-shrink-0"
+        className="hidden md:block px-3 py-1 text-xs font-semibold flex-shrink-0"
         style={{ background: 'var(--accent-soft)', color: 'var(--accent)', borderRadius: 20 }}
       >
         {title}

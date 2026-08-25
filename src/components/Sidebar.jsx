@@ -26,11 +26,11 @@ const VERTICALS = [
   { key: 'health',     label: 'Health' },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, onClose }) {
   const { state, dispatch } = useGame();
   const { currentScreen } = state.ui;
 
-  const navigate = (screen) => dispatch({ type: 'NAVIGATE', screen });
+  const navigate = (screen) => { dispatch({ type: 'NAVIGATE', screen }); onClose?.(); };
 
   const unlockedBadgeCount = Object.keys(state.badges).length;
 
@@ -44,14 +44,23 @@ export default function Sidebar() {
   });
 
   return (
-    <div
-      className="flex flex-col h-full flex-shrink-0"
-      style={{
-        width: 220,
-        background: 'var(--panel)',
-        borderRight: '1px solid var(--border)',
-      }}
-    >
+    <>
+      {isOpen && (
+        <div
+          className="md:hidden fixed inset-0"
+          style={{ background: 'rgba(0,0,0,0.4)', zIndex: 39 }}
+          onClick={onClose}
+        />
+      )}
+      <div
+        className={`flex flex-col h-full flex-shrink-0 fixed md:static inset-y-0 left-0 transition-transform duration-200 md:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        style={{
+          width: 220,
+          background: 'var(--panel)',
+          borderRight: '1px solid var(--border)',
+          zIndex: 40,
+        }}
+      >
       {/* Nav */}
       <nav className="flex-1 p-3 flex flex-col gap-1">
         {NAV_ITEMS.map(({ screen, label, icon: Icon }) => {
@@ -118,6 +127,7 @@ export default function Sidebar() {
           {state.player.totalXP.toLocaleString()} XP total
         </p>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

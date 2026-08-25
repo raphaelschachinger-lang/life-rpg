@@ -85,7 +85,7 @@ function PropertyCard({ property, onUpdate, onRemove }) {
 
       {editing ? (
         <div className="flex flex-col gap-3 fade-up">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
               <label className="text-xs block mb-1" style={{ color: 'var(--muted)' }}>Nom</label>
               <input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
@@ -116,7 +116,7 @@ function PropertyCard({ property, onUpdate, onRemove }) {
               }
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
               <label className="text-xs block mb-1" style={{ color: 'var(--muted)' }}>Type</label>
               <select value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value }))}>
@@ -148,7 +148,7 @@ function PropertyCard({ property, onUpdate, onRemove }) {
         </div>
       ) : (
         <div>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div>
               <p className="text-xs" style={{ color: 'var(--muted)' }}>Type</p>
               <p className="text-sm font-mono font-bold" style={{ color: 'var(--text)' }}>
@@ -302,7 +302,7 @@ export default function RealEstate() {
       </div>
 
       {/* KPI row */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         {[
           { label: 'Biens actifs', value: ownedCount, color: 'var(--accent)' },
           { label: 'Portefeuille brut', value: formatCurrency(totalBrut), color: 'var(--accent)' },

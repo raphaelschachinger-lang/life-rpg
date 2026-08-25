@@ -204,26 +204,26 @@ export default function Carte() {
       <div className="card" style={{ padding: 24 }}>
         <div className="flex items-center justify-between mb-4">
           <button
-            className="btn btn-ghost flex items-center gap-1 text-xs"
+            className="btn btn-ghost flex items-center gap-1 text-xs flex-shrink-0"
             disabled={selectedIndex === 0}
             style={selectedIndex === 0 ? { opacity: 0.3, cursor: 'default' } : {}}
             onClick={() => selectedIndex > 0 && setSelectedIndex(selectedIndex - 1)}
           >
-            <ChevronLeft size={14} /> Précédent
+            <ChevronLeft size={14} /> <span className="hidden sm:inline">Précédent</span>
           </button>
-          <div className="text-center">
+          <div className="text-center" style={{ minWidth: 0 }}>
             <p className="text-xs font-mono" style={{ color: 'var(--muted)', letterSpacing: '0.1em' }}>
               CHAPITRE {selected.id}
             </p>
             <h2 className="text-lg font-bold" style={{ color: 'var(--cyan)' }}>{selected.name}</h2>
           </div>
           <button
-            className="btn btn-ghost flex items-center gap-1 text-xs"
+            className="btn btn-ghost flex items-center gap-1 text-xs flex-shrink-0"
             disabled={selectedIndex === CHAPTERS.length - 1}
             style={selectedIndex === CHAPTERS.length - 1 ? { opacity: 0.3, cursor: 'default' } : {}}
             onClick={() => selectedIndex < CHAPTERS.length - 1 && setSelectedIndex(selectedIndex + 1)}
           >
-            Suivant <ChevronRight size={14} />
+            <span className="hidden sm:inline">Suivant</span> <ChevronRight size={14} />
           </button>
         </div>
 
@@ -246,7 +246,7 @@ export default function Carte() {
         <p className="text-xs font-mono mb-3" style={{ color: 'var(--muted)', letterSpacing: '0.1em' }}>
           JALONS DE CE CHAPITRE
         </p>
-        <div className="grid grid-cols-2 gap-2 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-4">
           {selectedInfo.milestoneBadges.map(id => {
             const badge = BADGES[id];
             if (!badge) return null;

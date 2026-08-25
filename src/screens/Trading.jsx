@@ -77,7 +77,7 @@ function PropfirmCard({ pf, onUpdate, onRemove }) {
 
       {editing && (
         <div className="mt-4 flex flex-col gap-3 fade-up" style={{ borderTop: '1px solid var(--border)', paddingTop: 12 }}>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
               <label className="text-xs block mb-1" style={{ color: 'var(--muted)' }}>Nom</label>
               <input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
@@ -170,7 +170,7 @@ export default function Trading() {
       </div>
 
       {/* KPIs */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         {[
           { label: 'P&L total', value: `${totalPnL >= 0 ? '+' : ''}${formatCurrency(totalPnL)}`, color: totalPnL >= 0 ? 'var(--accent)' : 'var(--negative)' },
           { label: 'Semaines positives', value: `${positiveWeeks}/${state.trading.weeklyLogs.length}`, color: 'var(--accent)' },
@@ -316,7 +316,7 @@ export default function Trading() {
             <p className="text-sm" style={{ color: 'var(--muted)' }}>Aucune propfirm enregistrée</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {state.trading.propfirms.map(pf => (
               <PropfirmCard
                 key={pf.id}

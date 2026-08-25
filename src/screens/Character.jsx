@@ -71,7 +71,7 @@ export default function Character() {
       </div>
 
       {/* Trait detail cards */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {TRAIT_ORDER.map(id => {
           const meta = TRAITS_META[id];
           const trait = traits[id];

@@ -155,7 +155,7 @@ export default function Dashboard() {
       </div>
 
       {/* KPI row */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <StatCard
           title="Patrimoine net"
           value={formatCurrency(state.patrimoine.current)}
@@ -204,7 +204,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         {/* Patrimoine chart */}
         <div className="card col-span-2">
           <div className="flex items-center justify-between mb-3">
@@ -290,7 +290,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         {/* Weekly Review CTA */}
         <div className="card">
           <div className="flex items-center gap-2 mb-3">

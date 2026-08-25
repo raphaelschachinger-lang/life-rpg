@@ -122,7 +122,7 @@ export default function Achievements() {
       </div>
 
       {/* Stats row */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         {[
           { label: 'Débloqués', value: unlockedCount, color: 'var(--accent)', icon: '🏆' },
           { label: 'Restants', value: totalBadges - unlockedCount, color: 'var(--text-dim)', icon: '🔒' },
@@ -213,7 +213,7 @@ export default function Achievements() {
                   {cat.label} ({catUnlocked}/{catBadges.length})
                 </h2>
               </div>
-              <div className="grid grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {catBadges.map(badge => (
                   <BadgeCard
                     key={badge.id}
@@ -227,7 +227,7 @@ export default function Achievements() {
           );
         })
       ) : (
-        <div className="grid grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {sortedBadges.map(badge => (
             <BadgeCard
               key={badge.id}

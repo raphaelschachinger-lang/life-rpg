@@ -73,7 +73,7 @@ export default function FinancialMarkets() {
       </div>
 
       {/* KPI row */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         {[
           { label: 'Portefeuille total', value: formatCurrency(totalPortfolio), color: 'var(--accent)' },
           { label: 'Total investi', value: formatCurrency(totalInvested), color: 'var(--text)' },
@@ -87,7 +87,7 @@ export default function FinancialMarkets() {
         ))}
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         {/* PEA Card */}
         <div className="card">
           <div className="flex items-center justify-between mb-3">
@@ -137,7 +137,7 @@ export default function FinancialMarkets() {
             </div>
           )}
 
-          <div className="grid grid-cols-2 gap-3 mb-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
             <div>
               <p className="text-xs" style={{ color: 'var(--muted)' }}>Valeur actuelle</p>
               <p className="font-mono font-bold text-lg" style={{ color: 'var(--accent)' }}>{formatCurrency(pea.currentValue)}</p>
@@ -190,7 +190,7 @@ export default function FinancialMarkets() {
             </button>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 mb-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
             <div>
               <p className="text-xs" style={{ color: 'var(--muted)' }}>Valeur actuelle</p>
               <p className="font-mono font-bold text-lg" style={{ color: 'var(--accent)' }}>{formatCurrency(cto.currentValue)}</p>
@@ -232,7 +232,7 @@ export default function FinancialMarkets() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         {/* DCA Tracker */}
         <div className="card">
           <div className="flex items-center justify-between mb-3">
@@ -242,7 +242,7 @@ export default function FinancialMarkets() {
             </button>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 mb-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
             <div>
               <p className="text-xs" style={{ color: 'var(--muted)' }}>Mensuel programmé</p>
               <p className="font-mono font-bold text-lg" style={{ color: 'var(--accent)' }}>{formatCurrency(dca.monthlyAmount)}</p>
