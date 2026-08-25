@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useGame } from '../context/GameContext';
 import Topbar from './Topbar';
 import Sidebar from './Sidebar';
@@ -30,11 +30,12 @@ export default function Layout() {
   const { state } = useGame();
   const Screen = SCREENS[state.ui.currentScreen] || Dashboard;
 
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', state.ui.theme || 'dark');
+  }, [state.ui.theme]);
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden', position: 'relative' }}>
-      <div className="bg-texture" />
-      <div className="bg-grid" />
-      <div className="bg-scanlines" />
       <Topbar />
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden', position: 'relative', zIndex: 1 }}>
         <Sidebar />

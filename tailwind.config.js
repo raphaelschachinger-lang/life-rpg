@@ -4,18 +4,16 @@ export default {
   theme: {
     extend: {
       colors: {
-        'bg-start': '#0e2b2e',
-        'bg-mid':   '#08191b',
-        'bg-end':   '#051012',
-        'rpg-cyan':     '#4fe8d1',
-        'rpg-cyan-dim': '#1f6e66',
-        'rpg-amber':    '#ffb454',
-        'rpg-text':     '#d8f3ee',
-        'rpg-muted':    '#6fa39a',
+        'rpg-accent':      '#0A6CFF',
+        'rpg-accent-soft': 'rgba(10,108,255,0.12)',
+        'rpg-negative':    '#E5484D',
       },
       fontFamily: {
-        mono: ['Courier New', 'ui-monospace', 'monospace'],
-        sans: ['Courier New', 'ui-monospace', 'monospace'],
+        sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"Segoe UI"', 'Helvetica', 'Arial', 'sans-serif'],
+        // No monospace anywhere in the new theme — font-mono utility (used across
+        // screens for numeric values) now resolves to the same system font, with
+        // tabular-nums applied separately via the `.mono` class where alignment matters.
+        mono: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"Segoe UI"', 'Helvetica', 'Arial', 'sans-serif'],
       },
       animation: {
         'fade-up': 'fadeUp 0.4s ease forwards',

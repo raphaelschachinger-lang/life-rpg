@@ -48,9 +48,8 @@ export default function Sidebar() {
       className="flex flex-col h-full flex-shrink-0"
       style={{
         width: 220,
-        background: 'var(--bg-panel)',
-        backdropFilter: 'blur(2px)',
-        borderRight: '1px solid var(--line)',
+        background: 'var(--panel)',
+        borderRight: '1px solid var(--border)',
       }}
     >
       {/* Nav */}
@@ -69,14 +68,14 @@ export default function Sidebar() {
               {showDot && (
                 <span
                   className="w-2 h-2 rounded-full flex-shrink-0"
-                  style={{ background: 'var(--amber)', boxShadow: '0 0 6px var(--amber)' }}
+                  style={{ background: 'var(--negative)' }}
                   title="Review à faire"
                 />
               )}
               {screen === 'achievements' && unlockedBadgeCount > 0 && (
                 <span
                   className="text-xs px-1"
-                  style={{ background: 'var(--cyan-dim-bg)', color: 'var(--cyan)', fontSize: 10, borderRadius: 2 }}
+                  style={{ background: 'var(--accent-soft)', color: 'var(--accent)', fontSize: 10, borderRadius: 6 }}
                 >
                   {unlockedBadgeCount}
                 </span>
@@ -87,7 +86,7 @@ export default function Sidebar() {
       </nav>
 
       {/* Vertical stats */}
-      <div className="p-3" style={{ borderTop: '1px solid var(--line)' }}>
+      <div className="p-3" style={{ borderTop: '1px solid var(--border)' }}>
         <p className="panel-label" style={{ marginBottom: 12 }}>
           Stats vertical
         </p>
@@ -98,8 +97,8 @@ export default function Sidebar() {
             return (
               <div key={key}>
                 <div className="flex justify-between items-center mb-1">
-                  <span style={{ color: 'var(--text-dim)', fontSize: 11, textTransform: 'uppercase' }}>{label}</span>
-                  <span className="text-xs font-bold" style={{ color: 'var(--cyan)' }}>Lv.{level}</span>
+                  <span style={{ color: 'var(--text-dim)', fontSize: 12 }}>{label}</span>
+                  <span className="text-xs font-bold" style={{ color: 'var(--accent)' }}>Niv.{level}</span>
                 </div>
                 <div className="progress-bar">
                   <div className="progress-bar-fill" style={{ width: `${pct}%` }} />
@@ -111,11 +110,11 @@ export default function Sidebar() {
       </div>
 
       {/* Player name */}
-      <div className="p-3" style={{ borderTop: '1px solid var(--line)' }}>
-        <p className="text-xs" style={{ color: 'var(--text-dim)', fontSize: 11, textTransform: 'uppercase' }}>
+      <div className="p-3" style={{ borderTop: '1px solid var(--border)' }}>
+        <p className="text-xs" style={{ color: 'var(--text-dim)', fontSize: 12 }}>
           {state.player.name}
         </p>
-        <p className="text-xs" style={{ color: 'var(--text-dim2)', fontSize: 10 }}>
+        <p className="text-xs mono" style={{ color: 'var(--text-faint)', fontSize: 11 }}>
           {state.player.totalXP.toLocaleString()} XP total
         </p>
       </div>

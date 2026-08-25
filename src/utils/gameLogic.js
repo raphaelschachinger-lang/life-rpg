@@ -53,10 +53,10 @@ export function getPlayerTitle(level) {
 // ── Chapter system ─────────────────────────────────────────────
 
 export const CHAPTERS = [
-  { id: 1, name: 'THE FORGE',      period: '2025–2027', start: 13000,   target: 100000,    color: '#4fe8d1' },
-  { id: 2, name: 'THE ENGINE',     period: '2027–2031', start: 100000,  target: 1000000,   color: '#4fe8d1' },
-  { id: 3, name: 'CRITICAL MASS',  period: '2031–2036', start: 1000000, target: 4000000,   color: '#4fe8d1' },
-  { id: 4, name: 'ENDGAME',        period: '2036–2041', start: 4000000, target: 10000000,  color: '#4fe8d1' },
+  { id: 1, name: 'THE FORGE',      period: '2025–2027', start: 13000,   target: 100000,    color: 'var(--accent)' },
+  { id: 2, name: 'THE ENGINE',     period: '2027–2031', start: 100000,  target: 1000000,   color: 'var(--accent)' },
+  { id: 3, name: 'CRITICAL MASS',  period: '2031–2036', start: 1000000, target: 4000000,   color: 'var(--accent)' },
+  { id: 4, name: 'ENDGAME',        period: '2036–2041', start: 4000000, target: 10000000,  color: 'var(--accent)' },
 ];
 
 export function getCurrentChapter(patrimoine) {

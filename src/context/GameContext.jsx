@@ -11,7 +11,7 @@ const HABIT_DEFAULTS = () => ({
 });
 
 export const DEFAULT_STATE = {
-  ui: { currentScreen: 'dashboard' },
+  ui: { currentScreen: 'dashboard', theme: 'dark' },
   player: {
     name: 'Player',
     totalXP: 0,
@@ -30,12 +30,12 @@ export const DEFAULT_STATE = {
     health:     { totalXP: 0 },
   },
   habits: {
-    sport:     { ...HABIT_DEFAULTS(), name: 'Sport', xpPerDay: 10, color: '#4fe8d1', frequency: 'alternate', frequencyStartDate: '2026-06-29' },
-    noSmoke:   { ...HABIT_DEFAULTS(), name: 'Zéro cigarette', xpPerDay: 15, color: '#4fe8d1' },
-    noAlcohol: { ...HABIT_DEFAULTS(), name: 'Zéro alcool', xpPerDay: 10, color: '#4fe8d1', vacationMode: false },
-    reading:   { ...HABIT_DEFAULTS(), name: 'Lecture', xpPerDay: 10, color: '#4fe8d1' },
-    noSocial:  { ...HABIT_DEFAULTS(), name: 'Zéro réseaux sociaux', xpPerDay: 15, color: '#4fe8d1' },
-    noJunkFood: { ...HABIT_DEFAULTS(), name: 'No Junk Food', xpPerDay: 15, color: '#4fe8d1' },
+    sport:     { ...HABIT_DEFAULTS(), name: 'Sport', xpPerDay: 10, color: 'var(--accent)', frequency: 'alternate', frequencyStartDate: '2026-06-29' },
+    noSmoke:   { ...HABIT_DEFAULTS(), name: 'Zéro cigarette', xpPerDay: 15, color: 'var(--accent)' },
+    noAlcohol: { ...HABIT_DEFAULTS(), name: 'Zéro alcool', xpPerDay: 10, color: 'var(--accent)', vacationMode: false },
+    reading:   { ...HABIT_DEFAULTS(), name: 'Lecture', xpPerDay: 10, color: 'var(--accent)' },
+    noSocial:  { ...HABIT_DEFAULTS(), name: 'Zéro réseaux sociaux', xpPerDay: 15, color: 'var(--accent)' },
+    noJunkFood: { ...HABIT_DEFAULTS(), name: 'No Junk Food', xpPerDay: 15, color: 'var(--accent)' },
   },
   trading: {
     weeklyLogs: [],
@@ -175,6 +175,9 @@ function reducer(state, action) {
 
     case 'NAVIGATE':
       return { ...state, ui: { ...state.ui, currentScreen: action.screen } };
+
+    case 'SET_THEME':
+      return { ...state, ui: { ...state.ui, theme: action.theme } };
 
     case 'SET_PLAYER_NAME':
       return { ...state, player: { ...state.player, name: action.name } };

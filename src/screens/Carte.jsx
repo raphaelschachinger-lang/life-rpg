@@ -143,7 +143,7 @@ export default function Carte() {
                       />
                       <circle
                         cx={sat.x} cy={sat.y} r={SAT_R}
-                        fill={unlocked ? 'var(--cyan)' : '#0c1216'}
+                        fill={unlocked ? 'var(--cyan)' : 'var(--panel-alt)'}
                         stroke={unlocked ? 'var(--cyan)' : 'var(--line-strong)'}
                         strokeWidth={1}
                         opacity={unlocked ? 1 : 0.7}
@@ -157,7 +157,7 @@ export default function Carte() {
                 {/* Hub */}
                 <circle
                   cx={pos.x} cy={pos.y} r={HUB_R}
-                  fill={status === 'locked' ? 'var(--navy-700)' : 'rgba(79,232,209,0.15)'}
+                  fill={status === 'locked' ? 'var(--navy-700)' : 'var(--accent-soft)'}
                   stroke={isSelected ? 'var(--cyan)' : (status === 'locked' ? 'var(--border2)' : 'var(--cyan)')}
                   strokeWidth={isSelected ? 4 : 2.5}
                   opacity={status === 'locked' ? 0.55 : 1}
@@ -172,15 +172,15 @@ export default function Carte() {
                   {status === 'locked' ? '🔒' : info.icon}
                 </text>
                 <text x={pos.x} y={pos.y + HUB_R + 22} textAnchor="middle" fontSize={13} fontWeight={700}
-                  fill="var(--text)" fontFamily="'Courier New', ui-monospace, monospace">
+                  fill="var(--text)">
                   {chapter.name}
                 </text>
                 <text x={pos.x} y={pos.y + HUB_R + 38} textAnchor="middle" fontSize={10}
-                  fill="var(--muted)" fontFamily="'Courier New', ui-monospace, monospace">
+                  fill="var(--muted)">
                   {chapter.period}
                 </text>
                 <text x={pos.x} y={pos.y + HUB_R + 54} textAnchor="middle" fontSize={11} fontWeight={700}
-                  fill="var(--cyan)" fontFamily="'Courier New', ui-monospace, monospace">
+                  fill="var(--cyan)">
                   {formatCurrency(chapter.target)}
                 </text>
               </g>
@@ -189,11 +189,11 @@ export default function Carte() {
 
           {/* "You are here" marker */}
           <g>
-            <circle cx={markerPos.x} cy={markerPos.y} r={9} fill="var(--cyan)" stroke="var(--bg-gradient-end)" strokeWidth={2}>
+            <circle cx={markerPos.x} cy={markerPos.y} r={9} fill="var(--cyan)" stroke="var(--bg)" strokeWidth={2}>
               <animate attributeName="r" values="8;11;8" dur="1.4s" repeatCount="indefinite" />
             </circle>
             <text x={markerPos.x} y={markerPos.y - 18} textAnchor="middle" fontSize={11} fontWeight={700}
-              fill="var(--cyan)" fontFamily="'Courier New', ui-monospace, monospace">
+              fill="var(--cyan)">
               Toi
             </text>
           </g>
@@ -269,7 +269,7 @@ export default function Carte() {
                   <p className="text-xs truncate" style={{ color: 'var(--muted2)', fontSize: 10 }}>{badge.description}</p>
                 </div>
                 {unlocked
-                  ? <Check size={14} style={{ color: '#4fe8d1', flexShrink: 0 }} />
+                  ? <Check size={14} style={{ color: 'var(--accent)', flexShrink: 0 }} />
                   : <Lock size={12} style={{ color: 'var(--muted2)', flexShrink: 0 }} />}
               </div>
             );

@@ -18,13 +18,17 @@ const PRINCIPLES = [
 
 function StatCard({ title, value, sub, color, icon: Icon }) {
   return (
-    <div className="card" style={{ borderTop: `2px solid ${color}` }}>
+    <div className="card">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-xs" style={{ color: 'var(--muted)', fontWeight: 500 }}>{title}</span>
-        {Icon && <Icon size={14} style={{ color }} />}
+        <span className="text-xs" style={{ color: 'var(--text-dim)', fontWeight: 500 }}>{title}</span>
+        {Icon && (
+          <span className="icon-pastille active" style={{ width: 28, height: 28, borderRadius: 9 }}>
+            <Icon size={14} />
+          </span>
+        )}
       </div>
-      <div className="font-mono text-xl font-bold" style={{ color }}>{value}</div>
-      {sub && <div className="text-xs mt-1" style={{ color: 'var(--muted)' }}>{sub}</div>}
+      <div className="mono text-xl font-bold" style={{ color }}>{value}</div>
+      {sub && <div className="text-xs mt-1" style={{ color: 'var(--text-dim)' }}>{sub}</div>}
     </div>
   );
 }
@@ -55,11 +59,11 @@ function HabitRow({ habit, data }) {
         {days.map((d, i) => (
           <div
             key={i}
-            className="flex items-center justify-center text-xs font-mono"
+            className="flex items-center justify-center text-xs mono"
             style={{
               width: 22, height: 22, borderRadius: '50%',
-              background: d.done ? data.color : 'var(--navy-700)',
-              color: d.done ? '#000' : 'var(--muted2)',
+              background: d.done ? data.color : 'var(--panel-alt)',
+              color: d.done ? '#ffffff' : 'var(--text-faint)',
               fontSize: 9, fontWeight: 700,
             }}
           >
@@ -67,10 +71,10 @@ function HabitRow({ habit, data }) {
           </div>
         ))}
       </div>
-      <span className="text-xs font-mono flex-shrink-0" style={{ color: 'var(--muted)', minWidth: 28 }}>
+      <span className="text-xs mono flex-shrink-0" style={{ color: 'var(--text-dim)', minWidth: 28 }}>
         {doneCount}/7
       </span>
-      <span className="text-xs font-mono flex-shrink-0" style={{ color: data.color }}>
+      <span className="text-xs mono flex-shrink-0" style={{ color: data.color }}>
         🔥{data.currentStreak}j
       </span>
     </div>
@@ -125,7 +129,7 @@ export default function Dashboard() {
                 value={nameInput}
                 onChange={e => setNameInput(e.target.value)}
                 className="text-xl font-bold"
-                style={{ background: 'var(--navy-700)', border: '1px solid var(--border2)', borderRadius: 6, padding: '4px 10px', color: 'var(--text)', fontFamily: 'inherit', width: 200 }}
+                style={{ background: 'var(--panel-alt)', border: '1px solid var(--border-strong)', borderRadius: 'var(--radius-sm)', padding: '4px 10px', color: 'var(--text)', fontFamily: 'inherit', width: 200 }}
                 autoFocus
               />
               <button type="submit" className="btn btn-primary" style={{ padding: '4px 12px', fontSize: 12 }}>OK</button>
@@ -140,13 +144,13 @@ export default function Dashboard() {
               {state.player.name}
             </h1>
           )}
-          <p className="text-sm mt-1" style={{ color: 'var(--muted)' }}>
+          <p className="text-sm mt-1" style={{ color: 'var(--text-dim)' }}>
             {title} · {state.player.totalXP.toLocaleString()} XP total · {Object.keys(state.badges).length} badges
           </p>
         </div>
         <div className="text-right">
-          <p className="text-xs" style={{ color: 'var(--muted)' }}>En jeu depuis</p>
-          <p className="text-sm font-mono" style={{ color: 'var(--text)' }}>{formatDate(state.player.createdAt)}</p>
+          <p className="text-xs" style={{ color: 'var(--text-dim)' }}>En jeu depuis</p>
+          <p className="text-sm mono" style={{ color: 'var(--text)' }}>{formatDate(state.player.createdAt)}</p>
         </div>
       </div>
 
@@ -156,7 +160,7 @@ export default function Dashboard() {
           title="Patrimoine net"
           value={formatCurrency(state.patrimoine.current)}
           sub={`×${multiplier} depuis le départ`}
-          color="#4fe8d1"
+          color="var(--accent)"
           icon={TrendingUp}
         />
         <StatCard
@@ -168,33 +172,33 @@ export default function Dashboard() {
         />
         <StatCard
           title="XP & Niveau"
-          value={`LVL ${level}`}
+          value={`Niv. ${level}`}
           sub={`${xpInLevel.toLocaleString()} / ${xpNeeded.toLocaleString()} XP`}
-          color="#4fe8d1"
+          color="var(--accent)"
           icon={Zap}
         />
         <StatCard
           title="Badges débloqués"
           value={Object.keys(state.badges).length}
           sub={`sur 49 badges`}
-          color="#4fe8d1"
+          color="var(--accent)"
           icon={Trophy}
         />
       </div>
 
       {/* XP bar */}
-      <div className="card mb-6" style={{ padding: '12px 16px' }}>
+      <div className="card mb-6" style={{ padding: '16px 20px' }}>
         <div className="flex items-center gap-3 mb-2">
-          <span className="text-xs font-mono" style={{ color: 'var(--muted)' }}>LVL {level}</span>
-          <div className="flex-1 progress-bar" style={{ height: 8, borderRadius: 4 }}>
+          <span className="text-xs mono" style={{ color: 'var(--text-dim)' }}>Niv. {level}</span>
+          <div className="flex-1 progress-bar" style={{ height: 8 }}>
             <div
               className="progress-bar-fill"
-              style={{ width: `${xpPct}%`, background: 'linear-gradient(90deg, #4fe8d1, #4fe8d1)' }}
+              style={{ width: `${xpPct}%` }}
             />
           </div>
-          <span className="text-xs font-mono" style={{ color: 'var(--muted)' }}>LVL {level + 1}</span>
+          <span className="text-xs mono" style={{ color: 'var(--text-dim)' }}>Niv. {level + 1}</span>
         </div>
-        <div className="flex justify-between text-xs font-mono" style={{ color: 'var(--muted)' }}>
+        <div className="flex justify-between text-xs mono" style={{ color: 'var(--text-dim)' }}>
           <span>{xpInLevel.toLocaleString()} XP</span>
           <span>encore {(xpNeeded - xpInLevel).toLocaleString()} XP pour monter</span>
         </div>
@@ -202,10 +206,10 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-3 gap-4 mb-6">
         {/* Patrimoine chart */}
-        <div className="card card-gold col-span-2">
+        <div className="card col-span-2">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-semibold" style={{ color: 'var(--text)' }}>Historique patrimoine</h3>
-            <span className="text-xs font-mono" style={{ color: '#4fe8d1' }}>
+            <span className="text-xs mono" style={{ color: 'var(--accent)' }}>
               {formatCurrency(chapter.target)} objectif
             </span>
           </div>
@@ -214,52 +218,52 @@ export default function Dashboard() {
               <AreaChart data={patrimoineChart}>
                 <defs>
                   <linearGradient id="pgGold" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#4fe8d1" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#4fe8d1" stopOpacity={0} />
+                    <stop offset="5%" stopColor="var(--accent)" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="var(--accent)" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <XAxis dataKey="date" tick={{ fill: '#6fa39a', fontSize: 10 }} tickLine={false} axisLine={false} />
-                <YAxis tick={{ fill: '#6fa39a', fontSize: 10 }} tickLine={false} axisLine={false}
+                <XAxis dataKey="date" tick={{ fill: 'var(--text-dim)', fontSize: 10 }} tickLine={false} axisLine={false} />
+                <YAxis tick={{ fill: 'var(--text-dim)', fontSize: 10 }} tickLine={false} axisLine={false}
                   tickFormatter={v => formatCurrency(v)} width={55} />
                 <Tooltip
-                  contentStyle={{ background: 'var(--navy-800)', border: '1px solid var(--border)', borderRadius: 6 }}
-                  labelStyle={{ color: 'var(--muted)', fontSize: 11 }}
+                  contentStyle={{ background: 'var(--panel)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', boxShadow: 'var(--shadow)' }}
+                  labelStyle={{ color: 'var(--text-dim)', fontSize: 11 }}
                   formatter={v => [formatCurrency(v), 'Patrimoine']}
                 />
-                <Area type="monotone" dataKey="value" stroke="#4fe8d1" fill="url(#pgGold)" strokeWidth={2} />
+                <Area type="monotone" dataKey="value" stroke="var(--accent)" fill="url(#pgGold)" strokeWidth={2} />
               </AreaChart>
             </ResponsiveContainer>
           ) : (
-            <div className="flex items-center justify-center h-36" style={{ color: 'var(--muted2)', fontSize: 13 }}>
+            <div className="flex items-center justify-center h-36" style={{ color: 'var(--text-faint)', fontSize: 13 }}>
               Les données apparaîtront après vos premières Weekly Reviews.
             </div>
           )}
         </div>
 
         {/* Chapter progress */}
-        <div className="card" style={{ borderTop: `2px solid ${chapter.color}` }}>
+        <div className="card">
           <h3 className="text-sm font-semibold mb-1" style={{ color: 'var(--text)' }}>
             Chapitre {chapter.id}
           </h3>
-          <p className="font-serif text-lg font-bold mb-3" style={{ color: chapter.color }}>
+          <p className="text-lg font-bold mb-3" style={{ color: chapter.color }}>
             {chapter.name}
           </p>
-          <div className="text-xs mb-1 flex justify-between" style={{ color: 'var(--muted)' }}>
+          <div className="text-xs mb-1 flex justify-between mono" style={{ color: 'var(--text-dim)' }}>
             <span>{formatCurrency(state.patrimoine.current)}</span>
             <span>{formatCurrency(chapter.target)}</span>
           </div>
-          <div className="progress-bar mb-3" style={{ height: 8, borderRadius: 4 }}>
+          <div className="progress-bar mb-3" style={{ height: 8 }}>
             <div
               className="progress-bar-fill"
               style={{ width: `${chapterPct}%`, background: chapter.color }}
             />
           </div>
-          <p className="text-xs font-mono mb-4" style={{ color: chapter.color }}>
+          <p className="text-xs mono mb-4" style={{ color: chapter.color }}>
             {chapterPct.toFixed(2)}% accompli
           </p>
-          <div className="text-xs" style={{ color: 'var(--muted)' }}>
-            <p className="font-semibold mb-1" style={{ color: 'var(--text)', fontSize: 11 }}>BOSS FINAL</p>
-            <p className="font-mono font-bold" style={{ color: chapter.color, fontSize: 16 }}>
+          <div className="text-xs" style={{ color: 'var(--text-dim)' }}>
+            <p className="font-semibold mb-1" style={{ color: 'var(--text)', fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Boss final</p>
+            <p className="mono font-bold" style={{ color: chapter.color, fontSize: 16 }}>
               {formatCurrency(chapter.target)}
             </p>
             <p className="mt-1">{chapter.period}</p>
@@ -268,7 +272,7 @@ export default function Dashboard() {
       </div>
 
       {/* Habits this week */}
-      <div className="card card-red mb-6">
+      <div className="card mb-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-semibold" style={{ color: 'var(--text)' }}>Habitudes cette semaine</h3>
           <button
@@ -288,28 +292,28 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-3 gap-4 mb-6">
         {/* Weekly Review CTA */}
-        <div className={`card ${reviewDoneThisWeek ? 'card-blue' : ''}`}
-          style={!reviewDoneThisWeek ? { borderTop: '2px solid #ffb454', animation: 'pulseGold 2s ease infinite' } : {}}>
+        <div className="card">
           <div className="flex items-center gap-2 mb-3">
-            <ClipboardList size={16} style={{ color: reviewDoneThisWeek ? '#4fe8d1' : '#ffb454' }} />
+            <span className="icon-pastille" style={{ background: reviewDoneThisWeek ? 'var(--accent-soft)' : 'var(--panel-alt)', color: reviewDoneThisWeek ? 'var(--accent)' : 'var(--text-dim)', width: 28, height: 28, borderRadius: 9 }}>
+              <ClipboardList size={14} />
+            </span>
             <h3 className="text-sm font-semibold" style={{ color: 'var(--text)' }}>Weekly Review</h3>
           </div>
           {reviewDoneThisWeek ? (
             <div>
-              <p className="text-sm" style={{ color: '#4fe8d1' }}>✓ Complétée cette semaine</p>
-              <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>
+              <p className="text-sm" style={{ color: 'var(--accent)' }}>✓ Complétée cette semaine</p>
+              <p className="text-xs mt-1" style={{ color: 'var(--text-dim)' }}>
                 {state.weeklyReviews.length} reviews au total
               </p>
             </div>
           ) : (
             <div>
-              <p className="text-sm mb-3" style={{ color: 'var(--muted)' }}>
+              <p className="text-sm mb-3" style={{ color: 'var(--text-dim)' }}>
                 Pas encore faite cette semaine
               </p>
               <button
                 className="btn btn-primary w-full"
                 onClick={() => dispatch({ type: 'NAVIGATE', screen: 'review' })}
-                style={{ background: '#4fe8d1', width: '100%' }}
               >
                 Démarrer la review →
               </button>
@@ -318,13 +322,15 @@ export default function Dashboard() {
         </div>
 
         {/* Recent badges */}
-        <div className="card card-gold">
+        <div className="card">
           <div className="flex items-center gap-2 mb-3">
-            <Trophy size={16} style={{ color: '#4fe8d1' }} />
+            <span className="icon-pastille active" style={{ width: 28, height: 28, borderRadius: 9 }}>
+              <Trophy size={14} />
+            </span>
             <h3 className="text-sm font-semibold" style={{ color: 'var(--text)' }}>Badges récents</h3>
           </div>
           {recentBadges.length === 0 ? (
-            <p className="text-xs" style={{ color: 'var(--muted2)' }}>
+            <p className="text-xs" style={{ color: 'var(--text-faint)' }}>
               Aucun badge encore — faites votre première Weekly Review !
             </p>
           ) : (
@@ -334,7 +340,7 @@ export default function Dashboard() {
                   <span className="text-base">{b.icon}</span>
                   <div>
                     <p className="text-xs font-semibold" style={{ color: 'var(--text)' }}>{b.name}</p>
-                    <p className="text-xs" style={{ color: '#4fe8d1', fontFamily: "'Courier New', ui-monospace, monospace" }}>+{b.xp} XP</p>
+                    <p className="text-xs mono" style={{ color: 'var(--accent)' }}>+{b.xp} XP</p>
                   </div>
                 </div>
               ))}
@@ -345,35 +351,37 @@ export default function Dashboard() {
         {/* Active alerts */}
         <div className="card">
           <div className="flex items-center gap-2 mb-3">
-            <AlertCircle size={16} style={{ color: '#ffb454' }} />
+            <span className="icon-pastille" style={{ width: 28, height: 28, borderRadius: 9 }}>
+              <AlertCircle size={14} />
+            </span>
             <h3 className="text-sm font-semibold" style={{ color: 'var(--text)' }}>Statut</h3>
           </div>
           <div className="flex flex-col gap-2 text-xs">
             <div className="flex items-center gap-2">
-              <span className="status-dot" style={{ background: state.markets.emergencyFund >= 9000 ? '#4fe8d1' : '#ffb454' }} />
+              <span className="status-dot" style={{ background: state.markets.emergencyFund >= 9000 ? 'var(--accent)' : 'var(--negative)' }} />
               <span style={{ color: 'var(--text)' }}>Fonds urgence</span>
-              <span className="font-mono ml-auto" style={{ color: state.markets.emergencyFund >= 9000 ? '#4fe8d1' : '#ffb454' }}>
+              <span className="mono ml-auto" style={{ color: state.markets.emergencyFund >= 9000 ? 'var(--accent)' : 'var(--negative)' }}>
                 {formatCurrency(state.markets.emergencyFund)}
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="status-dot" style={{ background: state.markets.pea.openDate ? '#4fe8d1' : '#ffb454' }} />
+              <span className="status-dot" style={{ background: state.markets.pea.openDate ? 'var(--accent)' : 'var(--text-faint)' }} />
               <span style={{ color: 'var(--text)' }}>PEA</span>
-              <span className="ml-auto text-xs" style={{ color: state.markets.pea.openDate ? '#4fe8d1' : '#ffb454' }}>
+              <span className="ml-auto text-xs" style={{ color: state.markets.pea.openDate ? 'var(--accent)' : 'var(--text-dim)' }}>
                 {state.markets.pea.openDate ? 'Actif' : 'À ouvrir'}
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="status-dot" style={{ background: state.trading.consecutivePositiveMonths > 0 ? '#4fe8d1' : 'var(--muted2)' }} />
+              <span className="status-dot" style={{ background: state.trading.consecutivePositiveMonths > 0 ? 'var(--accent)' : 'var(--text-faint)' }} />
               <span style={{ color: 'var(--text)' }}>Trading streak</span>
-              <span className="font-mono ml-auto" style={{ color: '#4fe8d1' }}>
+              <span className="mono ml-auto" style={{ color: 'var(--accent)' }}>
                 {state.trading.consecutivePositiveMonths}M
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="status-dot" style={{ background: state.trading.propfirms.filter(p => p.status === 'funded').length > 0 ? '#4fe8d1' : 'var(--muted2)' }} />
+              <span className="status-dot" style={{ background: state.trading.propfirms.filter(p => p.status === 'funded').length > 0 ? 'var(--accent)' : 'var(--text-faint)' }} />
               <span style={{ color: 'var(--text)' }}>Propfirms funded</span>
-              <span className="font-mono ml-auto" style={{ color: '#4fe8d1' }}>
+              <span className="mono ml-auto" style={{ color: 'var(--accent)' }}>
                 {state.trading.propfirms.filter(p => p.status === 'funded').length}
               </span>
             </div>
@@ -382,17 +390,17 @@ export default function Dashboard() {
       </div>
 
       {/* Principles */}
-      <div className="card" style={{ borderTop: '2px solid var(--border2)' }}>
-        <h3 className="text-xs font-mono font-bold mb-3" style={{ color: 'var(--muted)', letterSpacing: '0.12em' }}>
-          PRINCIPES NON NÉGOCIABLES
+      <div className="card">
+        <h3 className="panel-label mb-3">
+          Principes non négociables
         </h3>
         <div className="flex flex-col gap-2">
           {PRINCIPLES.map((p, i) => (
             <div key={i} className="flex items-start gap-2 text-xs">
-              <span className="font-mono font-bold flex-shrink-0" style={{ color: '#4fe8d1' }}>
+              <span className="mono font-bold flex-shrink-0" style={{ color: 'var(--accent)' }}>
                 {String(i + 1).padStart(2, '0')}.
               </span>
-              <span style={{ color: 'var(--muted)' }}>{p}</span>
+              <span style={{ color: 'var(--text-dim)' }}>{p}</span>
             </div>
           ))}
         </div>

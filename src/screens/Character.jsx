@@ -51,8 +51,8 @@ export default function Character() {
             DÉPART VS ACTUEL
           </span>
           <span
-            className="text-xs font-mono font-bold"
-            style={{ color: totalGain > 0 ? '#4fe8d1' : 'var(--muted)' }}
+            className="text-xs mono font-bold"
+            style={{ color: totalGain > 0 ? 'var(--accent)' : 'var(--muted)' }}
           >
             {totalGain > 0 ? `+${totalGain.toFixed(1)} pts cumulés` : 'Aucune progression pour le moment'}
           </span>
@@ -63,7 +63,7 @@ export default function Character() {
             <PolarAngleAxis dataKey="trait" tick={{ fill: 'var(--text)', fontSize: 12 }} />
             <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fill: 'var(--muted2)', fontSize: 10 }} />
             <Radar name="Départ" dataKey="base" stroke="var(--muted2)" fill="var(--muted2)" fillOpacity={0.08} strokeDasharray="4 3" />
-            <Radar name="Actuel" dataKey="current" stroke="#4fe8d1" fill="#4fe8d1" fillOpacity={0.25} strokeWidth={2} />
+            <Radar name="Actuel" dataKey="current" stroke="var(--accent)" fill="var(--accent)" fillOpacity={0.25} strokeWidth={2} />
             <Legend wrapperStyle={{ fontSize: 12 }} />
             <Tooltip content={<CustomTooltip />} />
           </RadarChart>
@@ -77,19 +77,19 @@ export default function Character() {
           const trait = traits[id];
           const delta = trait.current_value - trait.base_value;
           return (
-            <div key={id} className="card" style={{ borderTop: `2px solid ${meta.color}` }}>
+            <div key={id} className="card">
               <div className="flex items-center justify-between mb-1">
                 <div>
                   <span className="text-sm font-bold" style={{ color: 'var(--text)' }}>{meta.name}</span>
                   <span className="text-xs ml-2" style={{ color: 'var(--muted2)' }}>{meta.subtitle}</span>
                 </div>
-                <span className="font-mono text-lg font-bold" style={{ color: meta.color }}>
+                <span className="mono text-lg font-bold" style={{ color: meta.color }}>
                   {trait.current_value.toFixed(1)}
                 </span>
               </div>
               <p className="text-xs mb-3" style={{ color: 'var(--muted)' }}>{meta.definition}</p>
 
-              <div className="progress-bar mb-2" style={{ height: 6, borderRadius: 3 }}>
+              <div className="progress-bar mb-2" style={{ height: 4 }}>
                 <div
                   className="progress-bar-fill"
                   style={{ width: `${trait.current_value}%`, background: meta.color }}
@@ -97,7 +97,7 @@ export default function Character() {
               </div>
               <div className="flex justify-between text-xs mb-3" style={{ color: 'var(--muted2)' }}>
                 <span>Départ : {trait.base_value}</span>
-                <span style={{ color: delta > 0 ? '#4fe8d1' : 'var(--muted2)' }}>
+                <span style={{ color: delta > 0 ? 'var(--accent)' : 'var(--muted2)' }}>
                   {delta > 0 ? `+${delta.toFixed(1)}` : 'stable'}
                 </span>
               </div>

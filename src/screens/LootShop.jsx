@@ -7,11 +7,8 @@ import { Gift, Lock, Check, X } from 'lucide-react';
 function ClaimModal({ item, onConfirm, onClose }) {
   const [note, setNote] = useState('');
   return (
-    <div style={{
-      position: 'fixed', inset: 0, background: 'rgba(5,16,18,0.9)',
-      display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100,
-    }}>
-      <div className="card pulse-gold" style={{ width: 440, borderTop: '2px solid #ffb454' }}>
+    <div className="modal-overlay">
+      <div className="modal-card pulse-gold" style={{ maxWidth: 440 }}>
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-base font-bold" style={{ color: 'var(--text)' }}>Réclamer la récompense</h3>
           <button className="btn btn-ghost" style={{ padding: '4px 8px' }} onClick={onClose}><X size={14} /></button>
@@ -19,12 +16,12 @@ function ClaimModal({ item, onConfirm, onClose }) {
 
         <div
           className="p-4 rounded-lg mb-4 text-center"
-          style={{ background: 'var(--amber-dim-bg)', border: '1px solid rgba(255,180,84,0.3)' }}
+          style={{ background: 'var(--accent-soft)', border: '1px solid rgba(10,108,255,0.3)', borderRadius: 'var(--radius-sm)' }}
         >
           <div className="text-4xl mb-2">{item.icon}</div>
-          <h4 className="font-bold mb-1" style={{ color: '#ffb454' }}>{item.label}</h4>
+          <h4 className="font-bold mb-1" style={{ color: 'var(--accent)' }}>{item.label}</h4>
           {item.budget && (
-            <p className="font-mono text-sm" style={{ color: 'var(--text)' }}>
+            <p className="mono text-sm" style={{ color: 'var(--text)' }}>
               Budget max: <strong>{formatCurrency(item.budget)}</strong>
             </p>
           )}
@@ -44,7 +41,7 @@ function ClaimModal({ item, onConfirm, onClose }) {
 
         <div className="flex gap-2">
           <button
-            className="btn btn-gold flex-1 flex items-center justify-center gap-2"
+            className="btn btn-primary flex-1 flex items-center justify-center gap-2"
             onClick={() => { onConfirm(note); onClose(); }}
           >
             <Check size={14} /> Confirmer
@@ -63,7 +60,6 @@ function LootCard({ item, unlocked, claimed, claimData, onClaim }) {
     <div
       className="card"
       style={{
-        borderTop: `2px solid ${claimed ? '#4fe8d1' : unlocked ? '#ffb454' : 'var(--border)'}`,
         opacity: claimed ? 0.7 : 1,
         transition: 'all 0.2s',
         position: 'relative',
@@ -75,31 +71,28 @@ function LootCard({ item, unlocked, claimed, claimData, onClaim }) {
         <div
           style={{
             position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-            background: 'linear-gradient(90deg, transparent, #ffb454, transparent)',
+            background: 'linear-gradient(90deg, transparent, var(--accent), transparent)',
             animation: 'pulseGold 2s ease infinite',
           }}
         />
       )}
 
       <div className="flex items-start gap-3 mb-3">
-        <div
-          className="text-3xl flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-lg"
-          style={{
-            background: claimed ? 'rgba(79,232,209,0.1)' : unlocked ? 'var(--amber-dim-bg)' : 'var(--navy-700)',
-            border: `1px solid ${claimed ? '#4fe8d140' : unlocked ? '#ffb45440' : 'var(--border)'}`,
-          }}
+        <span
+          className={`icon-pastille ${claimed || unlocked ? 'active' : ''}`}
+          style={{ width: 48, height: 48, borderRadius: 'var(--radius-sm)', fontSize: 24 }}
         >
           {item.icon}
-        </div>
+        </span>
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-0.5">
             <h3
               className="text-sm font-bold"
-              style={{ color: claimed ? '#4fe8d1' : unlocked ? '#ffb454' : 'var(--muted2)' }}
+              style={{ color: claimed || unlocked ? 'var(--accent)' : 'var(--muted2)' }}
             >
               {item.label}
             </h3>
-            {claimed && <Check size={12} style={{ color: '#4fe8d1' }} />}
+            {claimed && <Check size={12} style={{ color: 'var(--accent)' }} />}
             {!unlocked && <Lock size={11} style={{ color: 'var(--muted2)' }} />}
           </div>
           <p className="text-xs" style={{ color: 'var(--muted)' }}>{item.trigger}</p>
@@ -108,10 +101,11 @@ function LootCard({ item, unlocked, claimed, claimData, onClaim }) {
 
       {item.budget && (
         <div
-          className="inline-block px-2 py-1 rounded text-xs font-mono font-bold mb-3"
+          className="inline-block px-2 py-1 text-xs mono font-bold mb-3"
           style={{
-            background: unlocked ? 'var(--amber-dim-bg)' : 'var(--navy-700)',
-            color: unlocked ? '#ffb454' : 'var(--muted2)',
+            background: unlocked ? 'var(--accent-soft)' : 'var(--navy-700)',
+            color: unlocked ? 'var(--accent)' : 'var(--muted2)',
+            borderRadius: 8,
           }}
         >
           Budget max: {formatCurrency(item.budget)}
@@ -119,8 +113,8 @@ function LootCard({ item, unlocked, claimed, claimData, onClaim }) {
       )}
       {!item.budget && (
         <div
-          className="inline-block px-2 py-1 rounded text-xs font-mono font-bold mb-3"
-          style={{ background: 'var(--navy-700)', color: 'var(--muted)' }}
+          className="inline-block px-2 py-1 text-xs mono font-bold mb-3"
+          style={{ background: 'var(--navy-700)', color: 'var(--muted)', borderRadius: 8 }}
         >
           Budget libre
         </div>
@@ -128,17 +122,17 @@ function LootCard({ item, unlocked, claimed, claimData, onClaim }) {
 
       {claimed ? (
         <div
-          className="p-2 rounded text-xs"
-          style={{ background: 'rgba(79,232,209,0.08)', border: '1px solid rgba(79,232,209,0.2)' }}
+          className="p-2 text-xs"
+          style={{ background: 'var(--accent-soft)', border: '1px solid rgba(10,108,255,0.2)', borderRadius: 'var(--radius-sm)' }}
         >
-          <p style={{ color: '#4fe8d1', marginBottom: 2 }}>✓ Réclamée le {formatDate(claimData.claimedAt)}</p>
+          <p style={{ color: 'var(--accent)', marginBottom: 2 }}>✓ Réclamée le {formatDate(claimData.claimedAt)}</p>
           {claimData.note && (
             <p style={{ color: 'var(--muted)' }}>{claimData.note}</p>
           )}
         </div>
       ) : unlocked ? (
         <button
-          className="btn btn-gold w-full flex items-center justify-center gap-2"
+          className="btn btn-primary w-full flex items-center justify-center gap-2"
           style={{ width: '100%', animation: 'pulseGold 2s ease infinite' }}
           onClick={() => setShowClaim(true)}
         >
@@ -146,8 +140,8 @@ function LootCard({ item, unlocked, claimed, claimData, onClaim }) {
         </button>
       ) : (
         <div
-          className="p-2 rounded text-xs"
-          style={{ background: 'var(--navy-700)', border: '1px solid var(--border)' }}
+          className="p-2 text-xs"
+          style={{ background: 'var(--navy-700)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)' }}
         >
           <Lock size={11} style={{ color: 'var(--muted2)', display: 'inline', marginRight: 6 }} />
           <span style={{ color: 'var(--muted2)' }}>Condition: {item.trigger}</span>
@@ -197,7 +191,7 @@ export default function LootShop() {
           </p>
         </div>
         <div className="text-right">
-          <p className="font-mono font-bold text-lg" style={{ color: '#ffb454' }}>
+          <p className="mono font-bold text-lg" style={{ color: 'var(--accent)' }}>
             {pendingItems.length}
           </p>
           <p className="text-xs" style={{ color: 'var(--muted)' }}>à réclamer</p>
@@ -207,16 +201,16 @@ export default function LootShop() {
       {/* KPI */}
       <div className="grid grid-cols-3 gap-4 mb-6">
         {[
-          { label: 'Disponibles', value: pendingItems.length, color: '#ffb454', icon: '🎁' },
-          { label: 'Réclamées', value: claimedItems.length, color: '#4fe8d1', icon: '✓' },
+          { label: 'Disponibles', value: pendingItems.length, color: 'var(--accent)', icon: '🎁' },
+          { label: 'Réclamées', value: claimedItems.length, color: 'var(--accent)', icon: '✓' },
           { label: 'Verrouillées', value: LOOT_ITEMS.length - unlockedItems.length, color: 'var(--muted)', icon: '🔒' },
         ].map(({ label, value, color, icon }) => (
-          <div key={label} className="card card-gold">
+          <div key={label} className="card">
             <div className="flex items-center gap-2 mb-1">
               <span>{icon}</span>
               <p className="text-xs" style={{ color: 'var(--muted)' }}>{label}</p>
             </div>
-            <p className="font-mono text-2xl font-bold" style={{ color }}>{value}</p>
+            <p className="mono text-2xl font-bold" style={{ color }}>{value}</p>
           </div>
         ))}
       </div>
@@ -225,12 +219,14 @@ export default function LootShop() {
       {pendingItems.length > 0 && (
         <div
           className="card mb-6 pulse-gold"
-          style={{ borderTop: '2px solid #ffb454', background: 'var(--amber-dim-bg)' }}
+          style={{ background: 'var(--accent-soft)' }}
         >
           <div className="flex items-center gap-3">
-            <Gift size={20} style={{ color: '#ffb454' }} />
+            <span className="icon-pastille active" style={{ width: 36, height: 36 }}>
+              <Gift size={18} />
+            </span>
             <div>
-              <p className="text-sm font-bold" style={{ color: '#ffb454' }}>
+              <p className="text-sm font-bold" style={{ color: 'var(--accent)' }}>
                 {pendingItems.length} récompense{pendingItems.length > 1 ? 's' : ''} prête{pendingItems.length > 1 ? 's' : ''} à réclamer !
               </p>
               <p className="text-xs" style={{ color: 'var(--muted)' }}>
@@ -257,8 +253,8 @@ export default function LootShop() {
 
       {/* Principles reminder */}
       <div
-        className="mt-6 p-4 rounded-lg text-xs"
-        style={{ background: 'var(--navy-700)', border: '1px solid var(--border)', color: 'var(--muted)' }}
+        className="mt-6 p-4 text-xs"
+        style={{ background: 'var(--navy-700)', border: '1px solid var(--border)', color: 'var(--muted)', borderRadius: 'var(--radius-sm)' }}
       >
         <p className="font-semibold mb-1" style={{ color: 'var(--text)' }}>📖 Principe #2</p>
         <p>

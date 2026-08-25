@@ -3,46 +3,71 @@
 @tailwind utilities;
 
 :root {
-  /* ── Scan / archive palette ─────────────────────────────────── */
-  --bg-gradient-start: #0e2b2e;
-  --bg-gradient-mid:   #08191b;
-  --bg-gradient-end:   #051012;
-  --bg-panel: rgba(10,45,50,0.55);
-  --line:        rgba(94,230,213,0.28);
-  --line-strong: rgba(94,230,213,0.65);
-  --cyan:      #4fe8d1;
-  --cyan-dim:  #1f6e66;
-  --cyan-dim-bg: rgba(79,232,209,0.12);
-  --text:      #d8f3ee;
-  --text-dim:  #6fa39a;
-  --text-dim2: #4d7a72;
-  --amber:     #ffb454;
-  --amber-dim-bg: rgba(255,180,84,0.12);
+  /* ── Radius scale ────────────────────────────────────────────── */
+  --radius: 18px;
+  --radius-sm: 10px;
+
+  /* ── Accent (identical in light & dark) ─────────────────────── */
+  --accent: #0A6CFF;
+  --accent-soft: rgba(10,108,255,0.12);
+
+  /* ── Negative / alert (financial losses & warnings only) ────── */
+  --negative: #E5484D;
+  --negative-soft: rgba(229,72,77,0.12);
 
   /* ── Backward-compat aliases (consumed throughout src/) ─────── */
-  /* Every former per-vertical hue now resolves to the single cyan
-     accent (or amber for the one alert exception), so JSX that still
-     references these tokens inherits the new theme automatically. */
-  --navy-900: var(--bg-gradient-end);
-  --navy-800: rgba(10,45,50,0.4);
-  --navy-700: rgba(94,230,213,0.07);
-  --navy-600: rgba(94,230,213,0.16);
-  --blue:   var(--cyan);
-  --gold:   var(--cyan);
-  --green:  var(--cyan);
-  --purple: var(--cyan);
-  --teal:   var(--cyan);
-  --red:    var(--amber);
-  --muted:  var(--text-dim);
-  --muted2: var(--text-dim2);
-  --border:  var(--line);
-  --border2: var(--line-strong);
-  --blue-dim:   var(--cyan-dim-bg);
-  --gold-dim:   var(--cyan-dim-bg);
-  --green-dim:  var(--cyan-dim-bg);
-  --purple-dim: var(--cyan-dim-bg);
-  --teal-dim:   var(--cyan-dim-bg);
-  --red-dim:    var(--amber-dim-bg);
+  --cyan: var(--accent);
+  --cyan-dim: var(--accent);
+  --cyan-dim-bg: var(--accent-soft);
+  --amber: var(--negative);
+  --amber-dim-bg: var(--negative-soft);
+  --blue-dim: var(--accent-soft);
+  --gold-dim: var(--accent-soft);
+  --line: var(--border);
+}
+
+html[data-theme="light"] {
+  --bg: #f5f5f7;
+  --panel: #ffffff;
+  --panel-alt: #fafafa;
+  --border: rgba(0,0,0,0.06);
+  --border-strong: rgba(0,0,0,0.14);
+  --text: #1d1d1f;
+  --text-dim: #86868b;
+  --text-faint: #c7c7cc;
+  --shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.04);
+
+  --muted: var(--text-dim);
+  --muted2: var(--text-faint);
+  --text-dim2: var(--text-faint);
+  --line-strong: var(--border-strong);
+  --border2: var(--border-strong);
+  --bg-panel: var(--panel);
+  --navy-800: var(--panel);
+  --navy-700: var(--panel-alt);
+  --navy-600: var(--panel-alt);
+}
+
+html[data-theme="dark"] {
+  --bg: #000000;
+  --panel: #1c1c1e;
+  --panel-alt: #17171a;
+  --border: rgba(255,255,255,0.08);
+  --border-strong: rgba(255,255,255,0.16);
+  --text: #f5f5f7;
+  --text-dim: #98989d;
+  --text-faint: #4a4a4d;
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.3);
+
+  --muted: var(--text-dim);
+  --muted2: var(--text-faint);
+  --text-dim2: var(--text-faint);
+  --line-strong: var(--border-strong);
+  --border2: var(--border-strong);
+  --bg-panel: var(--panel);
+  --navy-800: var(--panel);
+  --navy-700: var(--panel-alt);
+  --navy-600: var(--panel-alt);
 }
 
 * { box-sizing: border-box; }
@@ -54,135 +79,89 @@ html, body, #root {
 }
 
 body {
-  background:
-    radial-gradient(circle at 30% 15%, rgba(79,232,209,0.14), transparent 55%),
-    radial-gradient(circle at 80% 80%, rgba(79,232,209,0.08), transparent 50%),
-    linear-gradient(160deg, var(--bg-gradient-start) 0%, var(--bg-gradient-mid) 60%, var(--bg-gradient-end) 100%);
+  background: var(--bg);
   color: var(--text);
-  font-family: 'Courier New', ui-monospace, monospace;
-  letter-spacing: 0.03em;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
-}
-
-/* ── Fixed background texture (dots + grid), masked toward the edges ── */
-.bg-texture {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.6;
-  background-image:
-    radial-gradient(circle, rgba(79,232,209,0.24) 1px, transparent 1px),
-    radial-gradient(circle, rgba(79,232,209,0.14) 1px, transparent 1px);
-  background-size: 34px 34px, 17px 17px;
-  background-position: -10px -10px, 4px 4px;
-  mask-image: radial-gradient(circle at 50% 35%, black, transparent 85%);
-  -webkit-mask-image: radial-gradient(circle at 50% 35%, black, transparent 85%);
-}
-.bg-grid {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background-image:
-    linear-gradient(rgba(79,232,209,0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(79,232,209,0.05) 1px, transparent 1px);
-  background-size: 68px 68px;
-  mask-image: radial-gradient(circle at 50% 35%, black, transparent 85%);
-  -webkit-mask-image: radial-gradient(circle at 50% 35%, black, transparent 85%);
-}
-.bg-scanlines {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 50;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(255,255,255,0.015) 0px,
-    rgba(255,255,255,0.015) 1px,
-    transparent 1px,
-    transparent 3px
-  );
-  mix-blend-mode: overlay;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 /* ── Headings & section labels ──────────────────────────────── */
 h1, h2, h3 {
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: normal;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
-h1 { font-size: 20px; letter-spacing: 0.12em; }
+h1 { font-size: 28px; }
+h2 { font-size: 20px; }
+h3 { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
 
 /* Line-style icons (lucide-react) — thin stroke everywhere */
-.lucide { stroke-width: 1.5; }
+.lucide { stroke-width: 1.7; }
 
 /* Scrollbar styling */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
 /* ── Panel (base component for every section) ───────────────── */
 .card {
-  background: var(--bg-panel);
-  border: 1px solid var(--line);
-  border-radius: 2px;
-  padding: 16px;
-  backdrop-filter: blur(2px);
-  box-shadow: 0 0 40px rgba(79,232,209,0.04) inset;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px;
+  box-shadow: var(--shadow);
 }
 
 /* Former per-vertical top-border accents are neutralized — one accent only. */
 .card-blue, .card-gold, .card-green, .card-purple, .card-red, .card-teal {
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--border) !important;
 }
+
+/* Icon pastille — square-rounded, 36x36, thin-stroke icon inside */
+.icon-pastille {
+  width: 36px; height: 36px; border-radius: 11px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--panel-alt); color: var(--text-dim);
+}
+.icon-pastille.active { background: var(--accent-soft); color: var(--accent); }
 
 /* Progress bar */
 .progress-bar {
-  height: 3px;
-  border-radius: 0;
-  background: rgba(94,213,255,0.08);
+  height: 6px;
+  border-radius: 3px;
+  background: var(--panel-alt);
   overflow: hidden;
   position: relative;
 }
 .progress-bar-fill {
   height: 100%;
-  border-radius: 0;
-  background: linear-gradient(90deg, var(--cyan-dim), var(--cyan));
+  border-radius: 3px;
+  background: var(--accent);
   transition: width 0.6s ease;
-  position: relative;
-}
-.progress-bar-fill::after {
-  content: '';
-  position: absolute;
-  right: 0; top: -3px; bottom: -3px; width: 2px;
-  background: var(--cyan);
-  box-shadow: 0 0 8px var(--cyan);
 }
 
-/* Rarity pills — hierarchy via weight/glow, not hue (single accent rule) */
+/* Rarity pills — hierarchy via weight, not hue (single accent rule) */
 .pill {
-  font-family: 'Courier New', ui-monospace, monospace;
   font-size: 10px;
   font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 2px;
+  padding: 3px 9px;
+  border-radius: 8px;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   display: inline-block;
   border: 1px solid transparent;
 }
-.pill-initie  { background: rgba(94,230,213,0.06); color: var(--text-dim);  border-color: var(--line); }
-.pill-veteran { background: rgba(94,230,213,0.10); color: var(--text);      border-color: var(--line-strong); }
-.pill-elite   { background: rgba(79,232,209,0.12); color: var(--cyan);      border-color: rgba(79,232,209,0.4); }
-.pill-legend  { background: rgba(79,232,209,0.16); color: var(--cyan);      border-color: rgba(79,232,209,0.55); box-shadow: 0 0 8px rgba(79,232,209,0.15); }
-.pill-mythic  { background: rgba(79,232,209,0.20); color: var(--cyan);      border-color: var(--cyan); box-shadow: 0 0 12px rgba(79,232,209,0.3); }
-.pill-timed   { background: var(--amber-dim-bg);   color: var(--amber);    border-color: rgba(255,180,84,0.4); }
-.pill-secret  { background: rgba(79,232,209,0.16); color: var(--cyan);     border-color: rgba(79,232,209,0.5); box-shadow: 0 0 10px rgba(79,232,209,0.2); }
+.pill-initie  { background: var(--panel-alt);   color: var(--text-dim);  border-color: var(--border); }
+.pill-veteran { background: var(--panel-alt);   color: var(--text);      border-color: var(--border-strong); }
+.pill-elite   { background: var(--accent-soft); color: var(--accent);    border-color: rgba(10,108,255,0.3); }
+.pill-legend  { background: var(--accent-soft); color: var(--accent);    border-color: rgba(10,108,255,0.4); }
+.pill-mythic  { background: var(--accent-soft); color: var(--accent);    border-color: var(--accent); }
+.pill-timed   { background: var(--accent-soft); color: var(--accent);    border-color: rgba(10,108,255,0.4); }
+.pill-secret  { background: var(--accent-soft); color: var(--accent);    border-color: rgba(10,108,255,0.4); }
 
-/* Mono numbers */
-.mono { font-family: 'Courier New', ui-monospace, monospace; }
+/* Mono numbers — kept for alignment only, no longer monospace font */
+.mono, .font-mono { font-variant-numeric: tabular-nums; }
 
 /* Fade up animation */
 @keyframes fadeUp {
@@ -197,10 +176,10 @@ h1 { font-size: 20px; letter-spacing: 0.12em; }
   to   { opacity: 1; transform: scale(1); }
 }
 
-/* Reward / alert pulse (amber — reserved for attention-grabbing states) */
+/* Reward celebration pulse — badge unlocks, loot ready to claim (positive, accent) */
 @keyframes pulseGold {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(255,180,84,0); }
-  50%       { box-shadow: 0 0 20px 6px rgba(255,180,84,0.35); }
+  0%, 100% { box-shadow: 0 0 0 0 transparent; }
+  50%       { box-shadow: 0 0 0 6px var(--accent-soft); }
 }
 .pulse-gold { animation: pulseGold 0.7s ease 3; }
 
@@ -224,29 +203,28 @@ h1 { font-size: 20px; letter-spacing: 0.12em; }
 /* Hover states */
 .nav-item {
   cursor: pointer;
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   padding: 8px 12px;
   transition: background 0.15s, color 0.15s;
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  font-size: 13px;
+  font-weight: 500;
   color: var(--text-dim);
 }
-.nav-item:hover { background: rgba(94,230,213,0.08); color: var(--text); }
-.nav-item.active { background: var(--cyan-dim-bg); color: var(--cyan); }
+.nav-item:hover { background: var(--panel-alt); color: var(--text); }
+.nav-item.active { background: var(--accent-soft); color: var(--accent); }
 
 /* Input / select — covers plain <input> with no explicit type= too */
 input,
 textarea,
 select {
-  background: rgba(5,16,18,0.4);
-  border: 1px solid var(--line);
-  border-radius: 2px;
+  background: var(--panel-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   color: var(--text);
-  font-family: 'Courier New', ui-monospace, monospace;
+  font-family: inherit;
   font-size: 13px;
   padding: 8px 12px;
   outline: none;
@@ -254,56 +232,54 @@ select {
   transition: border-color 0.15s;
 }
 input:focus, textarea:focus, select:focus {
-  border-color: var(--cyan);
+  border-color: var(--accent);
 }
 textarea { resize: vertical; }
-select option { background: #08191b; }
+select option { background: var(--panel); }
 
 /* Button */
 .btn {
   cursor: pointer;
   border: 1px solid transparent;
-  border-radius: 2px;
-  font-family: 'Courier New', ui-monospace, monospace;
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
   padding: 8px 18px;
   transition: opacity 0.15s, transform 0.1s, border-color 0.15s;
 }
 .btn:hover { opacity: 0.85; }
 .btn:active { transform: scale(0.97); }
-.btn-primary { background: var(--cyan); color: #04211d; }
-.btn-gold    { background: var(--cyan); color: #04211d; }
+.btn-primary { background: var(--accent); color: #ffffff; }
+.btn-gold    { background: var(--accent); color: #ffffff; }
 .btn-ghost   {
   background: transparent;
-  border: 1px solid var(--line-strong);
+  border: 1px solid var(--border-strong);
   color: var(--text-dim);
 }
-.btn-ghost:hover { color: var(--text); border-color: var(--cyan); }
-.btn-danger  { background: var(--amber); color: #2b1a05; }
+.btn-ghost:hover { color: var(--text); border-color: var(--accent); }
+.btn-danger  { background: var(--negative); color: #ffffff; }
 
 /* Toggle checkbox */
 .toggle-day {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  border: 1px solid var(--line);
+  border: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.15s;
   font-size: 11px;
-  color: var(--text-dim2);
+  color: var(--text-faint);
 }
 .toggle-day.checked {
-  background: var(--cyan);
-  border-color: var(--cyan);
-  color: #04211d;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
 }
-.toggle-day:hover:not(.checked) { border-color: var(--cyan); color: var(--cyan); }
+.toggle-day:hover:not(.checked) { border-color: var(--accent); color: var(--accent); }
 
 /* Status dot */
 .status-dot {
@@ -316,10 +292,11 @@ select option { background: #08191b; }
 
 /* Panel label row — used for section headers throughout screens */
 .panel-label {
-  font-size: 10px;
+  font-size: 12px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--cyan);
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -328,7 +305,36 @@ select option { background: #08191b; }
   display: inline-block;
   width: 6px; height: 6px;
   border-radius: 50%;
-  background: var(--cyan);
+  background: var(--accent);
   margin-right: 8px;
-  box-shadow: 0 0 6px var(--cyan);
+}
+
+/* Theme toggle pill (clair/sombre) */
+.theme-toggle {
+  display: flex; align-items: center; gap: 2px;
+  background: var(--panel-alt); border: 1px solid var(--border);
+  border-radius: 20px; padding: 3px;
+}
+.theme-toggle button {
+  border: none; background: transparent; padding: 5px 12px; border-radius: 16px;
+  font-size: 12px; font-weight: 500; color: var(--text-dim); cursor: pointer;
+  font-family: inherit;
+}
+.theme-toggle button.active { background: var(--text); color: var(--bg); }
+
+/* Shared modal styles (LootShop claim, RealEstate add, Trading add-propfirm) */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(0,0,0,0.4);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.modal-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  max-width: 420px;
+  width: 100%;
 }

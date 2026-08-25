@@ -39,18 +39,18 @@ function HabitCard({ habitKey, habit, vacationMode, onToggleVacation, onToggleDa
   const doneThisWeek = isAlternate ? grid.filter(d => d.done && d.due).length : grid.filter(d => d.done).length;
   const target = isAlternate ? dueCount : 7;
   const ratio = target > 0 ? doneThisWeek / target : 0;
-  const scoreColor = ratio >= 0.8 ? '#4fe8d1' : '#ffb454';
+  const scoreColor = ratio >= 0.8 ? 'var(--accent)' : 'var(--negative)';
   const nextBonus = STREAK_BONUSES[habitKey]?.find(b => b.days > habit.currentStreak);
   const isVacationSuspended = habitKey === 'noAlcohol' && vacationMode;
 
   return (
-    <div className="card" style={{ borderTop: `2px solid ${habit.color}` }}>
+    <div className="card">
       <div className="flex items-start justify-between mb-3">
         <div>
           <div className="flex items-center gap-2">
             <span className="text-sm font-bold" style={{ color: 'var(--text)' }}>{habit.name}</span>
             {isVacationSuspended && (
-              <span className="pill" style={{ background: 'rgba(79,232,209,0.15)', color: '#4fe8d1', fontSize: 9 }}>
+              <span className="pill" style={{ background: 'var(--accent-soft)', color: 'var(--accent)', fontSize: 9 }}>
                 MODE VACANCES
               </span>
             )}
@@ -91,7 +91,7 @@ function HabitCard({ habitKey, habit, vacationMode, onToggleVacation, onToggleDa
                 background: isRestDay
                   ? 'repeating-linear-gradient(45deg, var(--navy-800) 0px, var(--navy-800) 4px, var(--navy-700) 4px, var(--navy-700) 8px)'
                   : d.done ? habit.color : 'var(--navy-700)',
-                color: (!isRestDay && d.done) ? '#000' : 'var(--muted2)',
+                color: (!isRestDay && d.done) ? '#ffffff' : 'var(--muted2)',
                 border: `1px solid ${isRestDay ? 'transparent' : d.done ? habit.color : 'var(--border)'}`,
                 fontSize: 10,
                 cursor: isClickable ? 'pointer' : 'default',
@@ -122,7 +122,7 @@ function HabitCard({ habitKey, habit, vacationMode, onToggleVacation, onToggleDa
 
         {nextBonus && (
           <span className="text-xs" style={{ color: 'var(--muted)' }}>
-            Prochain bonus: <span className="font-mono" style={{ color: '#4fe8d1' }}>+{nextBonus.xp} XP</span>
+            Prochain bonus: <span className="font-mono" style={{ color: 'var(--accent)' }}>+{nextBonus.xp} XP</span>
             {' '}à {nextBonus.days}j
           </span>
         )}
@@ -175,7 +175,7 @@ export default function Health() {
   });
 
   const weeklyScore = totalPossible > 0 ? (totalDone / totalPossible) * 100 : 0;
-  const scoreColor = weeklyScore >= 80 ? '#4fe8d1' : '#ffb454';
+  const scoreColor = weeklyScore >= 80 ? 'var(--accent)' : 'var(--negative)';
 
   // Combined streak across all habits (sport's alternate-day rest days don't break it)
   const { current: minStreak } = calculateGlobalStreak(habits);
@@ -191,7 +191,7 @@ export default function Health() {
       {/* Level bar */}
       <div className="card mb-6" style={{ padding: '12px 16px' }}>
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-mono font-bold" style={{ color: 'var(--cyan)' }}>Health Niveau {vLevel}</span>
+          <span className="text-xs font-mono font-bold" style={{ color: 'var(--accent)' }}>Health Niveau {vLevel}</span>
           <span className="text-xs font-mono" style={{ color: 'var(--muted)' }}>
             {xpInLevel.toLocaleString()} / {xpNeeded.toLocaleString()} XP
           </span>
@@ -213,7 +213,7 @@ export default function Health() {
         </div>
         <div className="card">
           <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>Streak minimum</p>
-          <p className="font-mono font-bold text-2xl" style={{ color: minStreak > 0 ? '#4fe8d1' : '#ffb454' }}>
+          <p className="font-mono font-bold text-2xl" style={{ color: minStreak > 0 ? 'var(--accent)' : 'var(--negative)' }}>
             {minStreak}j
           </p>
           <p className="text-xs" style={{ color: 'var(--muted)' }}>toutes habitudes</p>
@@ -227,7 +227,7 @@ export default function Health() {
         </div>
         <div className="card">
           <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>Mode vacances</p>
-          <p className="font-mono font-bold text-lg" style={{ color: vacationMode ? '#4fe8d1' : 'var(--muted2)' }}>
+          <p className="font-mono font-bold text-lg" style={{ color: vacationMode ? 'var(--accent)' : 'var(--muted2)' }}>
             {vacationMode ? '🏖️ Actif' : 'Inactif'}
           </p>
           <p className="text-xs" style={{ color: 'var(--muted)' }}>alcool suspendu</p>
@@ -249,8 +249,8 @@ export default function Health() {
           />
         </div>
         <div className="flex justify-between text-xs mt-2" style={{ color: 'var(--muted)' }}>
-          <span style={{ color: '#ffb454' }}>&lt; 80% — à surveiller</span>
-          <span style={{ color: '#4fe8d1' }}>≥ 80% — sur la cible</span>
+          <span style={{ color: 'var(--negative)' }}>&lt; 80% — à surveiller</span>
+          <span style={{ color: 'var(--accent)' }}>≥ 80% — sur la cible</span>
         </div>
       </div>
 
@@ -270,8 +270,8 @@ export default function Health() {
 
       {/* Streak milestone info */}
       <div className="card mt-6">
-        <h3 className="text-xs font-mono font-bold mb-3" style={{ color: 'var(--muted)', letterSpacing: '0.1em' }}>
-          MILESTONES DE STREAK
+        <h3 className="panel-label mb-3">
+          Milestones de streak
         </h3>
         <div className="grid grid-cols-3 gap-3">
           {HABIT_KEYS.map(k => {
@@ -293,7 +293,7 @@ export default function Health() {
                         {h.currentStreak >= b.days ? '✓' : ''}
                       </span>
                       <span className="text-xs" style={{ color: 'var(--muted)' }}>{b.days}j</span>
-                      <span className="text-xs font-mono" style={{ color: '#4fe8d1' }}>+{b.xp}XP</span>
+                      <span className="text-xs font-mono" style={{ color: 'var(--accent)' }}>+{b.xp}XP</span>
                     </div>
                   ))}
                 </div>

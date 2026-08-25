@@ -4,12 +4,12 @@ import { formatCurrency, formatDate, getVerticalLevel } from '../utils/gameLogic
 import { Plus, Home, TrendingUp, X, Edit2, Check } from 'lucide-react';
 
 const STATUS_CONFIG = {
-  searching:  { label: 'En recherche',   color: '#6fa39a' },
-  offer:      { label: 'Offre faite',    color: '#ffb454' },
-  compromis:  { label: 'Compromis',      color: '#4fe8d1' },
-  owned:      { label: 'Propriétaire',   color: '#4fe8d1' },
-  sold:       { label: 'Vendu',          color: '#4fe8d1' },
-  lost:       { label: 'Perdu',          color: '#ffb454' },
+  searching:  { label: 'En recherche',   color: 'var(--text-dim)', bg: 'var(--panel-alt)' },
+  offer:      { label: 'Offre faite',    color: 'var(--text-dim)', bg: 'var(--panel-alt)' },
+  compromis:  { label: 'Compromis',      color: 'var(--accent)',   bg: 'var(--accent-soft)' },
+  owned:      { label: 'Propriétaire',   color: 'var(--accent)',   bg: 'var(--accent-soft)' },
+  sold:       { label: 'Vendu',          color: 'var(--accent)',   bg: 'var(--accent-soft)' },
+  lost:       { label: 'Perdu',          color: 'var(--negative)', bg: 'var(--negative-soft)' },
 };
 
 const ACTION_XP = {
@@ -48,7 +48,7 @@ function PropertyCard({ property, onUpdate, onRemove }) {
   return (
     <div
       className="card"
-      style={{ borderTop: `2px solid ${cfg.color}`, marginBottom: 16 }}
+      style={{ marginBottom: 16 }}
     >
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1">
@@ -60,7 +60,7 @@ function PropertyCard({ property, onUpdate, onRemove }) {
             <span
               className="pill"
               style={{
-                background: `${cfg.color}20`,
+                background: cfg.bg,
                 color: cfg.color,
               }}
             >
@@ -77,7 +77,7 @@ function PropertyCard({ property, onUpdate, onRemove }) {
           <button className="btn btn-ghost" style={{ padding: '4px 8px' }} onClick={() => setEditing(!editing)}>
             <Edit2 size={12} />
           </button>
-          <button className="btn btn-ghost" style={{ padding: '4px 8px', color: '#ffb454' }} onClick={() => onRemove(property.id)}>
+          <button className="btn btn-ghost" style={{ padding: '4px 8px', color: 'var(--negative)' }} onClick={() => onRemove(property.id)}>
             <X size={12} />
           </button>
         </div>
@@ -179,7 +179,7 @@ function PropertyCard({ property, onUpdate, onRemove }) {
                   <p className="text-xs" style={{ color: 'var(--muted)' }}>Profit net estimé</p>
                   <p
                     className="text-sm font-mono font-bold"
-                    style={{ color: (property.salePrice || 0) - (property.purchasePrice || 0) - (property.renovationBudget || 0) >= 0 ? '#4fe8d1' : '#ffb454' }}
+                    style={{ color: (property.salePrice || 0) - (property.purchasePrice || 0) - (property.renovationBudget || 0) >= 0 ? 'var(--accent)' : 'var(--negative)' }}
                   >
                     {formatCurrency((property.salePrice || 0) - (property.purchasePrice || 0) - (property.renovationBudget || 0))}
                   </p>
@@ -190,7 +190,7 @@ function PropertyCard({ property, onUpdate, onRemove }) {
                 <p className="text-xs" style={{ color: 'var(--muted)' }}>Cash-flow mensuel</p>
                 <p
                   className="text-sm font-mono font-bold"
-                  style={{ color: (property.cashflow || 0) >= 0 ? '#4fe8d1' : '#ffb454' }}
+                  style={{ color: (property.cashflow || 0) >= 0 ? 'var(--accent)' : 'var(--negative)' }}
                 >
                   {formatCurrency(property.cashflow || 0)}/mois
                 </p>
@@ -198,7 +198,7 @@ function PropertyCard({ property, onUpdate, onRemove }) {
             )}
             <div>
               <p className="text-xs" style={{ color: 'var(--muted)' }}>Valeur actuelle</p>
-              <p className="text-sm font-mono font-bold" style={{ color: '#4fe8d1' }}>
+              <p className="text-sm font-mono font-bold" style={{ color: 'var(--accent)' }}>
                 {formatCurrency(property.currentValue || 0)}
               </p>
             </div>
@@ -209,9 +209,9 @@ function PropertyCard({ property, onUpdate, onRemove }) {
             </p>
           )}
           <div className="flex gap-3 mt-3">
-            {property.visited && <span className="text-xs" style={{ color: '#4fe8d1' }}>✓ Visité</span>}
-            {property.offerAccepted && <span className="text-xs" style={{ color: '#4fe8d1' }}>✓ Offre acceptée</span>}
-            {property.notaryActSigned && <span className="text-xs" style={{ color: '#4fe8d1' }}>✓ Acte notarié</span>}
+            {property.visited && <span className="text-xs" style={{ color: 'var(--accent)' }}>✓ Visité</span>}
+            {property.offerAccepted && <span className="text-xs" style={{ color: 'var(--accent)' }}>✓ Offre acceptée</span>}
+            {property.notaryActSigned && <span className="text-xs" style={{ color: 'var(--accent)' }}>✓ Acte notarié</span>}
           </div>
         </div>
       )}
@@ -222,13 +222,8 @@ function PropertyCard({ property, onUpdate, onRemove }) {
 function AddPropertyModal({ onAdd, onClose }) {
   const [form, setForm] = useState({ name: '', address: '', type: 'flip' });
   return (
-    <div
-      style={{
-        position: 'fixed', inset: 0, background: 'rgba(5,16,18,0.85)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100,
-      }}
-    >
-      <div className="card" style={{ width: 420, borderTop: '2px solid #4fe8d1' }}>
+    <div className="modal-overlay">
+      <div className="modal-card" style={{ maxWidth: 420 }}>
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-base font-bold" style={{ color: 'var(--text)' }}>Ajouter un bien</h3>
           <button className="btn btn-ghost" style={{ padding: '4px 8px' }} onClick={onClose}><X size={14} /></button>
@@ -289,9 +284,9 @@ export default function RealEstate() {
       </div>
 
       {/* Vertical level bar */}
-      <div className="card card-gold mb-6" style={{ padding: '12px 16px' }}>
+      <div className="card mb-6" style={{ padding: '12px 16px' }}>
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-mono font-bold" style={{ color: '#4fe8d1' }}>
+          <span className="text-xs font-mono font-bold" style={{ color: 'var(--accent)' }}>
             Immo Niveau {vLevel}
           </span>
           <span className="text-xs font-mono" style={{ color: 'var(--muted)' }}>
@@ -301,7 +296,7 @@ export default function RealEstate() {
         <div className="progress-bar" style={{ height: 6, borderRadius: 3 }}>
           <div
             className="progress-bar-fill"
-            style={{ width: `${Math.min(100, (xpInLevel / xpNeeded) * 100)}%`, background: '#4fe8d1' }}
+            style={{ width: `${Math.min(100, (xpInLevel / xpNeeded) * 100)}%`, background: 'var(--accent)' }}
           />
         </div>
       </div>
@@ -309,12 +304,12 @@ export default function RealEstate() {
       {/* KPI row */}
       <div className="grid grid-cols-4 gap-4 mb-6">
         {[
-          { label: 'Biens actifs', value: ownedCount, color: '#4fe8d1' },
-          { label: 'Portefeuille brut', value: formatCurrency(totalBrut), color: '#4fe8d1' },
-          { label: 'Cash-flow net/mois', value: `${totalCashflow >= 0 ? '+' : ''}${formatCurrency(totalCashflow)}`, color: totalCashflow >= 0 ? '#4fe8d1' : '#ffb454' },
+          { label: 'Biens actifs', value: ownedCount, color: 'var(--accent)' },
+          { label: 'Portefeuille brut', value: formatCurrency(totalBrut), color: 'var(--accent)' },
+          { label: 'Cash-flow net/mois', value: `${totalCashflow >= 0 ? '+' : ''}${formatCurrency(totalCashflow)}`, color: totalCashflow >= 0 ? 'var(--accent)' : 'var(--negative)' },
           { label: 'Total biens', value: state.realEstate.properties.length, color: 'var(--text)' },
         ].map(({ label, value, color }) => (
-          <div key={label} className="card card-gold">
+          <div key={label} className="card">
             <p className="text-xs mb-1" style={{ color: 'var(--muted)' }}>{label}</p>
             <p className="font-mono text-lg font-bold" style={{ color }}>{value}</p>
           </div>
@@ -323,10 +318,7 @@ export default function RealEstate() {
 
       {/* Properties list */}
       {state.realEstate.properties.length === 0 ? (
-        <div
-          className="card text-center py-12"
-          style={{ borderTop: '2px solid #4fe8d1' }}
-        >
+        <div className="card text-center py-12">
           <Home size={32} style={{ color: 'var(--muted2)', margin: '0 auto 12px' }} />
           <p className="text-sm mb-1" style={{ color: 'var(--muted)' }}>Aucun bien enregistré</p>
           <p className="text-xs mb-4" style={{ color: 'var(--muted2)' }}>
@@ -339,8 +331,8 @@ export default function RealEstate() {
         </div>
       ) : (
         <div>
-          <h2 className="text-sm font-semibold mb-3" style={{ color: 'var(--muted)' }}>
-            BIENS ({state.realEstate.properties.length})
+          <h2 className="panel-label mb-3">
+            Biens ({state.realEstate.properties.length})
           </h2>
           {state.realEstate.properties.map(property => (
             <PropertyCard

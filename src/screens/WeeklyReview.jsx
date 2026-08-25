@@ -22,9 +22,9 @@ function StepIndicator({ step, total }) {
           <div
             className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-mono font-bold flex-shrink-0"
             style={{
-              background: i + 1 <= step ? '#4fe8d1' : 'var(--navy-700)',
+              background: i + 1 <= step ? 'var(--accent)' : 'var(--navy-700)',
               color: i + 1 <= step ? '#fff' : 'var(--muted2)',
-              border: i + 1 === step ? '2px solid #4fe8d1' : '1px solid var(--border)',
+              border: i + 1 === step ? '2px solid var(--accent)' : '1px solid var(--border)',
             }}
           >
             {i + 1 < step ? <Check size={12} /> : i + 1}
@@ -32,7 +32,7 @@ function StepIndicator({ step, total }) {
           {i < total - 1 && (
             <div
               className="flex-1 h-px"
-              style={{ background: i + 1 < step ? '#4fe8d1' : 'var(--border)', maxWidth: 40 }}
+              style={{ background: i + 1 < step ? 'var(--accent)' : 'var(--border)', maxWidth: 40 }}
             />
           )}
         </React.Fragment>
@@ -106,7 +106,7 @@ function ResultsScreen({ xpResult, newBadges, traitChanges, onDone }) {
         </h2>
         <div
           className="font-mono font-bold mb-2"
-          style={{ fontSize: 48, color: '#4fe8d1' }}
+          style={{ fontSize: 48, color: 'var(--accent)' }}
         >
           +<XPCounter target={xpResult.total} /> XP
         </div>
@@ -126,7 +126,7 @@ function ResultsScreen({ xpResult, newBadges, traitChanges, onDone }) {
             {xpResult.breakdown.map((item, i) => (
               <div key={i} className="flex justify-between text-xs">
                 <span style={{ color: 'var(--text)' }}>{item.label}</span>
-                <span className="font-mono font-bold" style={{ color: '#4fe8d1' }}>+{item.xp}</span>
+                <span className="font-mono font-bold" style={{ color: 'var(--accent)' }}>+{item.xp}</span>
               </div>
             ))}
           </div>
@@ -157,7 +157,7 @@ function ResultsScreen({ xpResult, newBadges, traitChanges, onDone }) {
         {/* New badges */}
         {newBadges.length > 0 && (
           <div className="mb-6">
-            <p className="text-xs font-mono font-bold mb-3" style={{ color: '#4fe8d1', letterSpacing: '0.1em' }}>
+            <p className="text-xs font-mono font-bold mb-3" style={{ color: 'var(--accent)', letterSpacing: '0.1em' }}>
               🏆 BADGES DÉBLOQUÉS
             </p>
             <div className="flex flex-wrap gap-3 justify-center">
@@ -165,11 +165,11 @@ function ResultsScreen({ xpResult, newBadges, traitChanges, onDone }) {
                 <div
                   key={b.id}
                   className="px-3 py-2 rounded-lg pulse-gold"
-                  style={{ background: 'var(--gold-dim)', border: '1px solid #4fe8d140' }}
+                  style={{ background: 'var(--accent-soft)', border: '1px solid rgba(10,108,255,0.4)' }}
                 >
                   <span className="text-2xl block text-center mb-1">{b.icon}</span>
-                  <p className="text-xs font-bold text-center" style={{ color: '#4fe8d1' }}>{b.name}</p>
-                  <p className="text-xs font-mono text-center" style={{ color: '#4fe8d1' }}>+{b.xp} XP</p>
+                  <p className="text-xs font-bold text-center" style={{ color: 'var(--accent)' }}>{b.name}</p>
+                  <p className="text-xs font-mono text-center" style={{ color: 'var(--accent)' }}>+{b.xp} XP</p>
                 </div>
               ))}
             </div>
@@ -249,7 +249,7 @@ export default function WeeklyReview() {
   if (reviewDone && step === 1) {
     return (
       <div className="fade-up" style={{ maxWidth: 560 }}>
-        <div className="card card-blue text-center py-8">
+        <div className="card text-center py-8">
           <div className="text-4xl mb-3">✅</div>
           <h2 className="text-lg font-bold mb-2" style={{ color: 'var(--text)' }}>
             Review déjà complétée cette semaine
@@ -298,7 +298,7 @@ export default function WeeklyReview() {
         {/* Step 1: Patrimoine */}
         {step === 1 && (
           <div className="fade-up">
-            <h2 className="text-base font-bold mb-1" style={{ color: '#4fe8d1' }}>💰 Patrimoine</h2>
+            <h2 className="text-base font-bold mb-1" style={{ color: 'var(--accent)' }}>💰 Patrimoine</h2>
             <p className="text-xs mb-4" style={{ color: 'var(--muted)' }}>
               Valeur nette actuelle de votre patrimoine.
             </p>
@@ -329,7 +329,7 @@ export default function WeeklyReview() {
         {/* Step 2: Trading */}
         {step === 2 && (
           <div className="fade-up">
-            <h2 className="text-base font-bold mb-1" style={{ color: '#4fe8d1' }}>📈 Trading</h2>
+            <h2 className="text-base font-bold mb-1" style={{ color: 'var(--accent)' }}>📈 Trading</h2>
             <p className="text-xs mb-4" style={{ color: 'var(--muted)' }}>
               Résumé de votre semaine de trading.
             </p>
@@ -361,7 +361,7 @@ export default function WeeklyReview() {
                     type="number"
                     value={form.trading.result}
                     onChange={e => updateForm('trading', { ...form.trading, result: Number(e.target.value) })}
-                    style={{ borderColor: form.trading.result >= 0 ? '#4fe8d1' : '#ffb454' }}
+                    style={{ borderColor: form.trading.result >= 0 ? 'var(--accent)' : 'var(--negative)' }}
                   />
                 </div>
                 <div>
@@ -379,7 +379,7 @@ export default function WeeklyReview() {
                   <button
                     type="button"
                     className={`btn ${form.trading.mmRespected ? 'btn-primary' : 'btn-ghost'}`}
-                    style={form.trading.mmRespected ? { background: '#4fe8d1' } : {}}
+                    style={form.trading.mmRespected ? { background: 'var(--accent)' } : {}}
                     onClick={() => updateForm('trading', { ...form.trading, mmRespected: !form.trading.mmRespected })}
                   >
                     {form.trading.mmRespected ? '✓' : '○'} Money management respecté
@@ -393,7 +393,7 @@ export default function WeeklyReview() {
         {/* Step 3: Real Estate */}
         {step === 3 && (
           <div className="fade-up">
-            <h2 className="text-base font-bold mb-1" style={{ color: '#4fe8d1' }}>🏠 Real Estate</h2>
+            <h2 className="text-base font-bold mb-1" style={{ color: 'var(--accent)' }}>🏠 Real Estate</h2>
             <p className="text-xs mb-4" style={{ color: 'var(--muted)' }}>
               Action immobilière cette semaine ?
             </p>
@@ -428,14 +428,14 @@ export default function WeeklyReview() {
                         type="button"
                         className="btn btn-ghost text-left"
                         style={form.realEstate.actionType === a.value
-                          ? { borderColor: '#4fe8d1', color: '#4fe8d1', background: 'var(--gold-dim)' }
+                          ? { borderColor: 'var(--accent)', color: 'var(--accent)', background: 'var(--gold-dim)' }
                           : { fontSize: 12 }
                         }
                         onClick={() => updateForm('realEstate', { ...form.realEstate, actionType: a.value })}
                       >
                         <span className="flex items-center justify-between w-full">
                           <span>{a.label}</span>
-                          <span className="font-mono text-xs" style={{ color: '#4fe8d1' }}>+{a.xp}</span>
+                          <span className="font-mono text-xs" style={{ color: 'var(--accent)' }}>+{a.xp}</span>
                         </span>
                       </button>
                     ))}
@@ -460,7 +460,7 @@ export default function WeeklyReview() {
         {/* Step 4: Markets */}
         {step === 4 && (
           <div className="fade-up">
-            <h2 className="text-base font-bold mb-1" style={{ color: '#4fe8d1' }}>📊 Financial Markets</h2>
+            <h2 className="text-base font-bold mb-1" style={{ color: 'var(--accent)' }}>📊 Financial Markets</h2>
             <p className="text-xs mb-4" style={{ color: 'var(--muted)' }}>
               Mise à jour de vos placements financiers.
             </p>
@@ -472,14 +472,14 @@ export default function WeeklyReview() {
               >
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-sm font-semibold" style={{ color: 'var(--text)' }}>DCA Mensuel</span>
-                  <span className="text-xs font-mono" style={{ color: '#4fe8d1' }}>
+                  <span className="text-xs font-mono" style={{ color: 'var(--accent)' }}>
                     {state.markets.dca.monthlyAmount}€ programmés
                   </span>
                 </div>
                 <button
                   type="button"
                   className={`btn w-full ${form.markets.dcaDone ? 'btn-primary' : 'btn-ghost'}`}
-                  style={form.markets.dcaDone ? { background: '#4fe8d1', width: '100%' } : { width: '100%' }}
+                  style={form.markets.dcaDone ? { background: 'var(--accent)', width: '100%' } : { width: '100%' }}
                   onClick={() => updateForm('markets', { ...form.markets, dcaDone: !form.markets.dcaDone })}
                 >
                   {form.markets.dcaDone ? '✓ DCA effectué ce mois (+80 XP)' : 'DCA effectué ce mois ?'}
@@ -514,7 +514,7 @@ export default function WeeklyReview() {
         {/* Step 5: Week score */}
         {step === 5 && (
           <div className="fade-up">
-            <h2 className="text-base font-bold mb-1" style={{ color: '#4fe8d1' }}>⭐ Score de la semaine</h2>
+            <h2 className="text-base font-bold mb-1" style={{ color: 'var(--accent)' }}>⭐ Score de la semaine</h2>
             <p className="text-xs mb-4" style={{ color: 'var(--muted)' }}>
               Comment évaluez-vous votre semaine ?
             </p>
@@ -523,7 +523,7 @@ export default function WeeklyReview() {
             <div className="mb-6">
               <div className="flex justify-between text-xs mb-2" style={{ color: 'var(--muted)' }}>
                 <span>1 — Mauvaise</span>
-                <span style={{ color: '#4fe8d1', fontSize: 24, fontFamily: "'Courier New', ui-monospace, monospace", fontWeight: 700 }}>
+                <span style={{ color: 'var(--accent)', fontSize: 24, fontWeight: 700 }}>
                   {form.weekScore}
                 </span>
                 <span>10 — Excellente</span>
@@ -537,10 +537,10 @@ export default function WeeklyReview() {
                     className="flex-1 py-2 rounded text-sm font-mono font-bold transition-all"
                     style={{
                       background: n <= form.weekScore
-                        ? `rgba(79,232,209,${0.3 + n * 0.07})`
+                        ? `rgba(10,108,255,${0.12 + n * 0.05})`
                         : 'var(--navy-700)',
-                      color: n <= form.weekScore ? '#4fe8d1' : 'var(--muted2)',
-                      border: n === form.weekScore ? '1px solid #4fe8d1' : '1px solid var(--border)',
+                      color: n <= form.weekScore ? 'var(--accent)' : 'var(--muted2)',
+                      border: n === form.weekScore ? '1px solid var(--accent)' : '1px solid var(--border)',
                     }}
                   >
                     {n}
@@ -564,21 +564,21 @@ export default function WeeklyReview() {
             {/* XP Preview */}
             <div
               className="mt-4 p-3 rounded-lg"
-              style={{ background: 'var(--blue-dim)', border: '1px solid rgba(79,232,209,0.3)' }}
+              style={{ background: 'var(--blue-dim)', border: '1px solid var(--accent-soft)' }}
             >
-              <p className="text-xs font-mono font-bold mb-2" style={{ color: '#4fe8d1' }}>
+              <p className="text-xs font-mono font-bold mb-2" style={{ color: 'var(--accent)' }}>
                 APERÇU XP CETTE REVIEW
               </p>
               <div className="flex flex-col gap-1">
                 {calculateWeeklyXP(form).breakdown.map((b, i) => (
                   <div key={i} className="flex justify-between text-xs">
                     <span style={{ color: 'var(--muted)' }}>{b.label}</span>
-                    <span className="font-mono" style={{ color: '#4fe8d1' }}>+{b.xp}</span>
+                    <span className="font-mono" style={{ color: 'var(--accent)' }}>+{b.xp}</span>
                   </div>
                 ))}
                 <div
                   className="flex justify-between text-sm font-bold pt-2 mt-1"
-                  style={{ borderTop: '1px solid var(--border)', color: '#4fe8d1' }}
+                  style={{ borderTop: '1px solid var(--border)', color: 'var(--accent)' }}
                 >
                   <span>TOTAL</span>
                   <span className="font-mono">+{calculateWeeklyXP(form).total} XP</span>
@@ -591,7 +591,7 @@ export default function WeeklyReview() {
         {/* Step 6: Personnage */}
         {step === 6 && (
           <div className="fade-up">
-            <h2 className="text-base font-bold mb-1" style={{ color: '#4fe8d1' }}>🧬 Personnage</h2>
+            <h2 className="text-base font-bold mb-1" style={{ color: 'var(--accent)' }}>🧬 Personnage</h2>
             <p className="text-xs mb-5" style={{ color: 'var(--muted)' }}>
               Auto-évaluation hebdomadaire. 1 = nettement en dessous de d'habitude, 3 = comme d'habitude, 5 = nettement au-dessus.
             </p>
@@ -614,9 +614,9 @@ export default function WeeklyReview() {
                           onClick={() => updateForm('character', { ...form.character, [id]: n })}
                           className="flex-1 py-2 rounded text-sm font-mono font-bold transition-all"
                           style={{
-                            background: n === value ? `${meta.color}30` : 'var(--navy-700)',
+                            background: n === value ? 'var(--accent-soft)' : 'var(--navy-700)',
                             color: n === value ? meta.color : 'var(--muted2)',
-                            border: n === value ? `1px solid ${meta.color}` : '1px solid var(--border)',
+                            border: n === value ? `1px solid var(--accent)` : '1px solid var(--border)',
                           }}
                         >
                           {n}
@@ -650,7 +650,7 @@ export default function WeeklyReview() {
           <button
             className="btn btn-primary flex items-center gap-2"
             onClick={handleSubmit}
-            style={{ background: '#4fe8d1' }}
+            style={{ background: 'var(--accent)' }}
           >
             <Zap size={14} /> Valider la review
           </button>
