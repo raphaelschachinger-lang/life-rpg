@@ -13,7 +13,7 @@ const HABIT_DEFAULTS = () => ({
 export const DEFAULT_STATE = {
   ui: { currentScreen: 'dashboard', theme: 'dark' },
   player: {
-    name: 'Player',
+    name: 'Raphaël Schachinger',
     totalXP: 0,
     birthYear: 2001,
     createdAt: todayISO(),
@@ -95,6 +95,12 @@ export const DEFAULT_STATE = {
 function migrateState(saved) {
   // Thematic milestones system removed — carte de progression now chapter-based
   delete saved.milestones;
+
+  // Untouched default name from before the retheme — bump to the real default,
+  // never overrides a name the player actually chose.
+  if (saved.player?.name === 'Player') {
+    saved.player.name = 'Raphaël Schachinger';
+  }
 
   // noPorn → noJunkFood (only migrate user data, not habit metadata)
   if (saved.habits?.noPorn && !saved.habits?.noJunkFood) {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useGame } from '../context/GameContext';
 import { getLevelFromXP, getPlayerTitle, getCurrentChapter, getChapterProgress, formatCurrency } from '../utils/gameLogic';
-import { Zap, Shield } from 'lucide-react';
+import { Zap, Shield, Sun, Moon } from 'lucide-react';
 
 export default function Topbar() {
   const { state, dispatch } = useGame();
@@ -89,14 +89,18 @@ export default function Topbar() {
         <button
           className={theme === 'light' ? 'active' : ''}
           onClick={() => dispatch({ type: 'SET_THEME', theme: 'light' })}
+          title="Mode clair"
+          aria-label="Mode clair"
         >
-          Clair
+          <Sun size={14} />
         </button>
         <button
           className={theme === 'dark' ? 'active' : ''}
           onClick={() => dispatch({ type: 'SET_THEME', theme: 'dark' })}
+          title="Mode sombre"
+          aria-label="Mode sombre"
         >
-          Sombre
+          <Moon size={14} />
         </button>
       </div>
     </div>
